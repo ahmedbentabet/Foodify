@@ -48,36 +48,78 @@ Foodify is an innovative platform designed to connect food enthusiasts with thei
 
 ```plaintext
 │── AUTHORS
-├── README.md                  # Project description and instructions
-├── console.py                 # Command-line interface for managing data
+├── README.md                   # Project description and instructions
+├── console.py                  # Console-based interface for testing/admin tasks
 
-├── models/                    # Database models
-│   ├── __init__.py            # Initialize models module
-│   ├── base_model.py          # Base model with common fields
-│   ├── user.py                # User model (handles authentication, profiles)
-│   ├── restaurant.py          # Restaurant model (details about restaurants)
-│   ├── menu_item.py           # Menu Item model (food items)
-│   ├── order.py               # Order model (order details, status, and payment)
-│   ├── review.py              # Review model (user feedback)
-│   └── engine/                # PostgreSQL storage engine
-│       ├── __init__.py
-│       └── db_storage.py      # PostgreSQL connection and logic
+├── models/                     # Database models
+│   ├── **init**.py             # Initialize models module
+│   ├── base_model.py           # Base model with common fields
+│   ├── user.py                 # User model (handles authentication, profiles)
+│   ├── restaurant.py           # Restaurant model (handles restaurant details)
+│   ├── menu_item.py            # Menu Item model (details about food items)
+│   ├── order.py                # Order model (handles order details, payments, and statuses)
+│   ├── review.py               # Review model (user feedback on restaurants)
+│   └── engine/                 # PostgreSQL storage engine
+│       ├── **init**.py
+│       └── db_storage.py       # PostgreSQL connection and logic
 
-├── tests/                     # Unit tests for modules
-│   ├── test_models/           # Tests for models
-│   └── test_web_flask/        # Tests for web routes
+├── tests/                      # Unit tests for modules
+│   ├── **init**.py
+│   ├── test_models/            # Tests for models
+│   │   ├── **init**.py
+│   │   ├── test_user.py
+│   │   ├── test_base_model.py
+│   │   ├── test_restaurant.py
+│   │   ├── test_menu_item.py
+│   │   ├── test_order.py
+│   │   ├── test_review.py
+│   │   └── test_engine/
+│       │       ├── **init**.py
+│       │       └── test_db_storage.py
+│   └── test_web_flask/         # Tests for web routes
+│       ├── test_welcome_page.py
+│       ├── test_user_page.py
+│       ├── test_login.py
+│       ├── test_signup.py
+│       ├── test_order.py
+│       └── test_review.py
 
-├── web_flask/                 # Web application using Flask
-│   ├── __init__.py            # Initialize Flask app and configurations
-│   ├── routes/                # Route files for scalable management
-│   ├── static/                # Static assets (images, styles, scripts)
-│   └── templates/             # HTML templates
+├── web_flask/                  # Web application using Flask
+│   ├── **init**.py             # Initialize Flask app, settings, and configurations
+│   ├── routes/                 # Organized route files for scalable management
+│   │   ├── welcome.py          # Welcome page routes
+│   │   ├── user.py             # User-related routes (login, signup)
+│   │   ├── restaurant.py       # Restaurant-related routes
+│   │   ├── login.py            # Login logic
+│   │   ├── signup.py           # Signup logic
+│   │   ├── order.py            # Order placement and management routes
+│   │   ├── review.py           # Review routes
+│   │   └── api.py              # API endpoints for external/mobile integrations
+│   ├── static/                 # Static assets like images, styles, and scripts
+│   │   ├── images/             # Image files for the UI
+│   │       ├── icon.ico
+│   │       └── logo.png
+│   │   ├── styles/             # CSS files for styling
+│   │       ├── footer.css
+│   │       ├── header.css
+│   │       ├── common.css
+│   │       └── filters.css
+│   │   └── scripts/            # JavaScript files for frontend behavior
+│   │       ├── main.js
+│   │       └── forms.js
+│   └── templates/              # HTML templates for the web pages
+│       ├── base.html
+│       ├── welcome.html
+│       ├── user.html
+│       ├── login.html
+│       ├── signup.html
+│       ├── order.html
+│       └── review.html
 
-└── translations/              # Flask-Babel translation files
-    ├── en/                    # English translations
-    ├── fr/                    # French translations
-    └── ar/                    # Arabic translations
-```
+└── translations/               # Flask-Babel translation files for multiple languages
+    ├── en/                     # English translations
+    ├── fr/                     # French translations
+    └── ar/                     # Arabic translations
 
 ---
 
