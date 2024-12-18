@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """This module contains the console for the application."""
 import cmd
 
@@ -17,6 +17,12 @@ class FoodifyConsole(cmd.Cmd):
         """Handle EOF (Ctrl+D) to exit the console."""
         print("Goodbye!")
         return True
+
+    def help_quit(self):
+        print("Exits the console. Usage: quit")
+
+    def help_EOF(self):
+        print("Exits the console with EOF (Ctrl+D).")
 
 
 if __name__ == "__main__":
