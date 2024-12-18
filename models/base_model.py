@@ -9,6 +9,7 @@ from sqlalchemy.ext.declarative import declarative_base
 Base = declarative_base()
 
 
+
 class BaseModel(Base):
     """
     Base model that contains common fields for all tables.
