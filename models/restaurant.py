@@ -1,6 +1,7 @@
 from sqlalchemy import Column, String, ForeignKey
 from sqlalchemy.orm import relationship
-from base_model import BaseModel
+from models.base_model import BaseModel
+
 
 class Restaurant(BaseModel):
     """
