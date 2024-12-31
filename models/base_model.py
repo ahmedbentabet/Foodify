@@ -14,7 +14,6 @@ class BaseModel(Base):
     """A base class for all Foodify models"""
     
     __abstract__ = True  # Make this an abstract base class
-    # __tablename__ = 'base_model'
 
     id = Column(String(60), primary_key=True, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
@@ -37,7 +36,6 @@ class BaseModel(Base):
                 self.created_at = datetime.now()
             if 'updated_at' not in kwargs:
                 self.updated_at = datetime.now()
-        # print(self.__dict__)
 
     def __str__(self):
         """Returns a string representation of the instance"""
@@ -61,7 +59,6 @@ class BaseModel(Base):
         dictionary['updated_at'] = self.updated_at.isoformat()
         if '_sa_instance_state' in dictionary:
             del dictionary['_sa_instance_state']
-        print(dictionary)
         return dictionary
 
     def delete(self):

@@ -1,18 +1,20 @@
-from sqlalchemy import Column, String, Integer, ForeignKey
+from sqlalchemy import Column, Integer, String, Text, ForeignKey
 from sqlalchemy.orm import relationship
-from base_model import BaseModel
+from models.base_model import BaseModel
 
 class Review(BaseModel):
-    """
-    Review model to store user reviews for restaurants.
-    """
-    __tablename__ = 'review'
+    """Review model"""
+    
+    __tablename__ = 'reviews'
 
-    user_id = Column(String(36), ForeignKey('user.id'), nullable=False)
-    restaurant_id = Column(String(36), ForeignKey('restaurant.id'), nullable=False)
+    client_id = Column(Integer, ForeignKey('clients.id'), nullable=False)
+    restaurant_id = Column(Integer, ForeignKey('restaurants.id'), nullable=False)
     rating = Column(Integer, nullable=False)
-    comment = Column(String, nullable=True)
+    comment = Column(Text, nullable=True)
 
-    # Relationships
-    user = relationship('User', backref='reviews')
-    restaurant = relationship('Restaurant', backref='reviews')
+    client = relationship("Client", back_populates="reviews")
+    restaurant = relationship("Restaurant", back_populates="reviews")
+
+    def __init__(self, *args, **kwargs):
+        """Initialize review"""
+        super().__init__(*args, **kwargs)

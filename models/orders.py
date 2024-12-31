@@ -1,20 +1,21 @@
-from sqlalchemy import Column, String, Float, ForeignKey
+from sqlalchemy import Column, Integer, DECIMAL, String, ForeignKey, Enum
 from sqlalchemy.orm import relationship
-from base_model import BaseModel
+from models.base_model import BaseModel
 
 class Order(BaseModel):
-    """
-    Order model to store order details.
-    """
-    __tablename__ = 'order'
+    """Order model"""
+    
+    __tablename__ = 'orders'
 
-    user_id = Column(String(36), ForeignKey('user.id'), nullable=False)
-    restaurant_id = Column(String(36), ForeignKey('restaurant.id'), nullable=False)
-    items = Column(String, nullable=False)  # Store item list as a serialized string
-    total_price = Column(Float, nullable=False)
-    status = Column(String, nullable=False)  # e.g., 'pending', 'completed', 'cancelled'
-    payment_details = Column(String, nullable=True)
+    client_id = Column(Integer, ForeignKey('clients.id'), nullable=False)
+    restaurant_id = Column(Integer, ForeignKey('restaurants.id'), nullable=False)
+    total_price = Column(DECIMAL(10, 2), nullable=False)
+    status = Column(Enum('pending', 'completed', name='order_status'), default='pending')
 
-    # Relationships
-    user = relationship('User', backref='orders')
-    restaurant = relationship('Restaurant', backref='orders')
+    client = relationship("Client", back_populates="orders")
+    restaurant = relationship("Restaurant", back_populates="orders")
+    order_items = relationship("OrderItem", back_populates="order", cascade="all, delete")
+
+    def __init__(self, *args, **kwargs):
+        """Initialize order"""
+        super().__init__(*args, **kwargs)
