@@ -1,5 +1,7 @@
-from .user import User
-from .restaurant import Restaurant
-from .menu_item import MenuItem
-from .review import Review
-from .order import Order
+#!/usr/bin/python3
+"""This module instantiates an object of the DBStorage class"""
+
+from models.engine.db_storage import DBStorage
+storage = DBStorage()
+
+storage.reload()
