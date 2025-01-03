@@ -1,40 +1,205 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Setting up the HTML document with language and character encoding -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Foodify</title>
+    <!-- Including font from Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Helvetica+Neue&display=swap" rel="stylesheet">
+    <!-- Linking external CSS file -->
     <link rel="stylesheet" href="style.css">
-    
-
+    <!-- Adding a favicon for the website -->
+    <link rel="icon" type="image/png" href="images/logo.png" sizes="48x48">
 </head>
 <body>
+    <!-- Navigation bar -->
     <nav>
         <a href="#" class="logo">
-            <img src="logo.png" alt="Logo">
+            <!-- Website logo -->
+            <img src="images/logo.png" alt="Logo">
             <h1>Foodify</h1>
         </a>
         <ul>
+            <!-- Navigation links -->
             <li><a href="#">Home</a></li>
-            <li><a href="#">Menu</a></li>
-            <li><a href="#">About</a></li>
-            <li><a href="#">Reviews</a></li>
-            <li><a href="#"><img src="grocery-cart.png"></a></li>
+            <li><a href="#restaurants">Restaurants</a></li>
+            <li><a href="#search">Menu</a></li>
+            <li><a href="#footer">About</a></li>
+            <li class="cart-icon-container">
+                <a href="#">
+                    <img src="images/grocery-cart.png" alt="Cart">
+                    <span id="cart-count" class="cart-count-hidden"></span>
+                </a>
+            </li>
         </ul>
+        <!-- Login and Sign-up buttons -->
         <button>Login</button>
         <button>Sign Up</button>
     </nav>
 
-    <div class="home">
+    <!-- Home section -->
+    <section class="home">
         <div class="content">
-            <h2>"Dining Made Easy, Right at Home"</h2>
-            <p>The Best Online Food Ordering System <3</p>
-            <button>Order Now</button>
-            <button class="know_more">Know More</button>
+            <h2>"Dining Made Easy, Right at Home 🏠🛵"</h2>
+            <p>The Best Online Food Ordering System ❤️</p>
+            <a href="#restaurants"><button id="restaurants">Order Now</button></a>
+            <button class="know_more" id="knowMoreButton">Know More</button>
         </div>
-        <img src="Double Beef Burger.png" alt="home Image">
+        <!-- Featured image for the home section -->
+        <img src="images/Double Beef Burger.png" alt="Double Beef Burger">
+    </section>
+
+    <!-- Modal Structure -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <span class="close" id="closeModal">&times;</span>
+            <h2>Welcome to Foodify!</h2>
+            <p>
+                At <strong>Foodify</strong>, we aim to revolutionize the way you enjoy dining. 
+                From sizzling hot pizzas to refreshing smoothies, we bring the best meals from your favorite restaurants 
+                right to your doorstep. Say goodbye to long queues and waiting times — order your food in just a few clicks! 🚀
+            </p>
+            <p>
+                Whether you're planning a family dinner, a romantic date, or a solo treat, Foodify ensures
+                the fastest delivery, best deals, and most delicious options tailored just for you. Hungry yet? 🍔🍕
+            </p>
+        </div>
     </div>
-    <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Delectus ea atque, aperiam ipsa alias odio illum fugiat tenetur at recusandae ab, voluptatibus asperiores cupiditate molestias, quam quaerat hic corporis praesentium nulla obcaecati minus repudiandae eveniet ipsum dignissimos! Porro minus ratione illo maxime temporibus, voluptatum unde, autem illum ad officia vero error officiis sint modi labore nihil asperiores enim animi non! Ullam odio quasi eaque veniam cupiditate tempora error dignissimos ex obcaecati modi architecto, illum provident, aliquid dicta, molestiae eius in animi. Saepe distinctio perferendis repellat assumenda accusantium hic dolorem quisquam veritatis provident, molestiae incidunt nam laboriosam recusandae nemo ducimus beatae est dignissimos consequatur deserunt illo quos? Ratione eaque unde qui perferendis voluptatum neque molestias libero, exercitationem laborum, fuga commodi iure minus odio quidem doloribus fugit laudantium a! Necessitatibus eius enim architecto est voluptates. Nesciunt repellat illum beatae tenetur rem, sed nemo non ipsam quas iusto cumque fugiat, placeat iste fuga, quaerat labore libero dolor magnam. Sint dolor magni libero a perferendis unde assumenda illum maiores, inventore consequatur aspernatur officia? Dolorum nulla quasi nisi vero qui fugit quibusdam rem, temporibus eius magni, magnam itaque nobis ipsa sequi. Veniam praesentium voluptates rem? Omnis, maxime dicta hic, itaque incidunt impedit magnam commodi vel ratione sequi sed amet, veniam obcaecati numquam voluptate facilis porro nemo! Ut quae veritatis, labore soluta accusamus voluptatum illo incidunt magni consectetur. Temporibus natus voluptatum sint qui iure accusantium, quae labore ea ullam, aliquam ducimus, excepturi dolorum voluptas doloribus alias animi? Optio ratione hic temporibus minus fuga harum earum aspernatur rem laudantium, in suscipit eligendi cum officiis distinctio nobis deserunt corporis ad voluptatibus quod repellat. Tempore quibusdam architecto eum alias expedita, facere magni dicta consequuntur rem totam et, culpa hic! Accusantium eaque vel odit est cumque dignissimos, perferendis ipsa doloremque esse numquam quas vero et quasi, dicta reprehenderit voluptatem ratione maxime provident ad earum explicabo. Ab exercitationem ad ipsum assumenda iure cumque quo, quisquam vero, blanditiis voluptatum quis cupiditate voluptates autem omnis at magnam voluptas. Exercitationem ducimus necessitatibus asperiores reiciendis optio aspernatur voluptatum nostrum ipsa commodi, nemo alias tenetur, tempora soluta dolore iure architecto iste, nisi rem quas doloremque numquam repudiandae ipsam. Iste quaerat, et eos at nesciunt dolorem corrupti voluptate ipsam laborum iusto voluptatibus amet ut magni numquam libero consectetur doloremque sequi nam blanditiis delectus nisi, fuga fugit pariatur eum. Ipsa quam nostrum voluptatem ducimus? Nesciunt modi aliquid molestiae assumenda, deleniti maiores fugit nisi perspiciatis blanditiis, alias optio facilis laboriosam fuga hic iure natus itaque! Ullam, harum dolore molestiae doloremque, inventore, magni libero nostrum molestias fugit optio architecto exercitationem aperiam dolorem. Explicabo saepe totam sed atque pariatur, voluptatum soluta quos a repudiandae tempora commodi expedita earum fuga cupiditate possimus corrupti. At, laborum exercitationem asperiores tempore animi ipsam voluptate hic dolores officiis? Voluptatibus delectus modi recusandae quasi pariatur nam nesciunt doloremque. Quaerat distinctio nam, veniam quod doloremque asperiores a, recusandae, tempora ipsam adipisci veritatis sed deserunt sapiente maiores quas ducimus. Ad ipsa earum ducimus nam aspernatur officiis ipsam reprehenderit magnam sapiente adipisci velit esse incidunt, debitis cupiditate facere similique quas reiciendis? Non aspernatur praesentium omnis suscipit libero temporibus voluptatum illum ullam deleniti maiores, iure minima incidunt. Soluta recusandae aut labore praesentium dolorum sequi esse quasi, aspernatur iusto reiciendis, nostrum maiores quo a doloremque modi facere delectus in explicabo sit minus corporis quos rerum nesciunt eos? Iste dicta nisi impedit molestias id quas non saepe nesciunt corrupti? Perspiciatis delectus laboriosam modi ullam quis natus quisquam beatae sequi quibusdam. Autem iste hic illo officia aliquid, ratione itaque, laborum dolorem obcaecati laudantium amet incidunt, modi excepturi. Reiciendis provident alias totam asperiores omnis hic optio amet eius mollitia accusantium enim quisquam magni at recusandae placeat, quos, qui officiis quaerat tempore aliquid numquam. Officia reiciendis nisi dicta deleniti perspiciatis ex labore, repellendus eius autem ducimus nemo omnis nesciunt veritatis, deserunt, magni necessitatibus eligendi commodi? Harum, corporis earum ad atque praesentium explicabo exercitationem optio perferendis debitis tempora fugit, inventore laudantium odit maiores repellendus a ratione, quos illo tenetur sequi? Aliquam nemo repellat alias ipsum explicabo quos dolore nisi facilis, veniam nesciunt. In, dolor necessitatibus ab officiis exercitationem expedita aspernatur iusto. Ex, eos commodi. In, ex? Mollitia aliquid omnis eum adipisci ea, quos odio inventore facere tempore, sapiente in incidunt quia esse accusamus quidem ad? Voluptatem eligendi nisi et, iste rerum voluptatum provident perferendis, quaerat quos nulla totam odio praesentium, dolores veniam sunt placeat numquam tenetur? Minus incidunt harum, explicabo, ipsa nemo fugiat nulla placeat maiores quaerat eum blanditiis culpa laudantium commodi molestiae quibusdam, voluptatum quia sapiente! Accusantium similique velit cum magnam iste sint eos assumenda quibusdam numquam non corporis ducimus deserunt obcaecati, nemo unde, modi laudantium ex dolorum, consectetur error corrupti. Qui distinctio velit maiores, aperiam officia, rem corrupti est nisi exercitationem ipsa tempore alias eligendi vero. Doloribus nemo voluptatum hic facilis non odio sapiente dicta aut quod, soluta, sint beatae architecto pariatur accusamus? Non corporis, dolorem, atque ipsum placeat ab mollitia enim quasi porro, inventore reprehenderit tenetur quos aperiam nam perferendis consequatur laborum. Quos neque sunt, deleniti blanditiis nihil nesciunt fuga tenetur ad alias pariatur dolorum assumenda tempora minima commodi necessitatibus voluptatum corporis odit nam maiores magnam non iste quisquam dolores quod. Optio aperiam corporis labore sapiente modi, hic ipsum magnam provident quisquam ut expedita veniam atque, reprehenderit unde facere, saepe maxime porro esse ipsa ullam alias dolor. Qui, laudantium et accusamus voluptates sint doloribus molestiae nostrum id, impedit quis dolor expedita? Sit cum quisquam quis perferendis recusandae quas nisi, obcaecati consequatur ipsa. Amet repellat debitis laudantium, culpa recusandae distinctio non excepturi placeat unde. Accusamus reiciendis dicta ad nam magni. Amet harum dolore, in, est id, neque quasi libero explicabo voluptate officia soluta commodi dignissimos voluptas! Neque perspiciatis eius architecto, quae laudantium recusandae veniam sed nesciunt consectetur suscipit distinctio est eaque adipisci. Nihil iusto blanditiis rerum et beatae maiores asperiores inventore obcaecati provident nobis neque molestias consectetur necessitatibus voluptate nemo vel voluptatem, minima iure similique libero pariatur quo fugit error nulla? Eos dignissimos ratione vel consequatur maxime ipsa, ducimus voluptates? Vero autem, porro maiores, rerum recusandae tempore quam non laudantium ducimus soluta aut, delectus quaerat ex. Dolorum quae vitae excepturi mollitia quibusdam at voluptates numquam, nulla dolor repudiandae cupiditate quas iure atque obcaecati. Molestias est sapiente aperiam iusto eius esse? Cum, eius officia dicta neque nobis hic optio dolorum. Cum tenetur illum soluta voluptatem explicabo alias aut. Quo, dicta nemo. Ad vel, non, corrupti, sunt laborum eaque repudiandae quo ea unde accusamus eos reiciendis quam temporibus? Quos nostrum itaque accusamus maxime earum quam quae obcaecati culpa expedita corrupti, optio nemo dolorum temporibus qui? Voluptates id ipsum odio dolore magnam neque at asperiores eligendi laborum atque, rem ipsam quidem vel sed. Voluptatibus libero possimus atque accusamus repellat quasi quos culpa ducimus? Ab odit, optio officiis quibusdam odio, recusandae asperiores excepturi voluptatum consequuntur at rem corporis suscipit. Dolorem eaque laborum repellendus, quas quisquam temporibus magnam exercitationem pariatur officiis recusandae praesentium ea voluptatibus quae sit. Quidem voluptatem molestiae, impedit cum repellendus repudiandae ea explicabo numquam eos voluptas perferendis animi vitae omnis ab rem aut aperiam pariatur voluptatum. Quo, quaerat nam odit natus laboriosam possimus nisi culpa sunt. Adipisci nostrum, magni amet voluptas doloremque tempora laboriosam ut quaerat earum expedita maiores odio nisi vero! Omnis maiores quam adipisci minus doloribus sit? Accusamus nulla minus eius inventore voluptate. Recusandae explicabo optio esse non architecto cumque fugit, molestias debitis voluptatibus dolorum ipsam deserunt aliquid id facere quos aut? Rerum, omnis quis? Sequi, a nemo? Minima rerum soluta nemo dolores consectetur? Odit quaerat expedita, error repellendus sed, dolorum dolor natus itaque ex explicabo consectetur tempora aut nam facilis accusamus libero. Molestiae saepe maxime ducimus incidunt ea. Suscipit vero facere provident ipsum. Facilis numquam facere repellat aperiam debitis illo illum dignissimos porro optio sed at, natus voluptatibus sequi recusandae soluta earum neque atque officia unde corrupti similique excepturi praesentium. Quae laboriosam obcaecati quasi, cupiditate consequuntur ratione quam eos reiciendis in, quod earum. Officiis voluptatibus tempore illo molestias hic aliquam nemo adipisci inventore vitae vero quisquam quibusdam doloribus, a ea exercitationem atque debitis. Amet voluptate voluptatibus modi in eveniet necessitatibus aperiam quisquam delectus? Voluptate, incidunt at quaerat vitae quae aspernatur optio necessitatibus cupiditate eos, id aut consequuntur. Fugit, quis aliquid minima modi rerum a placeat libero, provident doloremque vel dolores quidem praesentium facilis animi tempora voluptatem maxime quod laborum vero necessitatibus cum soluta et impedit. Iusto minima obcaecati et quae adipisci eius, placeat velit ullam aspernatur aperiam rerum voluptatum exercitationem unde pariatur laudantium, alias molestiae laboriosam nihil! Repellat provident corrupti consequuntur id voluptatem incidunt dignissimos maxime, porro iure architecto est accusantium facere aperiam ipsa fuga tenetur officia explicabo quaerat alias maiores cum perspiciatis a aspernatur reiciendis? Accusamus ab nobis optio ea, culpa adipisci vero aspernatur hic unde, voluptatibus porro libero sapiente aperiam tenetur quia odit quam ipsam saepe. Natus, illo illum aliquid similique accusantium hic saepe, architecto laborum veritatis doloremque ratione deleniti accusamus alias neque aperiam minus voluptatem suscipit porro? Ut, doloremque! Ut reiciendis debitis molestias quasi hic quia vitae eius rerum similique optio? Mollitia nisi fugit rem voluptatibus cum perferendis? Eum omnis suscipit asperiores reprehenderit maxime nobis aliquam, nam labore nemo quasi, non harum, voluptatibus nihil minima. Impedit delectus provident est eaque labore explicabo aperiam minus ab obcaecati quas repellat incidunt, magnam quasi excepturi sapiente suscipit ut eius a aut quo culpa consectetur ratione distinctio. Illum similique non excepturi repellat vero sit iste ipsam reiciendis ullam? Beatae molestias blanditiis earum ex repudiandae fuga officiis, vel mollitia. Doloremque, dolor quidem consequatur amet beatae praesentium minus in facere iusto, porro eveniet expedita qui fugit et omnis vel! Ex dolore sint earum quae delectus dolores dolorem molestias aspernatur maxime at, maiores dolor inventore id eius sequi illo recusandae ad ut nam tempore mollitia autem magnam? Fuga laboriosam quam, tenetur assumenda aspernatur reprehenderit rerum beatae sit sapiente iste corrupti amet explicabo saepe veritatis quos at quasi maiores qui accusamus doloremque consectetur natus? Dicta magnam consequatur illo vitae sunt perspiciatis quia minus ea odit dolorum nisi provident ratione iusto incidunt dolore, ducimus nulla possimus? Vel ipsam corporis nulla, cupiditate, reiciendis nam quasi distinctio sint architecto fugiat repellat, odio esse ipsa magni accusamus cum sit? Rem voluptatibus quos sint harum rerum eveniet molestias pariatur cumque. Animi vel minima commodi cumque quos quia totam ipsa neque reiciendis illum repudiandae perspiciatis placeat, quam vero quisquam fuga iusto quaerat tempore? Magni earum, porro voluptates esse aliquam expedita est. Tenetur, dolore reiciendis, repellat architecto suscipit, iure enim iusto impedit magni rerum voluptatem minima expedita recusandae esse! Nisi modi, possimus et cupiditate velit, odit ipsam adipisci quo consectetur debitis, laboriosam exercitationem obcaecati ut placeat quod eum ratione dolore repellat eligendi aut doloremque! Itaque blanditiis similique eligendi veritatis eveniet, provident architecto aut nisi eos optio dignissimos ut, quaerat sapiente quibusdam quod obcaecati recusandae atque enim cumque quisquam dolore pariatur porro maiores quidem. At minima blanditiis harum vero possimus. Dolor itaque magni similique veritatis quam, in nam eum eius natus laudantium qui recusandae ad corrupti autem non temporibus blanditiis repudiandae architecto assumenda necessitatibus expedita corporis asperiores ducimus iusto. Quisquam, similique, qui sapiente repellat dolorum ipsam aspernatur quas explicabo cupiditate doloribus numquam. Animi voluptatum officiis beatae dolorem, similique praesentium esse incidunt quos possimus odit laborum ipsum quidem, modi odio cupiditate architecto expedita! Id distinctio laudantium veritatis, cumque sed quas, nesciunt fuga quae assumenda, illo blanditiis ea! Ipsam ut temporibus, a autem omnis animi perferendis eos! Corporis, cum? Aspernatur aut eveniet voluptates ratione placeat accusantium! Quasi quam voluptatum incidunt, ad magni perspiciatis corrupti veritatis esse itaque cum? Commodi mollitia labore impedit eius delectus quasi fugiat dolorum voluptatem consectetur, laudantium assumenda ex nulla quidem libero pariatur animi neque natus omnis sit ea fugit tempore quis nihil repudiandae. Unde facere nostrum quod quidem commodi voluptatibus! Accusamus quibusdam optio commodi reiciendis nulla quasi qui, fuga adipisci dolorum tempora eos dicta, vitae sed! Adipisci magnam quia harum accusamus a possimus quisquam et amet voluptates suscipit quasi maiores praesentium totam necessitatibus facere, enim beatae id? Atque dolores corporis consequatur labore repellendus odit necessitatibus! Doloremque maxime, rem accusantium cumque ipsam sapiente animi delectus suscipit voluptates optio molestias quo distinctio officiis enim consequatur magni veniam amet mollitia blanditiis repellat nesciunt! Necessitatibus ducimus optio sint doloremque.</p>
+
+    <!-- Restaurants menu section -->
+    <section class="menu" >
+        <ul class="resutrant">
+            <!-- List of restaurants -->
+            <li class="restaurant" >
+                <img src="images/Burger.jpeg" alt="Burger Blast">
+                <h3>Burger Blast</h3>
+            </li>
+            <li class="restaurant">
+                <img src="images/Pizza.jpeg" alt="Pizza Point">
+                <h3>Pizza Point</h3>
+            </li>
+            <li class="restaurant">
+                <img src="images/Bites.jpeg" alt="Healthy Bites">
+                <h3>Healthy Bites</h3>
+            </li>
+            <li class="restaurant">
+                <img src="images/Taco.jpeg" alt="Taco Tower">
+                <h3>Taco Tower</h3>
+            </li>
+            <li class="restaurant">
+                <img src="images/Wings.jpeg" alt="Wings&Things">
+                <h3>Wings&Things</h3>
+            </li>
+            <li class="restaurant">
+                <img src="images/Green.jpeg" alt="Green Plates">
+                <h3>Green Plates</h3>
+            </li>
+        </ul>
+    </section>
+
+    <!-- Search and filter section -->
+    <div class="search_color">
+        <section class="search" id="search">
+            <div class="search-container">
+                <!-- Search input field -->
+                <input type="text" id="search_bar" placeholder="Search...">
+                <button id="searchButton">
+                    <img src="images/search.png" alt="Search icon">
+                </button>
+            </div>
+            <!-- Dropdown filter menu -->
+            <select id="filter">
+                <option value="All">All Restaurants</option>
+                <option value="Burger Blast">Burger Blast</option>
+                <option value="Pizza Point">Pizza Point</option>
+                <option value="Healthy Bites">Healthy Bites</option>
+                <option value="Taco Tower">Taco Tower</option>
+                <option value="Wings&Things">Wings&Things</option>
+                <option value="Green Plates">Green Plates</option>
+                <option value="Fast Food">Fast Food</option>
+                <option value="Healthy Food">Healthy food</option>
+            </select>
+        </section>
+
+        <!-- Meals section -->
+        <section class="meals">
+        <div class="meal" data-meal-id="1">
+        <!-- Meal details -->
+        <img src="images/Double Beef Burger.png" alt="Meal Image">
+        <hr>
+        <div class="meal-info">
+            <h3>meal name</h3>
+            <p>Description</p>
+            <div class="meal-footer">
+                <span class="price" data-price="10.99">$10.99</span>
+                <div class="quantity">
+                    <img src="images/reduce.png" class="decrease" alt="Reduce quantity">
+                    <span class="quantity-value" data-quantity="0">0</span> <!-- Dynamic quantity here -->
+                    <img src="images/add.png" class="increase" alt="Increase quantity">
+                </div>
+            </div>
+        </div>
+        </div>
+        </section>
+
+        <!-- Pagination section -->
+        <div class="pagination">
+            <a href="#" id="prevPage">Previous</a>
+            <span id="pageNumbers"></span>
+            <a href="#" id="nextPage">Next</a>
+        </div>
+    </div>
+
+    <!-- Footer section -->
+    <footer>
+        <div class="footer-content" id="footer">
+            <div class="about">
+                <h3>About Us</h3>
+                <p>At <strong>{Foodify}</strong>, we are passionate about bringing you the finest meals directly to your doorstep. We understand the importance of quality, convenience, and speed, which is why we focus on offering a wide variety of delicious dishes prepared with fresh ingredients by top chefs. Our goal is to provide an exceptional dining experience, whether you're craving a hearty meal, a quick snack, or something special for a celebration.
+
+                    We believe in making every meal a delightful experience, so we take pride in offering not only great food but also fast and reliable delivery. With our easy-to-use platform, you can explore a range of cuisines from around the world, and have them delivered to your home or office in no time.
+                    
+                    Our commitment to customer satisfaction means we continuously strive to improve our service, ensuring that you enjoy a seamless ordering process, timely deliveries, and high-quality meals every time. Whether you’re at home, at work, or celebrating an occasion, we are here to make sure you have the best food at your fingertips.
+                    
+                    Join us on a culinary journey today and experience the best of food, service, and convenience all in one place!</p>
+            </div>
+        </div>
+        <div class="contact">
+            <h3>Contact Us</h3>
+            <div class="team">
+                <!-- Team member profiles -->
+                <div class="team-member">
+                    <a href="https://www.linkedin.com/in/johnsamy2004/" target="_blank">
+                        <img src="Team/John Samy.jpeg" alt="John Samy">
+                        <p class="name">John Samy</p>
+                    </a>
+                </div>
+                <div class="team-member">
+                    <a href="https://www.linkedin.com/in/ahmedbentabet/" target="_blank">
+                        <img src="Team/Ahmed Bentabet.jpeg" alt="Ahmed Bentabet">
+                        <p class="name">Ahmed Bentabet</p>
+                    </a>
+                </div>
+                <div class="team-member">
+                    <a href="https://www.linkedin.com/in/tariq-omer-8599381ba/" target="_blank">
+                        <img src="Team/Tariq Omer.jpeg" alt="Tariq Omer">
+                        <p class="name">Tariq Omer</p>
+                    </a>
+                </div>
+                <div class="team-member">
+                    <a href="https://www.linkedin.com/in/abobakr-elgandy/" target="_blank">
+                        <img src="Team/Abobakr Elgandy.jpeg" alt="AboBakr Elgandy">
+                        <p class="name">Abobakr Elgandy</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <!-- CopyRight -->
+        <div class="footer-bottom">
+            <p>&copy; 2025 All Rights Reserved</p>
+        </div>
+    </footer>   
+    <script src="script.js"></script> 
 </body>
 </html>
