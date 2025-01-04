@@ -1,14 +1,14 @@
 from sqlalchemy import Column, Integer, String, Text, ForeignKey
 from sqlalchemy.orm import relationship
-from models.base_model import BaseModel
+from base_model import BaseModel, Base
 
-class Review(BaseModel):
+class Review(BaseModel, Base):
     """Review model"""
     
     __tablename__ = 'reviews'
 
-    client_id = Column(Integer, ForeignKey('clients.id'), nullable=False)
-    restaurant_id = Column(Integer, ForeignKey('restaurants.id'), nullable=False)
+    client_id = Column(String(60), ForeignKey('clients.id'), nullable=False)
+    restaurant_id = Column(String(60), ForeignKey('restaurants.id'), nullable=False)
     rating = Column(Integer, nullable=False)
     comment = Column(Text, nullable=True)
 
