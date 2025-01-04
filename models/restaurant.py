@@ -1,8 +1,8 @@
 from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
-from models.base_model import BaseModel
+from base_model import BaseModel, Base
 
-class Restaurant(BaseModel):
+class Restaurant(BaseModel, Base):
     """Restaurant model"""
     
     __tablename__ = 'restaurants'
@@ -10,9 +10,9 @@ class Restaurant(BaseModel):
     name = Column(String(100), nullable=False)
     city = Column(String(100), nullable=False)
 
-    reviews = relationship("Review", back_populates="restaurant")
-    menu_items = relationship("MenuItem", back_populates="restaurant")
-    orders = relationship("Order", back_populates="restaurant")
+    reviews = relationship("Review", back_populates="restaurant", cascade="all, delete-orphan")
+    menu_items = relationship("MenuItem", back_populates="restaurant", cascade="all, delete-orphan")
+    orders = relationship("Order", back_populates="restaurant", cascade="all, delete-orphan")
 
     def __init__(self, *args, **kwargs):
         """Initialize restaurant"""
