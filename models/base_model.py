@@ -10,7 +10,7 @@ from sqlalchemy.orm import sessionmaker
 
 Base = declarative_base()
 
-class BaseModel(Base):
+class BaseModel():
     """A base class for all Foodify models"""
     
     __abstract__ = True  # Make this an abstract base class
