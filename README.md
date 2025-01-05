@@ -120,6 +120,8 @@ Foodify is an innovative platform designed to connect food enthusiasts with thei
     ├── fr/
     └── ar/
 
+```
+
 ---
 
 ## Models Overview
