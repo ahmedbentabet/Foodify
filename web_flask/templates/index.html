@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <!-- Setting up the HTML document with language and character encoding -->
     <meta charset="UTF-8">
@@ -12,32 +13,31 @@
     <!-- Adding a favicon for the website -->
     <link rel="icon" type="image/png" href="../static/images/logo.png" sizes="48x48">
 </head>
+
 <body>
     <!-- Navigation bar -->
     <nav>
-        <a href="#" class="logo">
-            <!-- Website logo -->
+        <a href="index.html" class="logo">
             <img src="../static/images/logo.png" alt="Logo">
             <h1>Foodify</h1>
         </a>
         <ul>
-            <!-- Navigation links -->
-            <li><a href="#">Home</a></li>
-            <li><a href="#restaurants">Restaurants</a></li>
-            <li><a href="#search">Menu</a></li>
-            <li><a href="#footer">About</a></li>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="index.html#restaurants">Restaurants</a></li>
+            <li><a href="index.html#search">Menu</a></li>
+            <li><a href="index.html#footer">About</a></li>
             <li class="cart-icon-container">
-                <a href="#">
+                <a href="payment.html">
                     <img src="../static/images/grocery-cart.png" alt="Cart">
-                    <span id="cart-count" class="cart-count-hidden"></span>
+                    <span id="cart-count" class="cart-count-hidden">0</span>
                 </a>
             </li>
         </ul>
         <!-- Login and Sign-up buttons -->
         <a href="login.html?mode=login"><button>Login</button></a>
         <a href="login.html?mode=signup"><button>Sign Up</button></a>
-
     </nav>
+
 
     <!-- Home section -->
     <section class="home">
@@ -57,9 +57,10 @@
             <span class="close" id="closeModal">&times;</span>
             <h2>Welcome to Foodify!</h2>
             <p>
-                At <strong>Foodify</strong>, we aim to revolutionize the way you enjoy dining. 
-                From sizzling hot pizzas to refreshing smoothies, we bring the best meals from your favorite restaurants 
-                right to your doorstep. Say goodbye to long queues and waiting times — order your food in just a few clicks! 🚀
+                At <strong>Foodify</strong>, we aim to revolutionize the way you enjoy dining.
+                From sizzling hot pizzas to refreshing smoothies, we bring the best meals from your favorite restaurants
+                right to your doorstep. Say goodbye to long queues and waiting times — order your food in just a few
+                clicks! 🚀
             </p>
             <p>
                 Whether you're planning a family dinner, a romantic date, or a solo treat, Foodify ensures
@@ -69,10 +70,10 @@
     </div>
 
     <!-- Restaurants menu section -->
-    <section class="menu" >
+    <section class="menu">
         <ul class="resutrant">
             <!-- List of restaurants -->
-            <li class="restaurant" >
+            <li class="restaurant">
                 <img src="../static/images/Burger.jpeg" alt="Burger Blast">
                 <h3>Burger Blast</h3>
             </li>
@@ -126,23 +127,23 @@
 
         <!-- Meals section -->
         <section class="meals">
-        <div class="meal" data-meal-id="1">
-        <!-- Meal details -->
-        <img src="../static/images/Double Beef Burger.png" alt="Meal Image">
-        <hr>
-        <div class="meal-info">
-            <h3>meal name</h3>
-            <p>Description</p>
-            <div class="meal-footer">
-                <span class="price" data-price="10.99">$10.99</span>
-                <div class="quantity">
-                    <img src="../static/images/reduce.png" class="decrease" alt="Reduce quantity">
-                    <span class="quantity-value" data-quantity="0">0</span> <!-- Dynamic quantity here -->
-                    <img src="../static/images/add.png" class="increase" alt="Increase quantity">
+            <div class="meal" data-meal-id="1">
+                <!-- Meal details -->
+                <img src="../static/images/Double Beef Burger.png" alt="Meal Image">
+                <hr>
+                <div class="meal-info">
+                    <h3>meal name</h3>
+                    <p>Description</p>
+                    <div class="meal-footer">
+                        <span class="price" data-price="10.99">$10.99</span>
+                        <div class="quantity">
+                            <img src="../static/images/reduce.png" class="decrease" alt="Reduce quantity">
+                            <span class="quantity-value" data-quantity="0">0</span> <!-- Dynamic quantity here -->
+                            <img src="../static/images/add.png" class="increase" alt="Increase quantity">
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-        </div>
         </section>
 
         <!-- Pagination section -->
@@ -158,13 +159,23 @@
         <div class="footer-content" id="footer">
             <div class="about">
                 <h3>About Us</h3>
-                <p>At <strong>{Foodify}</strong>, we are passionate about bringing you the finest meals directly to your doorstep. We understand the importance of quality, convenience, and speed, which is why we focus on offering a wide variety of delicious dishes prepared with fresh ingredients by top chefs. Our goal is to provide an exceptional dining experience, whether you're craving a hearty meal, a quick snack, or something special for a celebration.
+                <p>At <strong>{Foodify}</strong>, we are passionate about bringing you the finest meals directly to your
+                    doorstep. We understand the importance of quality, convenience, and speed, which is why we focus on
+                    offering a wide variety of delicious dishes prepared with fresh ingredients by top chefs. Our goal
+                    is to provide an exceptional dining experience, whether you're craving a hearty meal, a quick snack,
+                    or something special for a celebration.
 
-                    We believe in making every meal a delightful experience, so we take pride in offering not only great food but also fast and reliable delivery. With our easy-to-use platform, you can explore a range of cuisines from around the world, and have them delivered to your home or office in no time.
-                    
-                    Our commitment to customer satisfaction means we continuously strive to improve our service, ensuring that you enjoy a seamless ordering process, timely deliveries, and high-quality meals every time. Whether you’re at home, at work, or celebrating an occasion, we are here to make sure you have the best food at your fingertips.
-                    
-                    Join us on a culinary journey today and experience the best of food, service, and convenience all in one place!</p>
+                    We believe in making every meal a delightful experience, so we take pride in offering not only great
+                    food but also fast and reliable delivery. With our easy-to-use platform, you can explore a range of
+                    cuisines from around the world, and have them delivered to your home or office in no time.
+
+                    Our commitment to customer satisfaction means we continuously strive to improve our service,
+                    ensuring that you enjoy a seamless ordering process, timely deliveries, and high-quality meals every
+                    time. Whether you’re at home, at work, or celebrating an occasion, we are here to make sure you have
+                    the best food at your fingertips.
+
+                    Join us on a culinary journey today and experience the best of food, service, and convenience all in
+                    one place!</p>
             </div>
         </div>
         <div class="contact">
@@ -201,7 +212,8 @@
         <div class="footer-bottom">
             <p>&copy; 2025 All Rights Reserved</p>
         </div>
-    </footer>   
-    <script src="../static/Scripts/welcome_page.js"></script> 
+    </footer>
+    <script src="../static/Scripts/welcome_page.js"></script>
 </body>
+
 </html>
