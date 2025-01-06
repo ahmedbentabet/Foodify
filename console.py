@@ -4,7 +4,12 @@ import cmd
 import sys
 from models.base_model import BaseModel
 from models.__init__ import storage
-from Foodify.models.client import Client
+from models.client import Client
+from models.menu_item import MenuItem
+from models.order_item import OrderItem
+from models.order import Order
+from models.restaurant import Restaurant
+from models.review import Review
 
 
 class FoodifyCommand(cmd.Cmd):
@@ -14,7 +19,10 @@ class FoodifyCommand(cmd.Cmd):
     prompt = '(foodify) ' if sys.__stdin__.isatty() else ''
 
     classes = {
-                'BaseModel': BaseModel, 'Client': Client
+                'BaseModel': BaseModel, 'Client': Client,
+                'MenuItem': MenuItem, 'OrderItem': OrderItem,
+                'Order': Order, 'Restaurant': Restaurant,
+                'Review': Review
             }
     dot_cmds = ['all', 'count', 'show', 'destroy', 'update']
     types = {
@@ -148,21 +156,22 @@ class FoodifyCommand(cmd.Cmd):
 
             dict_of_attr[key] = value
 
-        try:
+        # try:
+        if class_name == Client:
             existing_client = storage.session.query(Client).filter_by(email=dict_of_attr["email"]).first()
             if existing_client:
                 print(f"this email is taken")
-            else:
-                # Create a new instance of the class
-                new_instance = FoodifyCommand.classes[class_name](**dict_of_attr)
-                # new_instance.save()
-                storage.new(new_instance)
-                storage.save()
-                print(new_instance.id)
-        except KeyError:
-            print("** email attribute missing **")
-        except Exception as e:
-            print(f"Database error: {e}")
+        else:
+            # Create a new instance of the class
+            new_instance = FoodifyCommand.classes[class_name](**dict_of_attr)
+            # new_instance.save()
+            storage.new(new_instance)
+            storage.save()
+            print(new_instance.id)
+        # except KeyError:
+        #     print("** email attribute missing **")
+        # except Exception as e:
+        #     print(f"Database error: {e}")
 
     def do_show(self, args):
         """ Method to show an individual object """
