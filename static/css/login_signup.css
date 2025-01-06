@@ -1,0 +1,512 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: sans-serif;
+    text-decoration: none;
+    list-style: none;
+    scroll-behavior: smooth;
+}
+
+body {
+    background: linear-gradient(#111, #eee);
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 10%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 9999;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(10px);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    color: #fff;
+    font-size: 20px;
+    font-weight: bolder;
+    transition: transform 0.3s ease-in-out;
+    margin-right: 210px;
+}
+
+.logo img {
+    width: 50px;
+    height: 70px;
+    margin-right: 10px;
+}
+
+.logo:hover {
+    transform: translateX(20px);
+}
+
+nav ul {
+    display: flex;
+    align-items: center;
+}
+
+nav ul li {
+    margin: 0 15px;
+}
+
+nav ul li a {
+    font-size: 16px;
+    color: #fff;
+    text-transform: uppercase;
+    font-weight: 400;
+    transition: color 0.3s ease, border-bottom 0.2s ease;
+}
+
+nav ul li a:hover {
+    color: #e78f38;
+    border-bottom: 3px solid #e78f38;
+}
+
+nav ul img {
+    width: 30px;
+    height: 30px;
+    transition: 0.3s ease;
+    display: inline-block;
+}
+
+nav ul a img:hover {
+    transform: scale(1.35);
+}
+
+
+
+nav button {
+    background: #e78f38;
+    border: none;
+    color: #fff;
+    padding: 10px 30px;
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: 20px;
+    transition: transform 0.3s ease, background 0.3s ease;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+nav button:hover {
+    transform: scale(0.95);
+    background: #f79c42;
+}
+
+.home {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 115vh;
+    padding: 50px;
+    margin-bottom: 100px;
+}
+
+.home .content {
+    color: #fff;
+    max-width: 500px;
+}
+
+/* From Uiverse.io by andrew-demchenk0 */ 
+.wrapper {
+    --input-focus: rgb(52, 52, 255);
+    --font-color: black;
+    --font-color-sub: #666;
+    --bg-color: #fff;
+    --bg-color-alt: #666;
+    --main-color: black;
+    
+      /* display: flex; */
+      /* flex-direction: column; */
+      /* align-items: center; */
+  }
+  /* switch card */
+  .switch {
+    transform: translateY(-200px);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    width: 50px;
+    height: 20px;
+  }
+  
+  .card-side::before {
+    position: absolute;
+    content: 'Log in';
+    left: -70px;
+    top: 0;
+    width: 100px;
+    text-decoration: underline;
+    color: var(--font-color);
+    font-weight: 600;
+  }
+  
+  .card-side::after {
+    position: absolute;
+    content: 'Sign up';
+    left: 70px;
+    top: 0;
+    width: 100px;
+    text-decoration: none;
+    color: var(--font-color);
+    font-weight: 600;
+  }
+  
+  .toggle {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  .slider {
+    box-sizing: border-box;
+    border-radius: 5px;
+    border: 2px solid var(--main-color);
+    box-shadow: 4px 4px var(--main-color);
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--bg-colorcolor);
+    transition: 0.3s;
+  }
+  
+  .slider:before {
+    box-sizing: border-box;
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    border: 2px solid var(--main-color);
+    border-radius: 5px;
+    left: -2px;
+    bottom: 2px;
+    background-color: var(--bg-color);
+    box-shadow: 0 3px 0 var(--main-color);
+    transition: 0.3s;
+  }
+  
+  .toggle:checked + .slider {
+    background-color: var(--input-focus);
+  }
+  
+  .toggle:checked + .slider:before {
+    transform: translateX(30px);
+  }
+  
+  .toggle:checked ~ .card-side:before {
+    text-decoration: none;
+  }
+  
+  .toggle:checked ~ .card-side:after {
+    text-decoration: underline;
+  }
+  
+  /* card */ 
+  
+  .flip-card__inner {
+    width: 300px;
+    height: 350px;
+    position: relative;
+    background-color: transparent;
+    perspective: 1000px;
+      /* width: 100%;
+      height: 100%; */
+    text-align: center;
+    transition: transform 0.8s;
+    transform-style: preserve-3d;
+  }
+  
+  .toggle:checked ~ .flip-card__inner {
+    transform: rotateY(180deg);
+  }
+  
+  .toggle:checked ~ .flip-card__front {
+    box-shadow: none;
+  }
+  
+  .flip-card__front, .flip-card__back {
+    padding: 20px;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    background: lightgrey;
+    gap: 20px;
+    border-radius: 5px;
+    border: 2px solid var(--main-color);
+    box-shadow: 4px 4px var(--main-color);
+  }
+  
+  .flip-card__back {
+    width: 100%;
+    transform: rotateY(180deg);
+  }
+  
+  .flip-card__form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+  }
+  
+  .title {
+    margin: 20px 0 20px 0;
+    font-size: 25px;
+    font-weight: 900;
+    text-align: center;
+    color: var(--main-color);
+  }
+  
+  .flip-card__input {
+    width: 250px;
+    height: 40px;
+    border-radius: 5px;
+    border: 2px solid var(--main-color);
+    background-color: var(--bg-color);
+    box-shadow: 4px 4px var(--main-color);
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--font-color);
+    padding: 5px 10px;
+    outline: none;
+  }
+  
+  .flip-card__input::placeholder {
+    color: var(--font-color-sub);
+    opacity: 0.8;
+  }
+  
+  .flip-card__input:focus {
+    border: 2px solid var(--input-focus);
+  }
+  
+  .flip-card__btn:active, .button-confirm:active {
+    box-shadow: 0px 0px var(--main-color);
+    transform: translate(3px, 3px);
+  }
+  
+  .flip-card__btn {
+    margin: 20px 0 20px 0;
+    width: 120px;
+    height: 40px;
+    border-radius: 5px;
+    border: 2px solid var(--main-color);
+    background-color: var(--bg-color);
+    box-shadow: 4px 4px var(--main-color);
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--font-color);
+    cursor: pointer;
+}
+.forgot-password {
+    color: Blue;
+    font-size: 14px;
+    text-align: right;
+    margin-top: 10px;
+} 
+
+
+
+footer {
+    background-color: black;
+    color: #fff;
+    padding: 30px 10%;
+}
+
+.footer-content{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+footer h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
+    font-weight: bold;
+
+}
+
+footer p, footer ul {
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.about h3, .contact h3 {
+    text-align: center;
+    text-decoration: underline;
+}
+
+.footer-bottom {
+    text-align: center;
+    margin-top: 20px;
+    border-top: 1px solid #444;
+    padding-top: 10px;
+    font-size: 14px;
+}
+.contact .team {
+    display: flex;
+    justify-content: space-around;
+    gap: 30px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.contact .team-member {
+    text-align: center;
+    position: relative;
+    width: 120px;  /* Adjust width as necessary */
+}
+
+.contact .team-member img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+.contact .team-member img:hover {
+    transform: scale(1.2);  /* Zoom in effect */
+    box-shadow: 0 8px 20px rgb(255, 255, 255);  /* Shadow effect */
+}
+
+.contact .team-member .name {
+    margin-top: 10px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #555;
+    transition: color 0.3s ease;
+}
+
+.contact .team-member img:hover + .name {
+    color: #e78f38;  /* Change color when hovering over the image */
+}
+
+/* Optional: Add a small effect to the email when hovered */
+.contact .team-member:hover .name {
+    font-weight: bold;
+    text-decoration: none;
+}
+
+
+@media (max-width: 768px) {
+    .footer-content {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .footer-content div {
+        margin-bottom: 20px;
+    }
+}
+
+.social-login {
+    text-align: center;
+    margin-top: 10px;
+}
+.social-login p{
+    font-size: 16px;
+    color: black;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+.google-login-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+    background-color: Red;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.google-login-btn img {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+}
+
+.google-login-btn:hover {
+    background-color: #357AE8;
+    transform: scale(1.05);
+}
+
+.google-login-btn:active {
+    transform: scale(0.95);
+}
+
+.remember-forgot {
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+    width: 100%;
+    font-size: 14px;
+    font-weight: bolder;
+    margin-top: 15px;
+    color: var(--font-color-sub);
+    font-family: 'Helvetica Neue', sans-serif; 
+}
+
+
+.remember-me {
+    display: flex;
+    align-items: center;
+    gap: 5px; 
+}
+
+.remember-me input {
+    width: 15px;
+    height: 15px;
+    cursor: pointer;
+}
+
+.forgot-password {
+    display: flex;
+    align-items: center;
+    margin-top: 1px;
+    justify-content: space-evenly;
+    font-size: 14px;
+    font-weight: bolder;
+    color: blue;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease, text-decoration 0.3s ease; 
+}
+
+
+.forgot-password:hover {
+    color: var(--main-color) !important; 
+    text-decoration: underline !important; 
+}
+
+.login-link {
+    color: blue;
+}
+
+.login-link:hover {
+    text-decoration: underline;
+    font-weight: bold;
+}
