@@ -4,7 +4,7 @@ import cmd
 import sys
 from models.base_model import BaseModel
 from models.__init__ import storage
-from models.clients import Client
+from Foodify.models.client import Client
 
 
 class FoodifyCommand(cmd.Cmd):
