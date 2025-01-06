@@ -3,13 +3,13 @@
 from os import getenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
-from base_model import Base
-from client import Client
-from menu_item import MenuItem
-from order_item import OrderItem
-from order import Order
-from restaurant import Restaurant
-from review import Review
+from models.base_model import Base
+
+from models.menu_item import MenuItem
+from models.order_item import OrderItem
+from models.order import Order
+from models.restaurant import Restaurant
+from models.review import Review
 
 
 class DBStorage:
@@ -21,10 +21,16 @@ class DBStorage:
     def __init__(self):
         """Initializes the DBStorage engine"""
 
-        USER = getenv("Foodify_MYSQL_USER")
-        PWD = getenv("Foodify_MYSQL_PWD")
-        HOST = getenv("Foodify_MYSQL_HOST")
-        DB = getenv("Foodify_MYSQL_DB")
+        # USER = getenv("Foodify_MYSQL_USER")
+        # PWD = getenv("Foodify_MYSQL_PWD")
+        # HOST = getenv("Foodify_MYSQL_HOST")
+        # DB = getenv("Foodify_MYSQL_DB")
+        # ENV = getenv("Foodify_ENV")
+
+        USER = "root"
+        PWD = "root"
+        HOST = "127.0.0.1"
+        DB = "foodify_db"
         ENV = getenv("Foodify_ENV")
 
         # Create the connection string using environment variables
@@ -42,6 +48,7 @@ class DBStorage:
         """Queries the database for all objects of a given class"""
         objects = {}
         if cls is None:
+            from models.client import Client
             # Query all types of objects
             for model_class in [Client]:
                 for obj in self.session.query(model_class).all():

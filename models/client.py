@@ -2,17 +2,19 @@
 """Client model module"""
 from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
-from base_model import BaseModel, Base
+from models.base_model import BaseModel, Base
+from flask_login import UserMixin
+from app import login_manager
 
-class Client(BaseModel, Base):
+class Client(BaseModel, Base, UserMixin):
     """Client model"""
     
     __tablename__ = 'clients'
 
-    username = Column(String(50), nullable=False)
+    username = Column(String(70), nullable=False)
+    address = Column(String(70), nullable=False)  # Combined address field
     email = Column(String(100), unique=True, nullable=False)
-    password_hash = Column(String(255), nullable=False)
-    address = Column(String(500), nullable=False)  # Combined address field
+    password = Column(String(128), nullable=False)
 
     reviews = relationship("Review", back_populates="client", cascade="all, delete-orphan")
     orders = relationship("Order", back_populates="client", cascade="all, delete-orphan")
