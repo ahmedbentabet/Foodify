@@ -3,104 +3,143 @@
 from os import getenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
-from models.base_model import Base
+from models.base_model import Base, BaseModel
+from models.client import Client
 from models.menu_item import MenuItem
 from models.order_item import OrderItem
 from models.order import Order
 from models.restaurant import Restaurant
 from models.review import Review
 
+from typing import Dict, Any, Optional, List
+
+
+classes = [Client, Restaurant, MenuItem, Review, Order, OrderItem]
+
 
 class DBStorage:
-    """DBStorage class"""
+    """Database Storage Class"""
 
-    engine = None  # Holds the SQLAlchemy engine (connection manager)
-    session = None  # Holds the database session (workspace)
+    __engine = None
+    __session = None
 
     def __init__(self):
-        """Initializes the DBStorage engine"""
+        """Initialize database connection"""
+        self.environment = getenv("FOOD_ENV", "development")
+        user = getenv("FOOD_MYSQL_USER", "root")
+        pwd = getenv("FOOD_MYSQL_PWD", "root")
+        host = getenv("FOOD_MYSQL_HOST", "127.0.0.1")
+        db = getenv("FOOD_MYSQL_DB", "foodify_db")
 
-        # USER = getenv("Foodify_MYSQL_USER")
-        # PWD = getenv("Foodify_MYSQL_PWD")
-        # HOST = getenv("Foodify_MYSQL_HOST")
-        # DB = getenv("Foodify_MYSQL_DB")
-        # ENV = getenv("Foodify_ENV")
+        self.__engine = create_engine(
+            f"mysql+mysqldb://{user}:{pwd}@{host}/{db}", pool_pre_ping=True
+        )
 
-        USER = "root"
-        PWD = "root"
-        HOST = "127.0.0.1"
-        DB = "foodify_db"
-        ENV = getenv("Foodify_ENV")
+    def reload(self) -> None:
+        """Create tables and session"""
+        Base.metadata.create_all(self.__engine)
+        session_factory = sessionmaker(bind=self.__engine,
+                                       expire_on_commit=False)
+        Session = scoped_session(session_factory)
+        self.__session = Session()
 
-        # Create the connection string using environment variables
-        conn_str = f"mysql+mysqldb://{USER}:{PWD}@{HOST}/{DB}"
+    def new(self, obj: BaseModel) -> None:
+        """Add object to current database session"""
+        if obj:
+            self.__session.add(obj)
 
-        # Create the SQLAlchemy engine (connection manager)
-        self.engine = create_engine(conn_str, pool_pre_ping=True)
+    def save(self) -> None:
+        """Commit changes to database"""
+        try:
+            self.__session.commit()
+        except Exception as e:
+            self.__session.rollback()
+            raise e
 
-        if ENV == "test":
-            # Drop all tables for testing
-            Base.metadata.drop_all(self.engine)
-            print("All tables dropped because Foodify_ENV is set to 'test'.")
+    def delete(self, obj: Optional[BaseModel] = None) -> None:
+        """Delete object from current database session"""
+        if obj:
+            self.__session.delete(obj)
 
-    def all(self, cls=None):
-        """Queries the database for all objects of a given class"""
+    def get(self, cls: Any, id: str) -> Optional[BaseModel]:
+        """Retrieve object by class and id"""
+        if cls and id:
+            return self.__session.query(cls).filter(cls.id == id).first()
+        return None
+
+    def all(
+        self, cls: Optional[Any] = None, page: int = -1, per_page: int = -1
+    ) -> Dict[str, BaseModel]:
+        """Query all objects of given class with pagination"""
         objects = {}
+
         if cls is None:
-            from models.client import Client
             # Query all types of objects
-            classes = [Client, Order, OrderItem, MenuItem]
             for model_class in classes:
-                for obj in self.session.query(model_class).all():
+                for obj in self.__session.query(model_class).all():
                     key = f"{model_class.__name__}.{obj.id}"
                     objects[key] = obj
         else:
-            # Query only objects of the specified class
-            for obj in self.session.query(cls).all():
-                key = f"{cls.__name__}.{obj.id}"
-                objects[key] = obj
+            if page < 0 and per_page < 0:
+                # Query only objects of the specified class
+                for obj in self.__session.query(cls).all():
+                    key = f"{cls.__name__}.{obj.id}"
+                    objects[key] = obj
+            else:
+                # Query with pagination
+                query = self.__session.query(cls)
+                total = query.count()
+                offset = (page - 1) * per_page
+                items = query.offset(offset).limit(per_page).all()
+
+                for obj in items:
+                    key = f"{obj.__class__.__name__}.{obj.id}"
+                    objects[key] = obj
+
+                return {
+                    "items": objects,
+                    "page": page,
+                    "per_page": per_page,
+                    "total": total,
+                }
+
         return objects
 
-    def new(self, obj):
-        """Adds an object to the current database session"""
-        self.session.add(obj)
+    def search(
+        self, cls: Any, filters: Dict[str, Any],
+        nested_filters: Dict[str, Dict] = None
+    ) -> List[BaseModel]:
+        """
+        Enhanced search method with nested relationship filtering
 
-    def save(self):
-        """Commits all changes of the current database session"""
-        self.session.commit()
+        Example:
+        filters = {"name": "Pizza Hut"}
+        nested_filters = {"menu_items": {"name": "juice"}}
+        """
+        query = self.__session.query(cls)
 
-    def delete(self, obj=None):
-        """Deletes an object from the current database session"""
-        if obj is not None:
-            self.session.delete(obj)
+        # Apply main filters
+        for key, value in filters.items():
+            if hasattr(cls, key):
+                query = query.filter(getattr(cls, key).ilike(f"%{value}%"))
 
-    def reload(self):
-        """Creates all tables and a new session"""
+        # Apply nested filters
+        if nested_filters:
+            for relation, rel_filters in nested_filters.items():
+                if hasattr(cls, relation):
+                    for key, value in rel_filters.items():
+                        query = query.filter(
+                            getattr(cls, relation).any(**{key: value})
+                            )
 
-        # Create all tables
-        Base.metadata.create_all(self.engine)
+        return query.all()
 
-        # Create a session factory
-        session_factory = sessionmaker(bind=self.engine, expire_on_commit=False)
+    def close(self) -> None:
+        """Close current session"""
+        self.__session.close()
 
-        # Create a thread-safe session using scoped_session
-        self.session = scoped_session(session_factory)
-
-    def close(self):
-        """Call remove() method on the private session attribute"""
-        self.session.remove()
-
-    def get_attributes(self, cls, obj_id):
-        """dssssssssdqsd"""
-        obj = self.session.query(cls).get(obj_id)
-        if obj:
-            return obj.__dict__
-        else:
-            return None
-
-    def get(self, cls, id):
-        """Get an object by class and ID"""
-        if cls and id:
-            key = f"{cls.__name__}.{id}"
-            return self.all(cls).get(key)
-        return None
+    def count(self, cls: Optional[Any] = None) -> int:
+        """Count number of objects in storage"""
+        if cls:
+            return self.__session.query(cls).count()
+        return 0
