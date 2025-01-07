@@ -45,8 +45,8 @@ class SignUpForm(FlaskForm):
 
 @signup_routes.route("/signup", methods=["GET", "POST"])
 def signup():
-    # if current_user.is_authenticated:
-    #     return redirect(url_for("welcome_routes.welcome"))
+    if current_user.is_authenticated:
+        return redirect(url_for("welcome_routes.welcome"))
     form = SignUpForm()
     if form.validate_on_submit():
         from models.client import Client
