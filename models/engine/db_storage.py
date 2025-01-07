@@ -4,7 +4,6 @@ from os import getenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 from models.base_model import Base
-
 from models.menu_item import MenuItem
 from models.order_item import OrderItem
 from models.order import Order
@@ -50,7 +49,8 @@ class DBStorage:
         if cls is None:
             from models.client import Client
             # Query all types of objects
-            for model_class in [Client]:
+            classes = [Client, Order, OrderItem, MenuItem]
+            for model_class in classes:
                 for obj in self.session.query(model_class).all():
                     key = f"{model_class.__name__}.{obj.id}"
                     objects[key] = obj
@@ -97,3 +97,10 @@ class DBStorage:
             return obj.__dict__
         else:
             return None
+
+    def get(self, cls, id):
+        """Get an object by class and ID"""
+        if cls and id:
+            key = f"{cls.__name__}.{id}"
+            return self.all(cls).get(key)
+        return None

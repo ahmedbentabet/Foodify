@@ -4,7 +4,7 @@ from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
 from models.base_model import BaseModel, Base
 from flask_login import UserMixin
-from app import login_manager
+# from app import login_manager
 
 class Client(BaseModel, Base, UserMixin):
     """Client model"""

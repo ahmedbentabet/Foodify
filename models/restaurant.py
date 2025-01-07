@@ -13,7 +13,7 @@ class Restaurant(BaseModel, Base):
 
     reviews = relationship("Review", back_populates="restaurant", cascade="all, delete, save-update")
     menu_items = relationship("MenuItem", back_populates="restaurant", cascade="all, delete-orphan")
-    orders = relationship("Order", back_populates="restaurant", cascade="all, delete-orphan")
+    # orders = relationship("Order", back_populates="restaurant", cascade="all, delete-orphan")
 
     def __init__(self, *args, **kwargs):
         """Initialize restaurant"""
