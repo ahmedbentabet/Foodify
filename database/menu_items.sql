@@ -1,4 +1,10 @@
 INSERT INTO menu_items (id, restaurant_id, name, price, is_available, image_url, created_at, updated_at) VALUES
+('2a1d9e24-cc7b-11ef-981d-000d3ad5d001', '5a1d9e24-cc7a-11ef-981d-000d3ad5d72a', 'Double Beef Burger', 15.99, 1, 'static/images/menu_items/Burger_Blast/Double_Beef_Burger.png', NOW(), NOW()),
+('2a1d9e24-cc7b-11ef-981d-000d3ad5d002', '5a1d9e24-cc7a-11ef-981d-000d3ad5d72a', 'Crispy Chicken Strips', 12.99, 1, 'static/images/menu_items/Burger_Blast/Crispy_Chicken_Strips.png', NOW(), NOW()),
+('2a1d9e24-cc7b-11ef-981d-000d3ad5d003', '5a1d9e24-cc7a-11ef-981d-000d3ad5d72a', 'Cheesy Fries', 6.99, 1, 'static/images/menu_items/Burger_Blast/Cheesy_Fries.png', NOW(), NOW()),
+('2a1d9e24-cc7b-11ef-981d-000d3ad5d004', '5a1d9e24-cc7a-11ef-981d-000d3ad5d72a', 'Onion Rings', 5.99, 1, 'static/images/menu_items/Burger_Blast/Onion_Rings.png', NOW(), NOW()),
+('2a1d9e24-cc7b-11ef-981d-000d3ad5d005', '5a1d9e24-cc7a-11ef-981d-000d3ad5d72a', 'Chocolate Shake', 5.99, 1, 'static/images/menu_items/Burger_Blast/Chocolate_Shake.png', NOW(), NOW()),
+
 ('2a1d9e24-cc7b-11ef-981d-000d3ad5d006', 'f72c4db3-cc7a-11ef-981d-000d3ad5d72b', 'Grilled Chicken Salad', 11.99, 1, 'static/images/menu_items/Green_Plate/Grilled_Chicken_Salad.png', NOW(), NOW()),
 ('2a1d9e24-cc7b-11ef-981d-000d3ad5d007', 'f72c4db3-cc7a-11ef-981d-000d3ad5d72b', 'Lentil Soup', 6.99, 1, 'static/images/menu_items/Green_Plate/Lentil_Soup.png', NOW(), NOW()),
 ('2a1d9e24-cc7b-11ef-981d-000d3ad5d008', 'f72c4db3-cc7a-11ef-981d-000d3ad5d72b', 'Quinoa & Avocado Bowl', 13.99, 1, 'static/images/menu_items/Green_Plate/Quinoa_&_Avocado_Bowl.png', NOW(), NOW()),
