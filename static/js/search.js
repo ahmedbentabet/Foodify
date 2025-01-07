@@ -29,32 +29,54 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  function updateMealsSection(meals) {
-    mealsSection.innerHTML = meals
-        .map(
-            (meal) => `
-                <div class="meal" data-meal-id="${meal.id}">
-                    <img src="/static/images/menu_items/${meal.restaurant_name}/${meal.image_name}" 
-                         alt="${meal.name}" />
-                    <hr />
-                    <div class="meal-info">
-                        <h3>${meal.name}</h3>
-                        <p>${meal.description || ''}</p>
-                        <div class="meal-footer">
-                            <span class="price" data-price="${meal.price}">$${meal.price}</span>
-                            <div class="quantity">
-                                <img src="/static/images/reduce.png" class="decrease" alt="Reduce quantity" />
-                                <span class="quantity-value" data-quantity="0">0</span>
-                                <img src="/static/images/add.png" class="increase" alt="Increase quantity" />
-                            </div>
+  function sanitizeName(name) {
+    return name.replace(/\s+/g, '_');
+  }
+
+  async function findImage(basePath, fileName) {
+    const extensions = ['jpeg', 'jpg', 'png'];
+    for (const ext of extensions) {
+        try {
+            const response = await fetch(`../static/images/menu_items/${basePath}/${fileName}.${ext}`);
+            if (response.ok) {
+                return `${fileName}.${ext}`;
+            }
+        } catch (error) {
+            continue;
+        }
+    }
+    return 'default.png'; // Fallback image
+  }
+
+  async function updateMealsSection(meals) {
+    const mealElements = await Promise.all(meals.map(async (meal) => {
+        const imagePath = await findImage(
+            sanitizeName(meal.restaurant_name),
+            sanitizeName(meal.name)
+        );
+
+        return `
+            <div class="meal" data-meal-id="${meal.id}">
+                <img src="../static/images/menu_items/${sanitizeName(meal.restaurant_name)}/${imagePath}"
+                     alt="${meal.name}"
+                     onerror="this.src='../static/images/default.png'" />
+                <hr />
+                <div class="meal-info">
+                    <h3>${meal.name}</h3>
+                    <div class="meal-footer">
+                        <span class="price" data-price="${meal.price}">$${meal.price}</span>
+                        <div class="quantity">
+                            <img src="../static/images/reduce.png" class="decrease" alt="Reduce quantity" />
+                            <span class="quantity-value" data-quantity="0">0</span>
+                            <img src="../static/images/add.png" class="increase" alt="Increase quantity" />
                         </div>
                     </div>
                 </div>
-            `
-        )
-        .join("");
+            </div>
+        `;
+    }));
 
-    // Reattach event listeners for quantity controls
+    mealsSection.innerHTML = mealElements.join('');
     attachQuantityListeners();
   }
 
