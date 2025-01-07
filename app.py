@@ -11,7 +11,7 @@ foodify_app.config['SECRET_KEY']='0e12c1e7483fe5a5e0088620aa95b29d265213904ca0fb
 
 # Initialize login manager before importing routes
 login_manager = LoginManager(foodify_app)
-login_manager.login_view = "login"
+login_manager.login_view = "login_routes.login"  # Updated this line
 login_manager.login_message_category = "info"
 bcrypt = Bcrypt(foodify_app)
 
@@ -29,14 +29,19 @@ def load_user(user_id):
 
 # Import routes after login_manager is initialized
 from routes.login import login_routes
-# from routes.login import logout_routes
+from routes.login import logout_routes
+from routes.login import setting_routes
 from routes.signup import signup_routes
 from routes.welcome import welcome_routes
+from routes.order import order_routes
 
 # Register blueprints
 foodify_app.register_blueprint(login_routes)
+foodify_app.register_blueprint(logout_routes)
+foodify_app.register_blueprint(setting_routes)
 foodify_app.register_blueprint(signup_routes)
 foodify_app.register_blueprint(welcome_routes)
+foodify_app.register_blueprint(order_routes)
 
 if __name__ == "__main__":
     foodify_app.run(debug=True)
