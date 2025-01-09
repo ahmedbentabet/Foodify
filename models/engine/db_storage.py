@@ -32,14 +32,19 @@ class DBStorage:
         db = getenv("FOOD_MYSQL_DB", "foodify_db")
 
         self.__engine = create_engine(
-            f"mysql+mysqldb://{user}:{pwd}@{host}/{db}", pool_pre_ping=True
+            f"mysql+mysqldb://{user}:{pwd}@{host}/{db}",
+            pool_pre_ping=True,
+            pool_recycle=3600
         )
 
     def reload(self) -> None:
         """Create tables and session"""
         Base.metadata.create_all(self.__engine)
-        session_factory = sessionmaker(bind=self.__engine,
-                                        expire_on_commit=False)
+        session_factory = sessionmaker(
+            bind=self.__engine,
+            expire_on_commit=False,
+            autoflush=True
+        )
         Session = scoped_session(session_factory)
         self.__session = Session()
 
@@ -73,43 +78,21 @@ class DBStorage:
             return self.__session.query(cls).filter(cls.id == id).first()
         return None
 
-    def all(
-        self, cls: Optional[Any] = None, page: int = -1, per_page: int = -1
-    ) -> Dict[str, BaseModel]:
-        """Query all objects of given class with pagination"""
-        objects = {}
-
-        if cls is None:
-            # Query all types of objects
-            for model_class in classes:
-                for obj in self.__session.query(model_class).all():
-                    key = f"{model_class.__name__}.{obj.id}"
-                    objects[key] = obj
-        else:
-            if page < 0 and per_page < 0:
-                # Query only objects of the specified class
-                for obj in self.__session.query(cls).all():
-                    key = f"{cls.__name__}.{obj.id}"
-                    objects[key] = obj
+    def all(self, cls=None):
+        """Query objects"""
+        try:
+            if cls:
+                objects = self.__session.query(cls).all()
             else:
-                # Query with pagination
-                query = self.__session.query(cls)
-                total = query.count()
-                offset = (page - 1) * per_page
-                items = query.offset(offset).limit(per_page).all()
+                objects = []
+                for c in classes:
+                    objects.extend(self.__session.query(c).all())
 
-                for obj in items:
-                    key = f"{obj.__class__.__name__}.{obj.id}"
-                    objects[key] = obj
+            return {f"{obj.__class__.__name__}.{obj.id}": obj for obj in objects}
 
-                return {
-                    "items": objects,
-                    "page": page,
-                    "per_page": per_page,
-                    "total": total,
-                }
-
-        return objects
+        except Exception as e:
+            self.__session.rollback()
+            raise e
 
     def search(
         self, cls: Any, filters: Dict[str, Any],

@@ -20,10 +20,10 @@ def update_cart():
 
         # Validate MenuItem
         menu_item = storage.get(MenuItem, menu_item_id)
-        if not menu_item or not menu_item.is_available:
-            return jsonify({'error': 'Item not available'}), 400
+        if not menu_item:
+            return jsonify({'error': 'Item not found'}), 404
 
-        # Get active order
+        # Get/create active order
         active_order = None
         orders = storage.all(Order).values()
         for order in orders:
@@ -31,8 +31,9 @@ def update_cart():
                 active_order = order
                 break
 
-        # Create new order if needed
-        if not active_order and action == 'increase':
+        if not active_order:
+            if action == 'decrease':
+                return jsonify({'error': 'No active order found'}), 400
             active_order = Order(
                 client_id=current_user.id,
                 status='active',
@@ -41,83 +42,74 @@ def update_cart():
             storage.new(active_order)
             storage.save()
 
-        # Handle order items
-        if active_order:
-            # Find existing order item
-            order_item = None
-            for item in active_order.order_items:
-                if item.menu_item_id == menu_item_id:
-                    order_item = item
-                    break
+        # Find order item
+        order_item = None
+        for item in active_order.order_items:
+            if item.menu_item_id == menu_item_id:
+                order_item = item
+                break
 
-            if action == 'increase':
-                if order_item:
-                    order_item.quantity += 1
-                else:
-                    order_item = OrderItem(
-                        order_id=active_order.id,
-                        menu_item_id=menu_item_id,
-                        quantity=1
-                    )
-                    storage.new(order_item)
-                active_order.total_price = float(active_order.total_price or 0) + float(menu_item.price)
+        if action == 'decrease':
+            if not order_item:
+                return jsonify({'error': 'Item not in cart'}), 400
 
-            elif action == 'decrease' and order_item:
-                if order_item.quantity > 1:
-                    order_item.quantity -= 1
-                    active_order.total_price = float(active_order.total_price) - float(menu_item.price)
-                else:
-                    # Properly remove order item
-                    active_order.order_items.remove(order_item)
-                    storage.delete(order_item)
-                    active_order.total_price = float(active_order.total_price) - float(menu_item.price)
+            # Calculate new price before updating quantity
+            new_total = float(active_order.total_price) - float(menu_item.price)
 
-                    # Check if order is empty
-                    if not active_order.order_items:
-                        active_order.status = 'cancelled'
-                        storage.delete(active_order)
-                        return jsonify({
-                            'success': True,
-                            'order': {
-                                'total_price': 0,
-                                'status': 'cancelled'
-                            },
-                            'item': {
-                                'id': menu_item.id,
-                                'quantity': 0
-                            }
-                        })
+            if order_item.quantity <= 1:
+                # Remove item and update order
+                active_order.order_items.remove(order_item)
+                storage.delete(order_item)
+                active_order.total_price = new_total
 
-            storage.save()
-
-            # Only return response if order still exists
-            if active_order.status != 'cancelled':
-                return jsonify({
-                    'success': True,
-                    'order': {
-                        'id': active_order.id,
-                        'total_price': float(active_order.total_price),
-                        'status': active_order.status
-                    },
-                    'item': {
-                        'id': menu_item.id,
-                        'quantity': order_item.quantity if order_item else 0
-                    }
-                })
+                # If no items left, cancel order
+                if not active_order.order_items:
+                    active_order.status = 'cancelled'
+                    storage.delete(active_order)
+                    storage.save()
+                    return jsonify({
+                        'success': True,
+                        'order': None,
+                        'item': {
+                            'id': menu_item_id,
+                            'quantity': 0
+                        }
+                    })
             else:
-                return jsonify({
-                    'success': True,
-                    'order': None,
-                    'item': {
-                        'id': menu_item.id,
-                        'quantity': 0
-                    }
-                })
+                # Decrease quantity and update price
+                order_item.quantity -= 1
+                active_order.total_price = new_total
 
-        return jsonify({'error': 'Could not process order'}), 400
+        elif action == 'increase':
+            if order_item:
+                order_item.quantity += 1
+            else:
+                order_item = OrderItem(
+                    order_id=active_order.id,
+                    menu_item_id=menu_item_id,
+                    quantity=1
+                )
+                storage.new(order_item)
+            active_order.total_price = float(active_order.total_price or 0) + float(menu_item.price)
+
+        storage.save()
+
+        return jsonify({
+            'success': True,
+            'order': {
+                'id': active_order.id,
+                'total_price': float(active_order.total_price),
+                'status': active_order.status
+            },
+            'item': {
+                'id': menu_item_id,
+                'quantity': order_item.quantity if order_item else 0
+            }
+        })
 
     except Exception as e:
         print(f"Error updating cart: {e}")
+        storage.rollback()
         return jsonify({'error': str(e)}), 500
 
 
@@ -128,27 +120,28 @@ def get_cart_state():
     try:
         # Get active order
         active_order = None
+        menu_items = {}
+        
         orders = storage.all(Order).values()
         for order in orders:
             if order.client_id == current_user.id and order.status == 'active':
                 active_order = order
+                # Map quantities to menu items
+                for item in order.order_items:
+                    menu_items[item.menu_item_id] = item.quantity
                 break
 
-        if active_order:
-            return jsonify({
-                'items': [{
-                    'menu_item_id': item.menu_item_id,
-                    'quantity': item.quantity
-                } for item in active_order.order_items],
-                'order': {
-                    'total_price': float(active_order.total_price)
-                }
-            })
-
         return jsonify({
-            'items': [],
-            'order': None
+            'items': [{
+                'menu_item_id': menu_item_id,
+                'quantity': quantity
+            } for menu_item_id, quantity in menu_items.items()],
+            'order': {
+                'id': active_order.id if active_order else None,
+                'total_price': float(active_order.total_price) if active_order else 0
+            }
         })
 
     except Exception as e:
+        print(f"Error getting cart state: {e}")
         return jsonify({'error': str(e)}), 500
