@@ -1,4 +1,6 @@
+// Global state
 let cartState = {};
+let isInitialized = false;
 
 let currentPage = 1;
 let totalPages = 1;
@@ -327,43 +329,50 @@ document.addEventListener("DOMContentLoaded", async function () {
 });
 
 async function initializeCartState() {
+    if (isInitialized) return cartState;
+
     try {
         const response = await fetch("/api/v1/cart/state");
         if (response.ok) {
             const data = await response.json();
 
-            // Update cart badge
-            if (data.order) {
-                updateCartBadge(data.order.total_price);
-            }
-
-            // Initialize cartState with quantities
+            // Set cart state
             cartState = data.items.reduce((acc, item) => {
                 acc[item.menu_item_id] = item.quantity;
                 return acc;
             }, {});
 
-            // Update UI quantities for visible meals
-            document.querySelectorAll('.meal').forEach(meal => {
-                const mealId = meal.dataset.mealId;
-                const quantity = cartState[mealId] || 0;
-                const quantitySpan = meal.querySelector('.quantity-value');
-                if (quantitySpan) {
-                    quantitySpan.textContent = quantity;
-                    quantitySpan.setAttribute('data-quantity', quantity);
-                }
-            });
+            // Update UI
+            updateCartBadge(data.order?.total_price || 0);
+            updateAllQuantities();
 
+            isInitialized = true;
             return cartState;
         }
     } catch (error) {
-        console.error("Error loading cart state:", error);
+        console.error("Cart state error:", error);
     }
     return {};
+}
+
+// Update all quantities in UI
+function updateAllQuantities() {
+    document.querySelectorAll('.meal').forEach(meal => {
+        const mealId = meal.dataset.mealId;
+        const quantity = cartState[mealId] || 0;
+        updateQuantityDisplay(mealId, quantity);
+    });
 }
 
 // Call initializeCartState when page loads and after login
 document.addEventListener("DOMContentLoaded", async function() {
     await initializeCartState();
     // ... rest of your initialization code
+});
+
+// Re-initialize on visibility change
+document.addEventListener("visibilitychange", async () => {
+    if (document.visibilityState === "visible") {
+        await initializeCartState();
+    }
 });
