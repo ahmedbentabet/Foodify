@@ -28,9 +28,8 @@ def load_user(user_id):
     return None
 
 # Import routes after login_manager is initialized
-from routes.login import login_routes
-from routes.login import logout_routes
-from routes.login import setting_routes
+from routes.login import login_routes, logout_routes
+from routes.user_setting import setting_routes
 from routes.signup import signup_routes
 from routes.welcome import welcome_routes
 from routes.order import order_routes
