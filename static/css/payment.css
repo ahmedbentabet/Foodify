@@ -2,15 +2,13 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: sans-serif;
-    text-decoration: none;
-    list-style: none;
-    scroll-behavior: smooth;
+    font-family: "Helvetica Neue", sans-serif;
 }
 
 body {
-    background: linear-gradient(#666, #444);
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    background: linear-gradient(#111, #222);
+    min-height: 100vh;
+    color: #fff;
 }
 
 nav {
@@ -80,6 +78,24 @@ nav ul a img:hover {
     transform: scale(1.35);
 }
 
+nav button {
+    background: #e78f38;
+    border: none;
+    color: #fff;
+    padding: 10px 30px;
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: 20px;
+    transition: transform 0.3s ease, background 0.3s ease;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+nav button:hover {
+    transform: scale(0.95);
+    background: #f79c42;
+}
+
 
 .cart-icon-container {
     position: relative;
@@ -105,106 +121,93 @@ nav ul a img:hover {
     display: none;
 }
 
-
-
-nav button {
-    background: #e78f38;
-    border: none;
-    color: #fff;
-    padding: 10px 30px;
-    font-size: 15px;
-    font-weight: 600;
-    border-radius: 20px;
-    transition: transform 0.3s ease, background 0.3s ease;
-    cursor: pointer;
-    margin-left: 10px;
+.payment-container {
+    max-width: 800px;
+    margin: 100px auto;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
 }
 
-nav button:hover {
-    transform: scale(0.95);
-    background: #f79c42;
+.order-summary {
+    margin-bottom: 30px;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
 }
 
-.profile-container {
+.total-section {
+    margin-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 20px;
+}
+
+.cart-items {
+    margin: 20px 0;
+}
+
+.cart-item {
     display: flex;
-    margin-top: 80px;
-    padding: 20px;
-    min-height: calc(100vh - 80px);
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.profile-sidebar {
-    width: 300px;
-    padding: 20px;
-    background: rgba(255, 255, 255, 0.568);
-    border-radius: 10px;
-    margin-right: 20px;
-    text-align: center;
+.credit-card-form {
+    margin: 20px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
-.profile-photo {
-    margin-bottom: 20px;
-}
-
-.profile-photo img {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-bottom: 10px;
-}
-
-.upload-btn {
-    display: inline-block;
-    padding: 8px 16px;
-    background: #e78f38;
-    color: white;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background 0.3s ease;
-}
-
-.upload-btn:hover {
-    background: #f79c42;
-}
-
-.profile-content {
-    flex: 1;
-    padding: 20px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
-}
-
-.profile-form {
-    max-width: 500px;
-    margin: 20px auto;
-}
-
-.form-group {
-    margin-bottom: 20px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 5px;
-}
-
-.form-group input {
-    width: 100%;
-    padding: 10px;
+.credit-card-form input {
+    padding: 12px;
     border: none;
     border-radius: 5px;
     background: rgba(255, 255, 255, 0.1);
     color: white;
 }
 
-.form-group input[readonly] {
-    background-color: #e9ecef;  /* Bootstrap's default gray for readonly inputs */
-    cursor: not-allowed;
+.card-details {
+    display: flex;
+    gap: 10px;
 }
 
-button {
+.card-details input {
+    width: 50%;
+}
+
+.payment-options label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 15px 0;
+}
+
+.payment-options input[type="radio"] {
+    accent-color: #e78f38;
+}
+
+.payment-section {
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+}
+
+.payment-options {
+    margin: 20px 0;
+}
+
+.payment-options label {
+    display: block;
+    margin: 10px 0;
+    cursor: pointer;
+}
+
+#confirm-payment {
     width: 100%;
-    padding: 12px;
+    padding: 15px;
     background: #e78f38;
     border: none;
     border-radius: 5px;
@@ -214,7 +217,7 @@ button {
     transition: background 0.3s ease;
 }
 
-button:hover {
+#confirm-payment:hover {
     background: #f79c42;
 }
 
