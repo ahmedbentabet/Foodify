@@ -39,7 +39,7 @@ class DBStorage:
         """Create tables and session"""
         Base.metadata.create_all(self.__engine)
         session_factory = sessionmaker(bind=self.__engine,
-                                       expire_on_commit=False)
+                                        expire_on_commit=False)
         Session = scoped_session(session_factory)
         self.__session = Session()
 
@@ -54,12 +54,18 @@ class DBStorage:
             self.__session.commit()
         except Exception as e:
             self.__session.rollback()
+            print(f"Error saving changes: {e}")  # Added error logging
             raise e
 
     def delete(self, obj: Optional[BaseModel] = None) -> None:
         """Delete object from current database session"""
         if obj:
-            self.__session.delete(obj)
+            try:
+                self.__session.delete(obj)
+                self.__session.flush()  # Added flush() call
+            except Exception as e:
+                self.__session.rollback()
+                print(f"Error deleting object: {e}")  # Added error logging
 
     def get(self, cls: Any, id: str) -> Optional[BaseModel]:
         """Retrieve object by class and id"""
