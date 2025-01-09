@@ -28,14 +28,14 @@ def search_meals():
     # Get meals from database
     meals = storage.all(MenuItem).values()
 
-    # Filter meals
+    # Filter meals with improved restaurant name matching
     filtered_meals = []
     for meal in meals:
         try:
             name_matches = query in meal.name.lower()
             restaurant_matches = (
                 restaurant == "All" or
-                meal.restaurant.name == restaurant  # Remove strip() here
+                meal.restaurant.name.replace('&', 'and') == restaurant.replace('&', 'and')  # Updated comparison
             )
 
             if name_matches and restaurant_matches:
