@@ -24,3 +24,11 @@ class Client(BaseModel, Base, UserMixin):
         """Initialize client"""
         super().__init__(*args, **kwargs)
 
+    def update(self, **kwargs):
+        """Update client attributes"""
+        allowed_fields = ['email', 'address']
+        for key, value in kwargs.items():
+            if key in allowed_fields:
+                setattr(self, key, value)
+        self.save()
+
