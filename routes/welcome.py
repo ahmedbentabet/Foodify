@@ -18,17 +18,24 @@ def welcome():
 
 @welcome_routes.route("/api/v1/search", methods=["GET"])
 def search_meals():
-    """Search meals endpoint"""
+    """Search meals endpoint with proper error handling"""
     try:
         query = request.args.get("query", "").strip().lower()
         restaurant = request.args.get("restaurant", "All").strip()
         page = int(request.args.get("page", 1))
         per_page = 8
 
-        # Get meals without using with block
-        meals = storage.all(MenuItem).values()
-        filtered_meals = []
+        # Get meals with session handling
+        meals = []
+        try:
+            meals = list(storage.all(MenuItem).values())
+        except Exception as db_error:
+            print(f"Database error: {db_error}")
+            # Try to reconnect
+            storage.reload()
+            meals = list(storage.all(MenuItem).values())
 
+        filtered_meals = []
         for meal in meals:
             try:
                 name_matches = query in meal.name.lower()
@@ -64,4 +71,6 @@ def search_meals():
 
     except Exception as e:
         print(f"Search error: {e}")
-        return jsonify({"error": str(e)}), 500
+        storage.close()  # Close the problematic session
+        storage.reload()  # Create a new session
+        return jsonify({"error": "Internal server error"}), 500

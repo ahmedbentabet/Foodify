@@ -34,19 +34,28 @@ class DBStorage:
         self.__engine = create_engine(
             f"mysql+mysqldb://{user}:{pwd}@{host}/{db}",
             pool_pre_ping=True,
-            pool_recycle=3600
+            pool_recycle=3600,
+            pool_size=20,
+            max_overflow=0
         )
+        self.__session = None
 
     def reload(self) -> None:
-        """Create tables and session"""
-        Base.metadata.create_all(self.__engine)
-        session_factory = sessionmaker(
-            bind=self.__engine,
-            expire_on_commit=False,
-            autoflush=True
-        )
-        Session = scoped_session(session_factory)
-        self.__session = Session()
+        """Create tables and session with proper error handling"""
+        try:
+            Base.metadata.create_all(self.__engine)
+            session_factory = sessionmaker(
+                bind=self.__engine,
+                expire_on_commit=False,
+                autoflush=True
+            )
+            Session = scoped_session(session_factory)
+            self.__session = Session()
+        except Exception as e:
+            print(f"Error reloading database: {e}")
+            if self.__session:
+                self.__session.close()
+            raise
 
     def new(self, obj: BaseModel) -> None:
         """Add object to current database session"""
@@ -124,8 +133,12 @@ class DBStorage:
         return query.all()
 
     def close(self) -> None:
-        """Close current session"""
-        self.__session.close()
+        """Close session safely"""
+        if self.__session:
+            try:
+                self.__session.remove()
+            except:
+                pass
 
     def count(self, cls: Optional[Any] = None) -> int:
         """Count number of objects in storage"""
