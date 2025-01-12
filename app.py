@@ -4,6 +4,7 @@
 from flask import Flask
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
+from models import storage
 
 # Create Flask app instance first
 foodify_app = Flask(__name__, template_folder='templates')
@@ -14,6 +15,7 @@ login_manager = LoginManager(foodify_app)
 login_manager.login_view = "login_routes.login"  # Updated this line
 login_manager.login_message_category = "info"
 bcrypt = Bcrypt(foodify_app)
+
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -26,6 +28,12 @@ def load_user(user_id):
         if client.id == user_id:
             return client
     return None
+
+
+def close_db(e=None):
+    """Cleanup function to be called after each request"""
+    storage.close()
+
 
 # Import routes after login_manager is initialized
 from routes.login import login_routes, logout_routes
@@ -41,6 +49,9 @@ foodify_app.register_blueprint(setting_routes)
 foodify_app.register_blueprint(signup_routes)
 foodify_app.register_blueprint(welcome_routes)
 foodify_app.register_blueprint(order_routes)
+
+# Register cleanup function with Flask app
+foodify_app.teardown_appcontext(close_db)
 
 if __name__ == "__main__":
     foodify_app.run(debug=True)
