@@ -81,46 +81,6 @@ nav ul a img:hover {
 }
 
 
-.cart-icon-container {
-    position: relative;
-}
-
-/* Base cart count styles */
-#cart-count {
-    position: absolute;
-    top: -10px;
-    right: -17px;
-    transition: all 0.3s ease;
-    font-size: 12px;
-    text-align: center;
-}
-
-/* Hidden state */
-.cart-count-hidden {
-    opacity: 0;
-    transform: scale(0);
-    width: 0;
-    height: 0;
-}
-
-/* Active state */
-.cart-count-active {
-    opacity: 1;
-    transform: scale(1);
-    background-color: #e78f38;
-    color: white;
-    padding: 4px 8px;
-    border-radius: 12px;
-    font-weight: bold;
-    min-width: 20px;
-    height: 20px;
-}
-
-.cart-count-hidden span{
-    display: none;
-}
-
-
 
 nav button {
     background: #e78f38;
