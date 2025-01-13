@@ -54,7 +54,8 @@ def update_cart():
                 return jsonify({'error': 'Item not in cart'}), 400
 
             # Calculate new price before updating quantity
-            new_total = float(active_order.total_price) - float(menu_item.price)
+            new_total = float(active_order.total_price) - \
+                float(menu_item.price)
 
             if order_item.quantity <= 1:
                 # Remove item and update order
@@ -90,7 +91,8 @@ def update_cart():
                     quantity=1
                 )
                 storage.new(order_item)
-            active_order.total_price = float(active_order.total_price or 0) + float(menu_item.price)
+            active_order.total_price = float(
+                active_order.total_price or 0) + float(menu_item.price)
 
         storage.save()
 
@@ -121,7 +123,7 @@ def get_cart_state():
         # Get active order
         active_order = None
         menu_items = {}
-        
+
         orders = storage.all(Order).values()
         for order in orders:
             if order.client_id == current_user.id and order.status == 'active':

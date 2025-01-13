@@ -131,28 +131,30 @@ document.addEventListener("DOMContentLoaded", async function () {
             return;
           }
 
-          const response = await fetch('/api/v1/cart/update', {
-            method: 'POST',
+          const response = await fetch("/api/v1/cart/update", {
+            method: "POST",
             headers: {
-                'Content-Type': 'application/json'
+              "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                menu_item_id: mealId,
-                action: action
-            })
+              menu_item_id: mealId,
+              action: action,
+            }),
           });
 
           if (!response.ok) {
             const error = await response.json();
-            throw new Error(error.error || 'Failed to update cart');
+            throw new Error(error.error || "Failed to update cart");
           }
 
           const data = await response.json();
 
           // Update UI immediately based on action and response
           let newQuantity;
-          if (action === 'decrease') {
-            const currentQuantity = parseInt(quantitySpan.getAttribute('data-quantity'));
+          if (action === "decrease") {
+            const currentQuantity = parseInt(
+              quantitySpan.getAttribute("data-quantity")
+            );
             newQuantity = currentQuantity > 1 ? currentQuantity - 1 : 0;
           } else {
             newQuantity = data.item.quantity;
@@ -170,18 +172,20 @@ document.addEventListener("DOMContentLoaded", async function () {
           }
 
           // Show appropriate message
-          if (data.order && data.order.status === 'cancelled' || newQuantity === 0) {
-            showToast('Item removed from cart');
+          if (
+            (data.order && data.order.status === "cancelled") ||
+            newQuantity === 0
+          ) {
+            showToast("Item removed from cart");
           } else {
             showToast(`Cart ${action}d successfully`);
           }
 
           // Update localStorage
-          localStorage.setItem('cartState', JSON.stringify(cartState));
-
+          localStorage.setItem("cartState", JSON.stringify(cartState));
         } catch (error) {
-          console.error('Error:', error);
-          showToast(error.message, 'error');
+          console.error("Error:", error);
+          showToast(error.message, "error");
         }
       }
 
@@ -209,17 +213,17 @@ document.addEventListener("DOMContentLoaded", async function () {
     const cartBadge = document.getElementById("cart-count");
 
     if (!totalPrice || totalPrice <= 0) {
-        // First state - empty cart
-        cartBadge.textContent = "";
-        cartBadge.classList.remove("cart-count-active");
-        cartBadge.classList.add("cart-count-hidden");
+      // First state - empty cart
+      cartBadge.textContent = "";
+      cartBadge.classList.remove("cart-count-active");
+      cartBadge.classList.add("cart-count-hidden");
     } else {
-        // Second state - cart with items
-        cartBadge.textContent = `$${parseFloat(totalPrice).toFixed(2)}`;
-        cartBadge.classList.remove("cart-count-hidden");
-        cartBadge.classList.add("cart-count-active");
+      // Second state - cart with items
+      cartBadge.textContent = `$${parseFloat(totalPrice).toFixed(2)}`;
+      cartBadge.classList.remove("cart-count-hidden");
+      cartBadge.classList.add("cart-count-active");
     }
-}
+  }
 
   function showToast(message, type = "success") {
     // Create toast element if it doesn't exist
@@ -303,7 +307,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     e.preventDefault();
     if (currentPage > 1) {
       currentPage--;
-      performSearch(false);  // Don't reset page when using pagination
+      performSearch(false); // Don't reset page when using pagination
     }
   });
 
@@ -311,16 +315,16 @@ document.addEventListener("DOMContentLoaded", async function () {
     e.preventDefault();
     if (currentPage < totalPages) {
       currentPage++;
-      performSearch(false);  // Don't reset page when using pagination
+      performSearch(false); // Don't reset page when using pagination
     }
   });
 
   // Add click handler for page numbers
-  pageNumbers.addEventListener("click", function(e) {
+  pageNumbers.addEventListener("click", function (e) {
     if (e.target.classList.contains("page-number")) {
       e.preventDefault();
       currentPage = parseInt(e.target.dataset.page);
-      performSearch(false);  // Don't reset page when using pagination
+      performSearch(false); // Don't reset page when using pagination
     }
   });
 
@@ -329,50 +333,50 @@ document.addEventListener("DOMContentLoaded", async function () {
 });
 
 async function initializeCartState() {
-    if (isInitialized) return cartState;
+  if (isInitialized) return cartState;
 
-    try {
-        const response = await fetch("/api/v1/cart/state");
-        if (response.ok) {
-            const data = await response.json();
+  try {
+    const response = await fetch("/api/v1/cart/state");
+    if (response.ok) {
+      const data = await response.json();
 
-            // Set cart state
-            cartState = data.items.reduce((acc, item) => {
-                acc[item.menu_item_id] = item.quantity;
-                return acc;
-            }, {});
+      // Set cart state
+      cartState = data.items.reduce((acc, item) => {
+        acc[item.menu_item_id] = item.quantity;
+        return acc;
+      }, {});
 
-            // Update UI
-            updateCartBadge(data.order?.total_price || 0);
-            updateAllQuantities();
+      // Update UI
+      updateCartBadge(data.order?.total_price || 0);
+      updateAllQuantities();
 
-            isInitialized = true;
-            return cartState;
-        }
-    } catch (error) {
-        console.error("Cart state error:", error);
+      isInitialized = true;
+      return cartState;
     }
-    return {};
+  } catch (error) {
+    console.error("Cart state error:", error);
+  }
+  return {};
 }
 
 // Update all quantities in UI
 function updateAllQuantities() {
-    document.querySelectorAll('.meal').forEach(meal => {
-        const mealId = meal.dataset.mealId;
-        const quantity = cartState[mealId] || 0;
-        updateQuantityDisplay(mealId, quantity);
-    });
+  document.querySelectorAll(".meal").forEach((meal) => {
+    const mealId = meal.dataset.mealId;
+    const quantity = cartState[mealId] || 0;
+    updateQuantityDisplay(mealId, quantity);
+  });
 }
 
 // Call initializeCartState when page loads and after login
-document.addEventListener("DOMContentLoaded", async function() {
-    await initializeCartState();
-    // ... rest of your initialization code
+document.addEventListener("DOMContentLoaded", async function () {
+  await initializeCartState();
+  // ... rest of your initialization code
 });
 
 // Re-initialize on visibility change
 document.addEventListener("visibilitychange", async () => {
-    if (document.visibilityState === "visible") {
-        await initializeCartState();
-    }
+  if (document.visibilityState === "visible") {
+    await initializeCartState();
+  }
 });
