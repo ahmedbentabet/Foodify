@@ -2,8 +2,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const chatMessages = document.getElementById('chatMessages');
     const messageInput = document.getElementById('messageInput');
     const sendButton = document.getElementById('sendMessage');
-    const stars = document.querySelectorAll('.fa-star');
+    const stars = document.querySelectorAll('.rating i');
     const feedbackForm = document.getElementById('feedbackForm');
+    let selectedRating = 0;
 
     // Add welcome message
     addMessage("Welcome to Foodify! How can we help you today?", 'received');
@@ -46,45 +47,57 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Star rating system
+    // Handle star rating
     stars.forEach(star => {
         star.addEventListener('click', () => {
-            const rating = star.getAttribute('data-rating');
+            selectedRating = star.dataset.rating;
             stars.forEach(s => {
-                if (s.getAttribute('data-rating') <= rating) {
+                if (s.dataset.rating <= selectedRating) {
                     s.classList.add('active');
                 } else {
                     s.classList.remove('active');
                 }
             });
         });
-
-        star.addEventListener('mouseover', () => {
-            const rating = star.getAttribute('data-rating');
-            stars.forEach(s => {
-                if (s.getAttribute('data-rating') <= rating) {
-                    s.classList.add('hover');
-                }
-            });
-        });
-
-        star.addEventListener('mouseout', () => {
-            stars.forEach(s => s.classList.remove('hover'));
-        });
     });
 
-    // Feedback form submission
-    feedbackForm.addEventListener('submit', (e) => {
+    // Handle form submission
+    feedbackForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const type = document.getElementById('feedbackType').value;
-        const text = document.getElementById('feedbackText').value;
-        const rating = document.querySelectorAll('.fa-star.active').length;
 
-        // Here you would typically send this data to your backend
-        console.log({ type, text, rating });
+        const restaurant = document.getElementById('feedbackType').value;
+        const feedback = document.getElementById('feedbackText').value;
 
-        alert('Thank you for your feedback!');
-        feedbackForm.reset();
-        stars.forEach(s => s.classList.remove('active'));
+        if (!selectedRating || !restaurant || !feedback) {
+            alert('Please fill in all fields and select a rating');
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/v1/submit_review', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    restaurant,
+                    rating: selectedRating,
+                    feedback
+                })
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                alert('Thank you for your feedback!');
+                feedbackForm.reset();
+                stars.forEach(s => s.classList.remove('active'));
+                selectedRating = 0;
+            } else {
+                alert(data.error || 'Error submitting review');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error submitting review');
+        }
     });
 });
