@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, render_template
 from flask_login import current_user, login_required
 from models import storage
 from models.order import Order
@@ -6,6 +6,7 @@ from models.order_item import OrderItem
 from models.menu_item import MenuItem
 import uuid
 from datetime import datetime
+from sqlalchemy.exc import PendingRollbackError
 
 order_routes = Blueprint("order_routes", __name__)
 
@@ -17,6 +18,12 @@ def update_cart():
         data = request.get_json()
         menu_item_id = data.get('menu_item_id')
         action = data.get('action')
+
+        # Ensure clean transaction state
+        try:
+            storage.rollback()
+        except Exception:
+            pass
 
         # Validate MenuItem
         menu_item = storage.get(MenuItem, menu_item_id)
@@ -109,7 +116,11 @@ def update_cart():
             }
         })
 
+    except PendingRollbackError:
+        storage.rollback()
+        return jsonify({'error': 'Transaction error, please try again'}), 500
     except Exception as e:
+        storage.rollback()
         print(f"Error updating cart: {e}")
         storage.rollback()
         return jsonify({'error': str(e)}), 500
@@ -120,6 +131,12 @@ def update_cart():
 def get_cart_state():
     """Get current cart state"""
     try:
+        # Ensure clean transaction state
+        try:
+            storage.rollback()
+        except Exception:
+            pass
+
         # Get active order
         active_order = None
         menu_items = {}
@@ -144,6 +161,17 @@ def get_cart_state():
             }
         })
 
+    except PendingRollbackError:
+        storage.rollback()
+        return jsonify({'error': 'Transaction error, please try again'}), 500
     except Exception as e:
         print(f"Error getting cart state: {e}")
+        storage.rollback()
         return jsonify({'error': str(e)}), 500
+
+
+@order_routes.route("/all_orders_and_review")
+@login_required
+def all_orders_and_review():
+    """Display all orders and review page"""
+    return render_template("all_orders_and_review.html")
