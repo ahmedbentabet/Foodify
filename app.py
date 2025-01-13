@@ -33,6 +33,7 @@ from routes.user_setting import setting_routes
 from routes.signup import signup_routes
 from routes.welcome import welcome_routes
 from routes.order import order_routes
+from routes.payment import payment_routes
 
 # Register blueprints
 foodify_app.register_blueprint(login_routes)
@@ -41,6 +42,7 @@ foodify_app.register_blueprint(setting_routes)
 foodify_app.register_blueprint(signup_routes)
 foodify_app.register_blueprint(welcome_routes)
 foodify_app.register_blueprint(order_routes)
+foodify_app.register_blueprint(payment_routes)
 
 if __name__ == "__main__":
     foodify_app.run(debug=True)

@@ -25,11 +25,10 @@
             <h1>Foodify</h1>
         </a>
         <ul>
-            <!-- Navigation links -->
-            <li><a href="#">Home</a></li>
-            <li><a href="#restaurants">Restaurants</a></li>
-            <li><a href="#search">Menu</a></li>
-            <li><a href="#footer">About</a></li>
+            <li><a href="{{ url_for('welcome_routes.welcome') }}">Home</a></li>
+            <li><a href="welcome.html#restaurants">Restaurants</a></li>
+            <li><a href="welcome.html#search">Menu</a></li>
+            <li><a href="welcome.html#footer">About</a></li>
             <li class="cart-icon-container">
                 <a href="#">
                     <img src="../static/images/grocery-cart.png" alt="Cart">
@@ -70,7 +69,7 @@
             <h2>"Dining Made Easy, Right at Home 🏠🛵"</h2>
             <p>The Best Online Food Ordering System ❤️</p>
             <a href="#restaurants"><button id="restaurants">Order Now</button></a>
-            <!-- <button class="know_more" id="knowMoreButton">Know More</button> -->
+            <button class="know_more" id="knowMoreButton">Know More</button>
         </div>
         <!-- Featured image for the home section -->
         <img src="../static/images/welcome_burger.png" alt="Double Beef Burger">

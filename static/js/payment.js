@@ -38,6 +38,19 @@ document.addEventListener('DOMContentLoaded', () => {
         totalElement.textContent = `$${(subtotal + deliveryFee).toFixed(2)}`;
     }
 
+    function updateTotals() {
+        fetch('/api/v1/payment/totals')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('subtotal').textContent = `$${data.subtotal}`;
+                document.getElementById('total').textContent = `$${data.total}`;
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    // Update totals periodically
+    setInterval(updateTotals, 5000);
+
     paymentOptions.forEach(option => {
         option.addEventListener('change', () => {
             creditCardForm.style.display =
