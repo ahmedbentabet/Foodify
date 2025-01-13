@@ -222,6 +222,9 @@ document.addEventListener("DOMContentLoaded", async function () {
       cartBadge.textContent = `$${parseFloat(totalPrice).toFixed(2)}`;
       cartBadge.classList.remove("cart-count-hidden");
       cartBadge.classList.add("cart-count-active");
+
+      // Trigger reflow for smooth transition
+      cartBadge.offsetHeight;
     }
   }
 
