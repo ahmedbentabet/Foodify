@@ -31,7 +31,7 @@
             <li><a href="welcome.html#search">Menu</a></li>
             <li><a href="welcome.html#footer">About</a></li>
             <li class="cart-icon-container">
-                <a href="#">
+                <a href="{{ url_for('review_routes.all_orders_and_review') }}">
                     <img src="../static/images/grocery-cart.png" alt="Cart">
                     <span id="cart-count" class="cart-count-hidden"></span>
                 </a>
@@ -68,7 +68,14 @@
     <div class="payment-container">
         <div class="order-summary">
             <h2>Order Summary</h2>
-            <div id="cart-items" class="cart-items"></div>
+            <div id="cart-items" class="cart-items">
+                {% for item in items %}
+                <div class="cart-item">
+                    <span>{{ item.name }} x {{ item.quantity }}</span>
+                    <span>${{ "%.2f"|format(item.price * item.quantity) }}</span>
+                </div>
+                {% endfor %}
+            </div>
             <div class="total-section">
                 <div class="subtotal">Subtotal: <span id="subtotal">${{ subtotal }}</span></div>
                 <div class="delivery-fee">Delivery Fee: <span>$5.00</span></div>

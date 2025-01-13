@@ -6,7 +6,6 @@ from models.order_item import OrderItem
 from models.menu_item import MenuItem
 import uuid
 from datetime import datetime
-from sqlalchemy.exc import PendingRollbackError
 
 order_routes = Blueprint("order_routes", __name__)
 
@@ -18,12 +17,6 @@ def update_cart():
         data = request.get_json()
         menu_item_id = data.get('menu_item_id')
         action = data.get('action')
-
-        # Ensure clean transaction state
-        try:
-            storage.rollback()
-        except Exception:
-            pass
 
         # Validate MenuItem
         menu_item = storage.get(MenuItem, menu_item_id)
@@ -116,11 +109,7 @@ def update_cart():
             }
         })
 
-    except PendingRollbackError:
-        storage.rollback()
-        return jsonify({'error': 'Transaction error, please try again'}), 500
     except Exception as e:
-        storage.rollback()
         print(f"Error updating cart: {e}")
         return jsonify({'error': str(e)}), 500
 
@@ -130,12 +119,6 @@ def update_cart():
 def get_cart_state():
     """Get current cart state"""
     try:
-        # Ensure clean transaction state
-        try:
-            storage.rollback()
-        except Exception:
-            pass
-
         # Get active order
         active_order = None
         menu_items = {}
@@ -160,16 +143,40 @@ def get_cart_state():
             }
         })
 
-    except PendingRollbackError:
-        storage.rollback()
-        return jsonify({'error': 'Transaction error, please try again'}), 500
     except Exception as e:
         print(f"Error getting cart state: {e}")
         return jsonify({'error': str(e)}), 500
 
 
-@order_routes.route("/all_orders_and_review")
-@login_required
-def all_orders_and_review():
-    """Display all orders and review page"""
-    return render_template("all_orders_and_review.html")
+@order_routes.route("/confirm_order", methods=["POST"])
+@login_required 
+def confirm_order():
+    """Handle order confirmation and payment"""
+    try:
+        data = request.get_json()
+        payment_method = data.get('payment_method')
+
+        # Get active order
+        active_order = None
+        orders = storage.all(Order).values()
+        for order in orders:
+            if order.client_id == current_user.id and order.status == 'active':
+                active_order = order
+                break
+
+        if not active_order:
+            return jsonify({'error': 'No active order found'}), 404
+
+        # Update order status
+        active_order.status = 'completed'
+        active_order.payment_method = payment_method
+        storage.save()
+
+        return jsonify({
+            'success': True,
+            'message': 'Order confirmed successfully'
+        })
+
+    except Exception as e:
+        storage.rollback()
+        return jsonify({'error': str(e)}), 500

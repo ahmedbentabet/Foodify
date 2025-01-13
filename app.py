@@ -6,6 +6,7 @@ from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from models import storage
 
+
 # Create Flask app instance first
 foodify_app = Flask(__name__, template_folder='templates')
 foodify_app.config['SECRET_KEY']='0e12c1e7483fe5a5e0088620aa95b29d265213904ca0fb375d558ab9ceaa4991'
@@ -42,6 +43,7 @@ from routes.signup import signup_routes
 from routes.welcome import welcome_routes
 from routes.order import order_routes
 from routes.payment import payment_routes
+from routes.all_orders_and_review import review_routes
 
 # Register blueprints
 foodify_app.register_blueprint(login_routes)
@@ -51,6 +53,7 @@ foodify_app.register_blueprint(signup_routes)
 foodify_app.register_blueprint(welcome_routes)
 foodify_app.register_blueprint(order_routes)
 foodify_app.register_blueprint(payment_routes)
+foodify_app.register_blueprint(review_routes)
 
 # Register cleanup function with Flask app
 foodify_app.teardown_appcontext(close_db)
