@@ -6,7 +6,7 @@
     text-decoration: none;
     list-style: none;
     scroll-behavior: smooth;
-}
+}   
 
 body {
     background: linear-gradient(#111, #222);
@@ -105,7 +105,18 @@ nav ul a img:hover {
     display: none;
 }
 
+.user-profile img {
+    width: 40px;
+    height: 40px;
+    transition: transform 0.3s ease;
+    background-color: #ddd;
+    border-radius: 70%;
+    margin: 10px;
+}
 
+.user-profile:hover img {
+    transform: scale(1.1);
+}
 
 nav button {
     background: #e78f38;

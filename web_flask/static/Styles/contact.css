@@ -9,7 +9,7 @@
 }
 
 body {
-    background: linear-gradient(#666, #444);
+    background:linear-gradient(#111, #222);
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
@@ -160,13 +160,15 @@ nav button:hover {
 
 .chat-section {
     flex: 1;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(20, 114, 114, 0.719);
     border-radius: 15px;
     padding: 20px;
+    box-shadow:  0 0 10px rgba(0, 255, 242, 0.692);
     backdrop-filter: blur(10px);
 }
 
 .chat-messages {
+    color:white;
     height: 400px;
     overflow-y: auto;
     padding: 15px;
@@ -178,10 +180,13 @@ nav button:hover {
     padding: 10px 15px;
     border-radius: 10px;
     max-width: 80%;
+    box-shadow:  0 0 px  rgba(194, 238, 1, 0.932);
 }
 
 .message.received {
     background: rgba(231, 143, 56, 0.2);
+    box-shadow:  0 0 10px rgba(0, 0, 255, 0.856);
+
     margin-right: auto;
 }
 
@@ -221,10 +226,11 @@ nav button:hover {
 
 .feedback-section {
     flex: 1;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(29, 179, 179, 0.747);
     border-radius: 15px;
     padding: 20px;
     backdrop-filter: blur(10px);
+    box-shadow:  0 0 10px rgba(4, 214, 204, 0.712);
 }
 
 .rating {
