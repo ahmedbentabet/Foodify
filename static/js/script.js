@@ -1,17 +1,16 @@
-// Defining the selected meals in the cart
-let cartItems = []; // Array to store meals and quantities in the cart
+// Cart state management
+let cartItems = [];
 
-// Function to update the cart (quantity only)
-async function updateCart(mealId, mealName, mealPrice, quantityChange) {
+async function updateCart(mealId, mealName, mealPrice, action) {
     try {
-        const response = await fetch('/api/v1/orders/update_item', {
+        const response = await fetch('/api/v1/cart/update', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                meal_id: mealId,
-                quantity_change: quantityChange
+                menu_item_id: mealId,
+                action: action
             })
         });
 
@@ -21,121 +20,95 @@ async function updateCart(mealId, mealName, mealPrice, quantityChange) {
 
         const data = await response.json();
         
-        // Update local cart state only after successful API call
-        const existingItemIndex = cartItems.findIndex(item => item.id === mealId);
-
-        if (existingItemIndex !== -1) {
-            const existingItem = cartItems[existingItemIndex];
-            existingItem.quantity += quantityChange;
-            if (existingItem.quantity <= 0) {
-                cartItems.splice(existingItemIndex, 1);
-            }
-        } else if (quantityChange > 0) {
-            cartItems.push({
-                id: mealId,
-                name: mealName,
-                price: mealPrice,
-                quantity: quantityChange
-            });
-        }
-
+        // Update local cart state
+        updateLocalCart(data);
         // Update the cart display
         updateCartDisplay();
 
+        // Show success toast
+        showToast('Cart updated successfully', 'success');
+
     } catch (error) {
         console.error('Error updating cart:', error);
-        alert('Failed to update cart. Please try again.');
-        
-        // Revert the UI change
-        const quantityElement = document.querySelector(`.meal[data-meal-id="${mealId}"] .quantity-value`);
-        if (quantityElement) {
-            const currentQuantity = parseInt(quantityElement.getAttribute('data-quantity')) - quantityChange;
-            quantityElement.setAttribute('data-quantity', currentQuantity);
-            quantityElement.textContent = currentQuantity;
-        }
+        showToast('Failed to update cart', 'error');
     }
 }
 
-// Function to update the cart display (showing only the number of meals in the nav bar)
-function updateCartDisplay() {
-    const cartCount = document.getElementById('cart-count');
+// Meal elements event handling
+const mealElements = document.querySelectorAll(".meal");
 
-    // Calculate the total number of meals in the cart
-    const totalQuantity = cartItems.reduce((total, item) => total + item.quantity, 0);
+mealElements.forEach((mealElement) => {
+    const mealId = mealElement.getAttribute("data-meal-id");
+    const mealName = mealElement.querySelector("h3").textContent;
+    const mealPrice = parseFloat(
+        mealElement.querySelector(".price").getAttribute("data-price")
+    );
+    const quantityElement = mealElement.querySelector(".quantity-value");
 
-    // Update the number of items in the cart in the nav bar
-    cartCount.textContent = totalQuantity;
-    cartCount.classList.remove('cart-count-hidden');
-    cartCount.style.backgroundColor = totalQuantity > 0 ? 'red' : 'transparent';
-}
+    const decreaseButton = mealElement.querySelector(".decrease");
+    const increaseButton = mealElement.querySelector(".increase");
 
-// Identifying the buttons affecting the meals
-const mealElements = document.querySelectorAll('.meal');
-
-// Adding event listeners to the buttons for each meal
-mealElements.forEach(mealElement => {
-    const mealId = mealElement.getAttribute('data-meal-id');
-    const mealName = mealElement.querySelector('h3').textContent;
-    const mealPrice = parseFloat(mealElement.querySelector('.price').getAttribute('data-price'));
-    const quantityElement = mealElement.querySelector('.quantity-value');
-
-    const decreaseButton = mealElement.querySelector('.decrease');
-    const increaseButton = mealElement.querySelector('.increase');
-
-    // Decrease quantity
-    decreaseButton.addEventListener('click', () => {
-        let quantity = parseInt(quantityElement.getAttribute('data-quantity'));
-        if (quantity > 0) {
-            quantity -= 1;
-            quantityElement.setAttribute('data-quantity', quantity);
-            quantityElement.innerText = quantity;
-            updateCart(mealId, mealName, mealPrice, -1); // Decrease quantity in the cart by 1
+    async function updateQuantity(action) {
+        // Check if user is logged in
+        const isLoggedIn = document.body.classList.contains("user-logged-in");
+        if (!isLoggedIn) {
+            localStorage.setItem("pendingCartAction", JSON.stringify({ mealId, action }));
+            window.location.href = "/login";
+            return;
         }
-    });
+        await updateCart(mealId, mealName, mealPrice, action);
+    }
 
-    // Increase quantity
-    increaseButton.addEventListener('click', () => {
-        let quantity = parseInt(quantityElement.getAttribute('data-quantity'));
-        quantity += 1; // Increase quantity by 1
-        quantityElement.setAttribute('data-quantity', quantity);
-        quantityElement.innerText = quantity;
-        updateCart(mealId, mealName, mealPrice, 1); // Increase quantity in the cart by 1
-    });
+    increaseButton.addEventListener("click", () => updateQuantity("increase"));
+    decreaseButton.addEventListener("click", () => updateQuantity("decrease"));
 });
 
-// Function to update the cart display (showing only the number of meals in the nav bar)
+// Cart display functions
 function updateCartDisplay() {
-        const cartCount = document.getElementById('cart-count');
+    const cartCount = document.getElementById('cart-count');
+    const totalQuantity = cartItems.reduce((total, item) => total + item.quantity, 0);
 
-        // Calculate the total number of meals in the cart
-        const totalQuantity = cartItems.reduce((total, item) => total + item.quantity, 0);
-
-        if (totalQuantity > 0) {
-            // If the quantity is greater than zero, show a red badge
-            if (!cartCount) {
-                // If the element does not exist, add it to the DOM
-                const span = document.createElement('span');
-                span.id = 'cart-count';
-                span.classList.remove('cart-count-hidden'); // Remove the hidden class
-                span.style.backgroundColor = 'red'; // Add red background color
-                span.style.color = 'white'; // Change the color to white for the number
-                span.style.padding = '0.2em'; // Add padding to show the badge
-                span.style.borderRadius = '50%'; // Make the badge circular
-                document.querySelector('.cart-icon-container a').appendChild(span);  // Add it to the link
-            }
-        } else {
-            // If the quantity is zero, remove the element completely
-            if (cartCount) {
-                cartCount.remove();
-            }
-        }
+    if (totalQuantity > 0) {
+        cartCount.textContent = totalQuantity;
+        cartCount.classList.add('cart-count-active');
+    } else {
+        cartCount.classList.remove('cart-count-active');
     }
+}
 
-    // Call the function to update the cart
-    updateCartDisplay();
+function updateLocalCart(data) {
+    if (data.order) {
+        const itemIndex = cartItems.findIndex(item => item.id === data.item.id);
+        if (itemIndex !== -1) {
+            if (data.item.quantity > 0) {
+                cartItems[itemIndex].quantity = data.item.quantity;
+            } else {
+                cartItems.splice(itemIndex, 1);
+            }
+        } else if (data.item.quantity > 0) {
+            cartItems.push(data.item);
+        }
+    } else {
+        cartItems = [];
+    }
+}
 
+// Toast notification function
+function showToast(message, type) {
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.textContent = message;
+    document.body.appendChild(toast);
 
-//================================================================================================
+    setTimeout(() => {
+        toast.classList.add('show');
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
+    }, 100);
+}
+
 // Modal functionality
 const knowMoreButton = document.querySelector('.know_more'); // Button to open the modal
 const modal = document.querySelector('.modal'); // Modal container
