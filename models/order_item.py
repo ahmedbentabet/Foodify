@@ -2,13 +2,22 @@ from sqlalchemy import Column, Integer, ForeignKey, String
 from sqlalchemy.orm import relationship
 from models.base_model import BaseModel, Base
 
+
 class OrderItem(BaseModel, Base):
     """OrderItem model"""
-    
-    __tablename__ = 'order_items'
 
-    order_id = Column(String(60), ForeignKey('orders.id', ondelete="CASCADE"), nullable=False)
-    menu_item_id = Column(String(60), ForeignKey('menu_items.id', ondelete="CASCADE"), nullable=False)
+    __tablename__ = "order_items"
+
+    order_id = Column(
+        String(60),
+        ForeignKey("orders.id", ondelete="CASCADE"),
+        nullable=False,
+    )
+    menu_item_id = Column(
+        String(60),
+        ForeignKey("menu_items.id", ondelete="CASCADE"),
+        nullable=False,
+    )
     quantity = Column(Integer, nullable=False)
 
     order = relationship("Order", back_populates="order_items")

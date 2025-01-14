@@ -33,15 +33,12 @@ class DBStorage:
 
         self.__engine = create_engine(
             f"mysql+mysqldb://{user}:{pwd}@{host}/{db}",
-            pool_pre_ping=True,         # Check connection before using
-            pool_recycle=300,           # Recycle connections every 5 minutes
-            pool_size=5,                # Smaller pool size
-            max_overflow=10,            # Allow more temp connections if needed
-            pool_timeout=30,            # Connection timeout
-            connect_args={
-                'connect_timeout': 60,
-                'read_timeout': 30
-            }
+            pool_pre_ping=True,  # Check connection before using
+            pool_recycle=300,  # Recycle connections every 5 minutes
+            pool_size=5,  # Smaller pool size
+            max_overflow=10,  # Allow more temp connections if needed
+            pool_timeout=30,  # Connection timeout
+            connect_args={"connect_timeout": 60, "read_timeout": 30},
         )
         self.__session = None
 
@@ -50,9 +47,7 @@ class DBStorage:
         try:
             Base.metadata.create_all(self.__engine)
             session_factory = sessionmaker(
-                bind=self.__engine,
-                expire_on_commit=False,
-                autoflush=True
+                bind=self.__engine, expire_on_commit=False, autoflush=True
             )
             Session = scoped_session(session_factory)
             self.__session = Session
@@ -102,15 +97,19 @@ class DBStorage:
                 for c in classes:
                     objects.extend(self.__session.query(c).all())
 
-            return {f"{obj.__class__.__name__}.{obj.id}": obj for obj in objects}
+            return {
+                f"{obj.__class__.__name__}.{obj.id}": obj for obj in objects
+            }
 
         except Exception as e:
             self.__session.rollback()
             raise e
 
     def search(
-        self, cls: Any, filters: Dict[str, Any],
-        nested_filters: Dict[str, Dict] = None
+        self,
+        cls: Any,
+        filters: Dict[str, Any],
+        nested_filters: Dict[str, Dict] = None,
     ) -> List[BaseModel]:
         """
         Enhanced search method with nested relationship filtering
@@ -184,9 +183,7 @@ class DBStorage:
 
             # Create session factory
             session_factory = sessionmaker(
-                bind=self.__engine,
-                expire_on_commit=False,
-                autoflush=True
+                bind=self.__engine, expire_on_commit=False, autoflush=True
             )
             # Create scoped session
             Session = scoped_session(session_factory)

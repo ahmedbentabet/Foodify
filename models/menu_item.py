@@ -9,11 +9,14 @@ class MenuItem(BaseModel, Base):
     __tablename__ = "menu_items"
 
     restaurant_id = Column(
-        String(60), ForeignKey("restaurants.id", ondelete="CASCADE"),
-        nullable=False
+        String(60),
+        ForeignKey("restaurants.id", ondelete="CASCADE"),
+        nullable=False,
     )
     name = Column(String(100), nullable=False)
-    price = Column(DECIMAL(10, 2), nullable=False)  # Using DECIMAL instead of Float for price
+    price = Column(
+        DECIMAL(10, 2), nullable=False
+    )  # Using DECIMAL instead of Float for price
     is_available = Column(Boolean, default=True)
     image_url = Column(String(255), nullable=True)  # path to menu item image
 

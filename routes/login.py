@@ -1,6 +1,14 @@
 #!/usr/bin/env python3
 """Login route handler"""
-from flask import Blueprint, render_template, url_for, flash, redirect, request, jsonify
+from flask import (
+    Blueprint,
+    render_template,
+    url_for,
+    flash,
+    redirect,
+    request,
+    jsonify,
+)
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField
 from wtforms.validators import DataRequired, Email
@@ -8,9 +16,9 @@ from flask_login import login_user, current_user, logout_user, login_required
 from models import storage
 
 
-login_routes = Blueprint('login_routes', __name__)
-logout_routes = Blueprint('logout_routes', __name__)
-setting_routes = Blueprint('setting_routes', __name__)
+login_routes = Blueprint("login_routes", __name__)
+logout_routes = Blueprint("logout_routes", __name__)
+setting_routes = Blueprint("setting_routes", __name__)
 order_routes = Blueprint("order_routes", __name__)  # Added new Blueprint
 
 
@@ -36,19 +44,29 @@ def login():
         try:
             from app import bcrypt
             from models.client import Client
+
             with storage.session_scope() as session:
-                client = (session.query(Client)
-                          .filter_by(email=form.email.data)
-                          .first())
+                client = (
+                    session.query(Client)
+                    .filter_by(email=form.email.data)
+                    .first()
+                )
 
                 if client and bcrypt.check_password_hash(
-                        client.password, form.password.data):
+                    client.password, form.password.data
+                ):
                     login_user(client, remember=form.remember.data)
-                    next_page = request.args.get('next')
-                    return redirect(next_page) if next_page else redirect(
-                        url_for("welcome_routes.welcome"))
+                    next_page = request.args.get("next")
+                    return (
+                        redirect(next_page)
+                        if next_page
+                        else redirect(url_for("welcome_routes.welcome"))
+                    )
                 else:
-                    flash("Login Unsuccessful. Please check credentials", "danger")
+                    flash(
+                        "Login Unsuccessful. Please check credentials",
+                        "danger",
+                    )
 
         except Exception as e:
             print(f"Login error: {e}")
@@ -70,7 +88,8 @@ def add_menu_item():
     from models.menu_item import MenuItem
     from models.order import Order
     from models.order_item import OrderItem
-    print('-' * 80)
+
+    print("-" * 80)
     try:
         data = request.get_json()
         menu_item_id = data.get("menu_item_id")
@@ -86,16 +105,15 @@ def add_menu_item():
         orders = storage.all(Order).values()
 
         for order in orders:
-            if (order.client_id == current_user.id and
-                    order.status == "active"):
+            if (
+                order.client_id == current_user.id
+                and order.status == "active"
+            ):
                 active_order = order
                 break
 
         if not active_order:
-            active_order = Order(
-                client_id=current_user.id,
-                status="active"
-            )
+            active_order = Order(client_id=current_user.id, status="active")
             storage.new(active_order)
             storage.save()
 
@@ -115,22 +133,24 @@ def add_menu_item():
             order_item = OrderItem(
                 order_id=active_order.id,
                 menu_item_id=menu_item_id,
-                quantity=quantity_change
+                quantity=quantity_change,
             )
             storage.new(order_item)
 
         storage.save()
 
-        return jsonify({
-            "status": "success",
-            "order_id": active_order.id,
-            "item": {
-                "id": menu_item.id,
-                "name": menu_item.name,
-                "price": float(menu_item.price),
-                "quantity": order_item.quantity if order_item else 0
+        return jsonify(
+            {
+                "status": "success",
+                "order_id": active_order.id,
+                "item": {
+                    "id": menu_item.id,
+                    "name": menu_item.name,
+                    "price": float(menu_item.price),
+                    "quantity": order_item.quantity if order_item else 0,
+                },
             }
-        })
+        )
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
