@@ -111,7 +111,6 @@ def update_cart():
 
     except Exception as e:
         print(f"Error updating cart: {e}")
-        storage.rollback()
         return jsonify({'error': str(e)}), 500
 
 
