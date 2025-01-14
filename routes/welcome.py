@@ -3,12 +3,14 @@ from flask import Blueprint, render_template, url_for, flash, redirect, session,
 import math
 from models import storage
 from flask_wtf import FlaskForm
+from sqlalchemy.orm import joinedload
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired, Length, Email, Regexp, EqualTo
 from models.menu_item import MenuItem  # Add imports at top
 # from app import foodify_app
 
 welcome_routes = Blueprint('welcome_routes', __name__)
+
 
 @welcome_routes.route("/")
 @welcome_routes.route("/welcome")
@@ -20,57 +22,39 @@ def welcome():
 def search_meals():
     """Search meals endpoint with proper error handling"""
     try:
-        query = request.args.get("query", "").strip().lower()
-        restaurant = request.args.get("restaurant", "All").strip()
-        page = int(request.args.get("page", 1))
-        per_page = 8
+        with storage.session_scope() as db_session:  # Use context manager
+            query_param = request.args.get("query", "").strip().lower()
+            restaurant = request.args.get("restaurant", "All").strip()
+            page = int(request.args.get("page", 1))
+            per_page = 8
 
-        # Get meals with session handling
-        meals = []
-        try:
-            meals = list(storage.all(MenuItem).values())
-        except Exception as db_error:
-            print(f"Database error: {db_error}")
-            # Try to reconnect
-            storage.reload()
-            meals = list(storage.all(MenuItem).values())
+            # Build query with proper session
+            query = db_session.query(MenuItem).options(joinedload('restaurant'))
 
-        filtered_meals = []
-        for meal in meals:
-            try:
-                name_matches = query in meal.name.lower()
-                restaurant_matches = (
-                    restaurant == "All" or
-                    meal.restaurant.name.replace('&', 'and') ==
-                    restaurant.replace('&', 'and')
+            # Apply filters
+            if query_param:
+                query = query.filter(MenuItem.name.ilike(f"%{query_param}%"))
+            if restaurant != "All":
+                query = query.join(MenuItem.restaurant).filter(
+                    Restaurant.name == restaurant
                 )
 
-                if name_matches and restaurant_matches:
-                    filtered_meals.append(meal)
-            except Exception as e:
-                print(f"Error filtering meal: {e}")
-                continue
+            # Get total count and paginate
+            total = query.count()
+            paginated_meals = query.limit(per_page).offset((page - 1) * per_page).all()
 
-        # Pagination
-        total = len(filtered_meals)
-        start_idx = (page - 1) * per_page
-        end_idx = start_idx + per_page
-        paginated_meals = filtered_meals[start_idx:end_idx]
-
-        return jsonify({
-            "meals": [{
-                "id": meal.id,
-                "name": meal.name,
-                "price": float(meal.price),
-                "is_available": meal.is_available,
-                "restaurant_name": meal.restaurant.name,
-                "image_name": meal.name
-            } for meal in paginated_meals],
-            "total": total
-        })
+            return jsonify({
+                "meals": [{
+                    "id": str(meal.id),
+                    "name": meal.name,
+                    "price": float(meal.price),
+                    "is_available": meal.is_available,
+                    "restaurant_name": meal.restaurant.name,
+                    "image_name": meal.name
+                } for meal in paginated_meals],
+                "total": total
+            })
 
     except Exception as e:
         print(f"Search error: {e}")
-        storage.close()  # Close the problematic session
-        storage.reload()  # Create a new session
         return jsonify({"error": "Internal server error"}), 500

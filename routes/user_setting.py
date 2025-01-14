@@ -9,6 +9,7 @@ from models import storage
 
 setting_routes = Blueprint('setting_routes', __name__)
 
+
 class UserSettingForm(FlaskForm):
     """User settings form"""
     username = StringField("Username", validators=[DataRequired()])
@@ -36,12 +37,15 @@ class UserSettingForm(FlaskForm):
             from models.client import Client
             clients = storage.all(Client).values()
             if any(client.email == email.data for client in clients):
-                raise ValidationError("Email already exists! Please choose a different one")
+                raise ValidationError(
+                    "Email already exists! Please choose a different one")
 
     def validate_current_password(self, current_password):
         """Validate current password if new password is provided"""
         if self.new_password.data and not current_password.data:
-            raise ValidationError("Current password is required to set new password")
+            raise ValidationError(
+                "Current password is required to set new password")
+
 
 @setting_routes.route("/setting", methods=["GET", "POST"])
 @login_required
@@ -50,52 +54,56 @@ def setting():
     user_setting_form = UserSettingForm()
 
     if request.method == "GET":
-        user_setting_form.username.data = current_user.username
-        user_setting_form.email.data = current_user.email
-        user_setting_form.address.data = current_user.address
-        return render_template("user_setting.html", user_setting_form=user_setting_form)  # Changed from form to user_setting_form
+        try:
+            from app import bcrypt
+            from models.client import Client
+            with storage.session_scope() as session:
+                client = session.query(Client).get(current_user.id)
+                if client:
+                    user_setting_form.username.data = client.username
+                    user_setting_form.email.data = client.email
+                    user_setting_form.address.data = client.address
+                return render_template("user_setting.html",
+                                       user_setting_form=user_setting_form)
+        except Exception as e:
+            flash(f"Error loading settings: {str(e)}", "danger")
+            return redirect(url_for("welcome_routes.welcome"))
 
     if user_setting_form.validate_on_submit():
         try:
-            from models.client import Client
-            from app import bcrypt
-            
-            # Get client
-            clients = storage.all(Client).values()
-            client = next((c for c in clients if c.id == current_user.id), None)
-            
-            if client:
-                # Handle password update first
+            with storage.session_scope() as session:
+                client = session.query(Client).get(current_user.id)
+                if not client:
+                    flash("User not found", "danger")
+                    return redirect(url_for("setting_routes.setting"))
+
+                # Handle password update
                 if user_setting_form.new_password.data:
-                    # Verify current password
-                    if not bcrypt.check_password_hash(client.password, user_setting_form.current_password.data):
+                    if not bcrypt.check_password_hash(
+                        client.password,
+                        user_setting_form.current_password.data
+                    ):
                         flash("Current password is incorrect", "danger")
                         return redirect(url_for("setting_routes.setting"))
-                    
-                    # Update password
-                    hashed_password = bcrypt.generate_password_hash(user_setting_form.new_password.data).decode('utf-8')
-                    client.password = hashed_password
-                    storage.save()
+
+                    client.password = bcrypt.generate_password_hash(
+                        user_setting_form.new_password.data
+                    ).decode('utf-8')
                     flash("Password updated successfully!", "success")
-                
+
                 # Handle profile updates
-                if user_setting_form.email.data != client.email or user_setting_form.address.data != client.address:
-                    client.email = user_setting_form.email.data
-                    client.address = user_setting_form.address.data
-                    storage.save()
-                    flash("Profile information updated successfully!", "success")
-                
-            else:
-                flash("User not found", "danger")
-                
+                client.email = user_setting_form.email.data
+                client.address = user_setting_form.address.data
+                flash("Profile information updated successfully!", "success")
+
         except Exception as e:
             flash(f"Error updating profile: {str(e)}", "danger")
-            
+
         return redirect(url_for("setting_routes.setting"))
 
     # If form validation failed, show errors
     for field, errors in user_setting_form.errors.items():
         for error in errors:
             flash(f"{field}: {error}", "danger")
-            
+
     return redirect(url_for("setting_routes.setting"))

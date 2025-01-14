@@ -13,6 +13,7 @@ logout_routes = Blueprint('logout_routes', __name__)
 setting_routes = Blueprint('setting_routes', __name__)
 order_routes = Blueprint("order_routes", __name__)  # Added new Blueprint
 
+
 class LoginForm(FlaskForm):
     email = StringField("Email", validators=[DataRequired(), Email()])
     password = PasswordField(
@@ -29,25 +30,30 @@ class LoginForm(FlaskForm):
 def login():
     if current_user.is_authenticated:
         return redirect(url_for("welcome_routes.welcome"))
+
     form = LoginForm()
     if form.validate_on_submit():
-        from models.client import Client
-        from app import bcrypt
-        # Get all clients and find the one with matching email
-        clients = storage.all(Client).values()
-        client = None
-        for c in clients:
-            if c.email == form.email.data:
-                client = c
-                break
-                
-        if client and bcrypt.check_password_hash(client.password, form.password.data):
-            login_user(client, remember=form.remember.data)
-            next_page = request.args.get('next')
-            # flash("You have been logged in!", "success")
-            return redirect(next_page) if next_page else redirect(url_for("welcome_routes.welcome"))
-        else:
-            flash("Login Unsuccessful. Please check credentials", "danger")
+        try:
+            from app import bcrypt
+            from models.client import Client
+            with storage.session_scope() as session:
+                client = (session.query(Client)
+                          .filter_by(email=form.email.data)
+                          .first())
+
+                if client and bcrypt.check_password_hash(
+                        client.password, form.password.data):
+                    login_user(client, remember=form.remember.data)
+                    next_page = request.args.get('next')
+                    return redirect(next_page) if next_page else redirect(
+                        url_for("welcome_routes.welcome"))
+                else:
+                    flash("Login Unsuccessful. Please check credentials", "danger")
+
+        except Exception as e:
+            print(f"Login error: {e}")
+            flash("An error occurred during login", "danger")
+
     return render_template("login.html", title="Login", form=form)
 
 
@@ -81,7 +87,7 @@ def add_menu_item():
 
         for order in orders:
             if (order.client_id == current_user.id and
-                order.status == "active"):
+                    order.status == "active"):
                 active_order = order
                 break
 

@@ -7,6 +7,7 @@ from models.restaurant import Restaurant
 
 review_routes = Blueprint("review_routes", __name__)
 
+
 @review_routes.route("/all_orders_and_review")
 @login_required
 def all_orders_and_review():
@@ -21,14 +22,15 @@ def all_orders_and_review():
 
         # Get all restaurants for reviews
         restaurants = storage.all(Restaurant).values()
-        
-        return render_template("all_orders_and_review.html", 
-                            orders=user_orders,
-                            restaurants=restaurants)
-                            
+
+        return render_template("all_orders_and_review.html",
+                               orders=user_orders,
+                               restaurants=restaurants)
+
     except Exception as e:
         storage.rollback()
         return jsonify({'error': str(e)}), 500
+
 
 @review_routes.route("/api/v1/submit_review", methods=["POST"])
 @login_required
