@@ -8,8 +8,10 @@ from models import storage
 
 
 # Create Flask app instance first
-foodify_app = Flask(__name__, template_folder='templates')
-foodify_app.config['SECRET_KEY']='0e12c1e7483fe5a5e0088620aa95b29d265213904ca0fb375d558ab9ceaa4991'
+foodify_app = Flask(__name__, template_folder="templates")
+foodify_app.config["SECRET_KEY"] = (
+    "0e12c1e7483fe5a5e0088620aa95b29d265213904ca0fb375d558ab9ceaa4991"
+)
 
 # Initialize login manager before importing routes
 login_manager = LoginManager(foodify_app)
@@ -23,6 +25,7 @@ def load_user(user_id):
     """Load user by ID."""
     from models import storage
     from models.client import Client
+
     # Get all clients and find the one with matching ID
     clients = storage.all(Client).values()
     for client in clients:
