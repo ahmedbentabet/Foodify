@@ -1,8 +1,8 @@
 import unittest
 from unittest.mock import patch, MagicMock
 from datetime import datetime
-import uuid
 from models.base_model import BaseModel
+
 
 class TestBaseModel(unittest.TestCase):
     """Test class for the BaseModel class"""
@@ -28,8 +28,8 @@ class TestBaseModel(unittest.TestCase):
         self.assertEqual(model.created_at, datetime(2022, 1, 1, 12, 0))
         self.assertEqual(model.updated_at, datetime(2022, 1, 2, 12, 0))
 
-    @patch('models.storage.new')
-    @patch('models.storage.save')
+    @patch("models.storage.new")
+    @patch("models.storage.save")
     def test_save(self, mock_save, mock_new):
         """Test the save method"""
         model = BaseModel()
@@ -43,19 +43,20 @@ class TestBaseModel(unittest.TestCase):
         """Test the to_dict method"""
         model = BaseModel()
         dict_representation = model.to_dict()
-        self.assertIn('__class__', dict_representation)
-        self.assertEqual(dict_representation['__class__'], 'BaseModel')
-        self.assertIn('created_at', dict_representation)
-        self.assertIn('updated_at', dict_representation)
-        self.assertIsInstance(dict_representation['created_at'], str)
-        self.assertIsInstance(dict_representation['updated_at'], str)
+        self.assertIn("__class__", dict_representation)
+        self.assertEqual(dict_representation["__class__"], "BaseModel")
+        self.assertIn("created_at", dict_representation)
+        self.assertIn("updated_at", dict_representation)
+        self.assertIsInstance(dict_representation["created_at"], str)
+        self.assertIsInstance(dict_representation["updated_at"], str)
 
-    @patch('models.storage.delete')
+    @patch("models.storage.delete")
     def test_delete(self, mock_delete):
         """Test the delete method"""
         model = BaseModel()
         model.delete()
         mock_delete.assert_called_once_with(model)
+
 
 if __name__ == "__main__":
     unittest.main()
