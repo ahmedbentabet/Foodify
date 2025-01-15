@@ -116,7 +116,7 @@ document.addEventListener("visibilitychange", async () => {
     }
 });
 
-// ... Rest of the existing helper functions (sanitizeName, findImage, etc.) remain unchanged ...
+// Helper functions
 
 function sanitizeName(name) {
     return name.replace(/\s+/g, "_");
@@ -288,37 +288,51 @@ function updatePagination(totalItems) {
 
     // Update page numbers display
     let pagesHtml = "";
-    for (let i = 1; i <= totalPages; i++) {
-        // Here Pagination
-        if (totalPages > 7) {
-            // here pagination -1
-            // Show ellipsis for many pages
-            if (
-                i === 1 ||
-                i === totalPages ||
-                (i >= currentPage - 1 && i <= currentPage + 1)
-            ) {
-                pagesHtml += `<span class="page-number ${
-                    i === currentPage ? "active" : ""
-                }"
-                                       data-page="${i}">${i}</span>`;
-            } else if (i === currentPage - 2 || i === currentPage + 2) {
-                pagesHtml += '<span class="ellipsis">...</span>';
-            }
-        } else {
-            pagesHtml += `<span class="page-number ${
-                i === currentPage ? "active" : ""
-            }"
-                                   data-page="${i}">${i}</span>`;
+
+    // Logic for displaying page numbers with ellipsis
+    const showPage = (i) => {
+        pagesHtml += `<span class="page-number ${i === currentPage ? "active" : ""}"
+            data-page="${i}">${i}</span>`;
+    };
+
+    const showEllipsis = () => {
+        pagesHtml += '<span class="ellipsis">...</span>';
+    };
+
+    // Always show first page
+    showPage(1);
+
+    // Logic for pages between first and last
+    for (let i = 2; i < totalPages; i++) {
+        if (
+            i === currentPage || // Current page
+            i === currentPage - 1 || // One before current
+            i === currentPage + 1 || // One after current
+            i === 2 || // Second page
+            i === totalPages - 1 // Second-to-last page
+        ) {
+            showPage(i);
+        } else if (
+            i === currentPage - 2 ||
+            i === currentPage + 2
+        ) {
+            showEllipsis();
         }
     }
+
+    // Always show last page if more than one page
+    if (totalPages > 1) {
+        showPage(totalPages);
+    }
+
+    // Update DOM
     const pageNumbers = document.getElementById("pageNumbers");
     pageNumbers.innerHTML = pagesHtml;
 
+    // Update prev/next buttons state
     const prevPage = document.getElementById("prevPage");
     const nextPage = document.getElementById("nextPage");
 
-    // Update prev/next buttons state
     prevPage.classList.toggle("disabled", currentPage === 1);
     nextPage.classList.toggle("disabled", currentPage === totalPages);
 }
