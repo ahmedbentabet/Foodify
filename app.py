@@ -50,6 +50,12 @@ def not_found_error(error):
 def internal_error(error):
     return render_template('500.html'), 500
 
+# 403 Error
+@foodify_app.errorhandler(403)
+def forbidden_error(error):
+    return render_template('403.html'), 403
+
+
 # Import routes after login_manager is initialized
 from routes.login import login_routes, logout_routes
 from routes.user_setting import setting_routes
