@@ -37,6 +37,7 @@ def load_user(user_id):
 def close_db(e=None):
     """Cleanup function to be called after each request"""
     storage.close()
+
 # Error Handlers
 
 # 404 Error
