@@ -1,0 +1,329 @@
+/* Import existing styles */
+@import url('welcome_page.css');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: sans-serif;
+    text-decoration: none;
+    list-style: none;
+    scroll-behavior: smooth;
+}
+
+body {
+    background: linear-gradient(#111, #222);
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 10%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 9999;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(10px);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    color: #fff;
+    font-size: 20px;
+    font-weight: bolder;
+    transition: transform 0.3s ease-in-out;
+    margin-right: 210px;
+}
+
+.logo img {
+    width: 50px;
+    height: 70px;
+    margin-right: 10px;
+}
+
+.logo:hover {
+    transform: translateX(20px);
+}
+
+nav ul {
+    display: flex;
+    align-items: center;
+}
+
+nav ul li {
+    margin: 0 15px;
+}
+
+nav ul li a {
+    font-size: 16px;
+    color: #fff;
+    text-transform: uppercase;
+    font-weight: 400;
+    transition: color 0.3s ease, border-bottom 0.2s ease;
+}
+
+nav ul li a:hover {
+    color: #e78f38;
+    border-bottom: 3px solid #e78f38;
+}
+
+nav ul img {
+    width: 30px;
+    height: 30px;
+    transition: 0.3s ease;
+    display: inline-block;
+}
+
+nav ul a img:hover {
+    transform: scale(1.35);
+}
+
+
+.cart-icon-container {
+    position: relative;
+}
+
+.cart-icon-container {
+    position: relative;
+}
+
+#cart-count {
+    background-color: red;
+    color: white;
+    padding: 0.1rem;
+    border-radius: 100%;
+    font-weight: bold;
+    position: absolute;
+    top: -10px;
+    right: -17px;
+    display: block;
+    width: 18px;
+    text-align: center;
+}
+
+.cart-count-hidden {
+    display: none !important;
+}
+
+.orders-container {
+    max-width: 1200px;
+    margin: 120px auto 40px;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+    color: #fff;
+}
+
+.order-items {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.order-item {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 20px;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.order-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(231, 143, 56, 0.2);
+}
+
+.order-item img {
+    width: 120px;
+    height: 120px;
+    border-radius: 12px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.order-item:hover img {
+    transform: scale(1.05);
+}
+
+.item-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.item-details h3 {
+    color: #e78f38;
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+}
+
+.item-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.quantity-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.quantity-btn {
+    background: #e78f38;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    color: white;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.price-breakdown {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 25px;
+    backdrop-filter: blur(10px);
+    position: sticky;
+    top: 100px;
+    height: fit-content;
+}
+
+.proceed-btn {
+    background: linear-gradient(135deg, #e78f38, #f79c42);
+    color: white;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.proceed-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.proceed-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(231, 143, 56, 0.4);
+}
+
+footer {
+    background-color: black;
+    color: #fff;
+    padding: 30px 10%;
+}
+
+.footer-content {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+footer h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
+    font-weight: bold;
+
+}
+
+footer p,
+footer ul {
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.about h3,
+.contact h3 {
+    text-align: center;
+    text-decoration: underline;
+}
+
+.footer-bottom {
+    text-align: center;
+    margin-top: 20px;
+    border-top: 1px solid #444;
+    padding-top: 10px;
+    font-size: 14px;
+}
+
+.contact .team {
+    display: flex;
+    justify-content: space-around;
+    gap: 30px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.contact .team-member {
+    text-align: center;
+    position: relative;
+    width: 120px;
+    /* Adjust width as necessary */
+}
+
+.contact .team-member img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+.contact .team-member img:hover {
+    transform: scale(1.2);
+    /* Zoom in effect */
+    box-shadow: 0 8px 20px rgb(255, 255, 255);
+    /* Shadow effect */
+}
+
+.contact .team-member .name {
+    margin-top: 10px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #555;
+    transition: color 0.3s ease;
+}
+
+.contact .team-member img:hover+.name {
+    color: #e78f38;
+    /* Change color when hovering over the image */
+}
+
+/* Optional: Add a small effect to the email when hovered */
+.contact .team-member:hover .name {
+    font-weight: bold;
+    text-decoration: none;
+}
+
+
+@media (max-width: 768px) {
+    .footer-content {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .footer-content div {
+        margin-bottom: 20px;
+    }
+}
+
