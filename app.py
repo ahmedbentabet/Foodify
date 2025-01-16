@@ -37,7 +37,17 @@ def load_user(user_id):
 def close_db(e=None):
     """Cleanup function to be called after each request"""
     storage.close()
+# Error Handlers
 
+# 404 Error
+@foodify_app.errorhandler(404)
+def not_found_error(error):
+    return render_template('404.html'), 404
+
+# 500 Error
+@foodify_app.errorhandler(500)
+def internal_error(error):
+    return render_template('500.html'), 500
 
 # Import routes after login_manager is initialized
 from routes.login import login_routes, logout_routes
