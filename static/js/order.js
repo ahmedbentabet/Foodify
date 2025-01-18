@@ -83,6 +83,6 @@ document.getElementById('proceedToDelivery').addEventListener('click', () => {
     localStorage.setItem('orderSummary', JSON.stringify(orderSummary));
 
     // Navigate to delivery page
-    window.location.href = 'delivery.html';
+    window.location.href = '/delivery';  // Changed from /location
 });
 
