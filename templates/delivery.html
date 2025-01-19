@@ -1,163 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Delivery Details - Foodify</title>
-    <!-- Include all necessary CSS files -->
-    <link rel="stylesheet" href="../static/css/login_signup.css" />
-    <link rel="stylesheet" href="../static/css/welcome.css" />
-    <link rel="stylesheet" href="../static/css/delivery.css" />
-    <link rel="stylesheet" href="../static/css/shared/cart.css" />
-    <!-- Font Awesome for icons -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-    />
-    <!-- Move delivery.js before Google Maps API script -->
-    <script src="{{ url_for('static', filename='js/delivery.js') }}"></script>
-
-    <!-- Then load Google Maps API -->
-    <script
-      async
-      defer
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCw3PF0eddc0oP3WDkB2G5BGeJip8f4CHg&libraries=places&callback=initMap"
-    ></script>
-  </head>
-  <body class="{{ 'user-logged-in' if current_user.is_authenticated else '' }}">
-    <!-- Navigation bar -->
-    <nav>
-      <a href="#" class="logo">
-        <img src="../static/images/foodify_logo.png" alt="Logo" />
-        <h1>Foodify</h1>
-      </a>
-      <ul>
-        <li><a href="welcome.html">Home</a></li>
-        <li>
-          <a href="{{ url_for('welcome_routes.welcome') }}#restaurants"
-            >Restaurants</a
-          >
-        </li>
-        <li>
-          <a href="{{ url_for('welcome_routes.welcome') }}#search">Menu</a>
-        </li>
-        <li>
-          <a href="{{ url_for('welcome_routes.welcome') }}#footer">About</a>
-        </li>
-        <li class="cart-icon-container">
-          <a href="{{ url_for('payment_routes.payment') }}">
-            <img src="../static/images/grocery-cart.png" alt="Cart" />
-            <span id="cart-count" class="cart-count-hidden"></span>
-          </a>
-        </li>
-      </ul>
-      {% if current_user.is_authenticated %}
-      <a href="{{ url_for('setting_routes.setting') }}">
-        <button id="settingsBtn">Settings</button>
-      </a>
-      <a href="{{ url_for('logout_routes.logout') }}">
-        <button id="logoutBtn">Logout</button>
-      </a>
-      {% else %}
-      <a href="{{ url_for('login_routes.login') }}">
-        <button id="loginBtn">Login</button>
-      </a>
-      <a href="{{ url_for('signup_routes.signup') }}">
-        <button id="signUpBtn">Sign Up</button>
-      </a>
-      {% endif %}
-    </nav>
-
+    <!-- TomTom Maps SDK -->
+    <link rel='stylesheet' type='text/css' href='https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.23.0/maps/maps.css'>
+    <script src="https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.23.0/maps/maps-web.min.js"></script>
+    <script src="https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.23.0/services/services-web.min.js"></script>
+    <!-- Your CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/delivery.css') }}">
+</head>
+<body class="{{ 'user-logged-in' if current_user.is_authenticated else '' }}">
     <div class="delivery-container">
-      <!-- Location Prompt -->
-      <div id="locationPrompt" class="location-prompt">
-        <h2>Delivery Location</h2>
-        <p>Would you like to continue with your stored location?</p>
-        <div class="button-group">
-          <button id="useStoredLocation" class="btn primary">Yes</button>
-          <button id="selectNewLocation" class="btn secondary">No</button>
+        <!-- Location Prompt -->
+        <div id="locationPrompt" class="location-prompt">
+            <h2>Delivery Location</h2>
+            <p>Would you like to continue with your stored location?</p>
+            {% if stored_location %}
+                <p class="stored-address">{{ stored_location.address }}</p>
+            {% endif %}
+            <div class="button-group">
+                <button id="useStoredLocation" class="btn primary">Yes</button>
+                <button id="selectNewLocation" class="btn secondary">No</button>
+            </div>
         </div>
-      </div>
 
-      <!-- Map Section -->
-      <div id="mapSection" class="map-section" style="display: none">
-        <div id="map"></div>
-        <div class="location-search">
-          <input
-            type="text"
-            id="address-input"
-            placeholder="Enter your delivery address"
-          />
-          <button id="geolocateMe" class="btn primary">
-            <i class="fas fa-location-arrow"></i> Use My Location
-          </button>
+        <!-- Map Section -->
+        <div id="mapSection" class="map-section" style="display: none;">
+            <div id="map"></div>
+            <div class="location-search">
+                <input type="text" id="searchInput" placeholder="Search location...">
+                <button id="geolocateMe" class="btn">
+                    <i class="fas fa-location-arrow"></i> Use My Location
+                </button>
+            </div>
+            <!-- Delivery Form -->
+            <div class="delivery-details">
+                <form id="locationForm">
+                    <div class="form-group">
+                        <label for="address">Address</label>
+                        <input type="text" id="address" required readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="instructions">Delivery Instructions</label>
+                        <textarea id="instructions" placeholder="Apartment number, landmarks, etc"></textarea>
+                    </div>
+                    <button type="submit" class="btn primary">Confirm Location</button>
+                </form>
+            </div>
         </div>
-      </div>
-
-      <!-- Delivery Form -->
-      <div class="delivery-details">
-        <form id="delivery-form">
-          <div class="form-group">
-            <label for="contact-name">Contact Name</label>
-            <input type="text" id="contact-name" required />
-          </div>
-          <div class="form-group">
-            <label for="phone">Phone Number</label>
-            <input type="tel" id="phone" required />
-          </div>
-          <div class="form-group">
-            <label for="instructions">Delivery Instructions</label>
-            <textarea
-              id="instructions"
-              placeholder="Apartment number, landmarks, etc"
-            ></textarea>
-          </div>
-          <button type="submit" class="confirm-btn">Confirm Location</button>
-        </form>
-      </div>
-
-      <!-- Move the stored location script after the form elements -->
-      <script>
-        // Wait for DOM to load before accessing elements
-        document.addEventListener('DOMContentLoaded', () => {
-            const storedLocation = {{ stored_location|tojson|safe if stored_location else 'null' }};
-
-            if (storedLocation) {
-                const elements = {
-                    'contact-name': storedLocation.contact_name,
-                    'phone': storedLocation.phone,
-                    'instructions': storedLocation.instructions,
-                    'address-input': storedLocation.address
-                };
-
-                Object.entries(elements).forEach(([id, value]) => {
-                    const element = document.getElementById(id);
-                    if (element && value) {
-                        element.value = value;
-                    }
-                });
-            }
-        });
-      </script>
     </div>
 
-    <!-- Footer -->
-    <footer>
-      <div class="footer-content" id="footer">
-        <div class="about">
-          <h3>About Us</h3>
-          <p>
-            At <strong>Foodify</strong>, we are passionate about bringing you
-            the finest meals directly to your doorstep.
-          </p>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <p>&copy; 2025 All Rights Reserved</p>
-      </div>
-    </footer>
-
-    <!-- Scripts -->
-    <script src="../static/js/script.js"></script>
-  </body>
+    <script src="{{ url_for('static', filename='js/delivery.js') }}"></script>
+</body>
 </html>
