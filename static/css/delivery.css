@@ -86,6 +86,39 @@
     border-radius: 5px;
 }
 
+.phone-input-container {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 5px;
+}
+
+.country-code {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background: white;
+    min-width: 100px;
+}
+
+.phone-input-container input[type="tel"] {
+    flex: 1;
+}
+
+.form-hint {
+    display: block;
+    color: #666;
+    font-size: 0.85em;
+    margin-top: 5px;
+}
+
+.form-group input:invalid {
+    border-color: #ff4444;
+}
+
+.form-group input:focus:invalid {
+    outline-color: #ff4444;
+}
+
 .error-message {
     position: fixed;
     top: 20px;
