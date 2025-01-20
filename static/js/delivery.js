@@ -32,43 +32,65 @@ document.addEventListener('DOMContentLoaded', () => {
                 interactive: true // Ensure map is interactive
             });
 
-            // Add search box
+            // Add search box with improved configuration
             try {
                 const searchBoxService = new tt.services.fuzzySearch({
-                    key: API_KEY
+                    key: API_KEY,
+                    idleTimePress: 100,  // Reduced for faster response
+                    language: 'en-GB',
+                    radius: 50000, // 50km radius
+                    limit: 5  // Number of suggestions
                 });
 
-                // Create SearchBox with correct configuration
-                searchBox = new tt.plugins.SearchBox(searchBoxService, {
-                    showSearchButton: true, // Changed to true
-                    searchBoxHTML: '<input type="text" class="tt-search-box-input" placeholder="Search location...">',
-                    noResultsMessage: 'No results found',
-                    idleTimePress: 200,
-                    minNumberOfCharacters: 3,
+                // Create SearchBox with enhanced configuration
+                searchBox = new tt.plugins.SearchBox(tt.services.fuzzySearch, {
+                    minNumberOfCharacters: 2,
+                    searchOptions: {
+                        key: API_KEY,
+                        language: 'en-GB'
+                    },
+                    autocompleteOptions: {
+                        key: API_KEY,
+                        language: 'en-GB'
+                    },
                     labels: {
-                        placeholder: 'Search location...'
+                        placeholder: 'Search for a location'
                     }
                 });
 
                 // Add SearchBox to map
                 map.addControl(searchBox, 'top-left');
 
-                // Remove the original search input as we're using the TomTom one
-                const originalSearchInput = document.getElementById('searchInput');
-                if (originalSearchInput) {
-                    originalSearchInput.parentNode.removeChild(originalSearchInput);
-                }
-
-                // Handle search results
+                // Handle result selection
                 searchBox.on('tomtom.searchbox.resultselected', function(event) {
-                    const coords = event.data.result.position;
-                    placeMarker([coords.lng, coords.lat]);
-                    getAddress(coords);
+                    const result = event.data.result;
+                    if (result.position) {
+                        const coords = [result.position.lng, result.position.lat];
+                        map.flyTo({
+                            center: coords,
+                            zoom: 15
+                        });
+                        placeMarker(coords);
+                        getAddress({
+                            lng: result.position.lng,
+                            lat: result.position.lat
+                        });
+                    }
+                });
+
+                // Handle enter key press
+                searchBox.getSearchBox().addEventListener('keyup', function(e) {
+                    if (e.key === 'Enter') {
+                        const searchQuery = e.target.value;
+                        if (searchQuery.length >= 2) {
+                            searchLocation(searchQuery);
+                        }
+                    }
                 });
 
             } catch (error) {
                 console.error('SearchBox initialization error:', error);
-                showError('Failed to initialize search');
+                showError(error);
             }
 
             // Add marker on map click
@@ -200,4 +222,37 @@ function showError(message) {
     errorDiv.textContent = message;
     document.querySelector('.delivery-container').prepend(errorDiv);
     setTimeout(() => errorDiv.remove(), 5000);
+}
+
+// Add this new function to handle manual searches
+async function searchLocation(query) {
+    try {
+        const response = await tt.services.fuzzySearch({
+            key: API_KEY,
+            query: query,
+            language: 'en-GB',
+            limit: 1
+        }).go();
+
+        if (response.results && response.results.length > 0) {
+            const result = response.results[0];
+            const coords = [result.position.lng, result.position.lat];
+
+            map.flyTo({
+                center: coords,
+                zoom: 15
+            });
+
+            placeMarker(coords);
+            getAddress({
+                lng: result.position.lng,
+                lat: result.position.lat
+            });
+        } else {
+            showError('Location not found');
+        }
+    } catch (error) {
+        console.error('Search error:', error);
+        showError('Failed to search location');
+    }
 }
