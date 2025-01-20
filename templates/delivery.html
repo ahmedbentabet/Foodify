@@ -6,8 +6,10 @@
     <title>Delivery Details - Foodify</title>
     <!-- TomTom Maps SDK -->
     <link rel='stylesheet' type='text/css' href='https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.23.0/maps/maps.css'>
+    <link rel='stylesheet' type='text/css' href='https://api.tomtom.com/maps-sdk-for-web/cdn/plugins/SearchBox/3.2.0/SearchBox.css'>
     <script src="https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.23.0/maps/maps-web.min.js"></script>
     <script src="https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.23.0/services/services-web.min.js"></script>
+    <script src="https://api.tomtom.com/maps-sdk-for-web/cdn/plugins/SearchBox/3.2.0/SearchBox-web.js"></script>
     <!-- Your CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/delivery.css') }}">
 </head>
@@ -29,6 +31,12 @@
         <!-- Map Section -->
         <div id="mapSection" class="map-section" style="display: none;">
             <div id="map"></div>
+            <script>
+                // Verify TomTom SDK is loaded
+                if (typeof tt === 'undefined') {
+                    console.error('TomTom SDK not loaded');
+                }
+            </script>
             <div class="location-search">
                 <input type="text" id="searchInput" placeholder="Search location...">
                 <button id="geolocateMe" class="btn">
