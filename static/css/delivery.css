@@ -122,31 +122,50 @@
     }
 }
 
-/* Add these styles for the TomTom search box */
+/* Improve SearchBox styling */
 .tt-search-box {
     width: 100%;
-    margin-right: 10px;
+    max-width: 400px;
+    margin: 10px;
 }
 
 .tt-search-box-input {
     width: 100%;
-    padding: 12px;
+    padding: 12px 40px 12px 16px;
     border: 1px solid #ddd;
     border-radius: 25px;
     font-size: 14px;
+    background: white;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.tt-search-box-input:focus {
+    outline: none;
+    border-color: #e78f38;
+    box-shadow: 0 2px 8px rgba(231, 143, 56, 0.2);
 }
 
 .tt-search-box-result-list {
     background: white;
-    border-radius: 5px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin-top: 8px;
+    max-height: 300px;
+    overflow-y: auto;
 }
 
 .tt-search-box-result {
-    padding: 10px;
+    padding: 12px 16px;
     cursor: pointer;
+    transition: background 0.2s ease;
 }
 
 .tt-search-box-result:hover {
     background: #f5f5f5;
+}
+
+.tt-search-box-result.selected {
+    background: #e78f38;
+    color: white;
 }
