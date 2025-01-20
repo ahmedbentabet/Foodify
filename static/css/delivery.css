@@ -195,44 +195,44 @@ body {
     margin: 10px;
 }
 
+/* TomTom SearchBox styling */
 .tt-search-box-input {
     width: 100%;
     padding: 12px 40px 12px 16px;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(0, 0, 0, 0.7);  /* Darker background */
+    border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 25px;
-    color: #fff;
+    color: #e78f38 !important;  /* Orange text color */
     font-size: 14px;
+    font-weight: 500;  /* Make text slightly bolder */
 }
 
+/* Placeholder text color */
+.tt-search-box-input::placeholder {
+    color: rgba(255, 255, 255, 0.5);  /* More visible placeholder */
+}
+
+/* Text color when typing */
 .tt-search-box-input:focus {
     outline: none;
     border-color: #e78f38;
-    box-shadow: 0 2px 8px rgba(231, 143, 56, 0.2);
+    box-shadow: 0 0 10px rgba(231, 143, 56, 0.3);
+    background: rgba(0, 0, 0, 0.8);  /* Darker background when focused */
 }
 
 .tt-search-box-result-list {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    margin-top: 8px;
-    max-height: 300px;
-    overflow-y: auto;
+    background: rgba(0, 0, 0, 0.9);
+    color: #e78f38;
+    border: 1px solid rgba(231, 143, 56, 0.3);
 }
 
 .tt-search-box-result {
+    color: #e78f38;  /* Orange text for results */
     padding: 12px 16px;
-    cursor: pointer;
-    transition: background 0.2s ease;
-    color: #fff;
 }
 
-.tt-search-box-result:hover {
-    background: rgba(231, 143, 56, 0.2);
-}
-
+.tt-search-box-result:hover,
 .tt-search-box-result.selected {
-    background: #e78f38;
-    color: white;
+    background: rgba(231, 143, 56, 0.2);
+    color: #fff;
 }
