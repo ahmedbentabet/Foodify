@@ -23,37 +23,61 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initialize map
     function initializeMap() {
-        map = tt.map({
-            key: API_KEY,
-            container: 'map',
-            center: [31.2357, 30.0444], // Cairo coordinates
-            zoom: 13
-        });
+        try {
+            map = tt.map({
+                key: API_KEY,
+                container: 'map',
+                center: [31.2357, 30.0444], // Cairo coordinates
+                zoom: 13,
+                interactive: true // Ensure map is interactive
+            });
 
-        // Add search box
-        const searchBoxService = new tt.services.fuzzySearch({
-            key: API_KEY
-        });
+            // Add click event debug logging
+            map.on('click', (e) => {
+                console.log('Map clicked:', e.lngLat);
+            });
 
-        const searchBoxElement = document.getElementById('searchInput');
-        searchBox = new tt.plugins.SearchBox(searchBoxService, {
-            showSearchButton: false,
-            searchBoxHTML: searchBoxElement.outerHTML
-        });
-        searchBoxElement.parentNode.replaceChild(searchBox.getSearchBoxHTML(), searchBoxElement);
+            // Add search box
+            try {
+                const searchBoxService = new tt.services.fuzzySearch({
+                    key: API_KEY
+                });
 
-        // Handle search results
-        searchBox.on('tomtom.searchbox.resultselected', function(event) {
-            const coords = event.data.result.position;
-            placeMarker([coords.lng, coords.lat]);
-            getAddress(coords);
-        });
+                const searchBoxElement = document.getElementById('searchInput');
+                if (tt.plugins && tt.plugins.SearchBox) {
+                    searchBox = new tt.plugins.SearchBox(searchBoxService, {
+                        showSearchButton: false,
+                        searchBoxHTML: searchBoxElement.outerHTML
+                    });
+                    searchBoxElement.parentNode.replaceChild(searchBox.getSearchBoxHTML(), searchBoxElement);
+                } else {
+                    console.error('TomTom SearchBox plugin not loaded');
+                    showError('Search functionality unavailable');
+                }
+            } catch (error) {
+                console.error('SearchBox initialization error:', error);
+                showError('Failed to initialize search');
+            }
 
-        // Add marker on map click
-        map.on('click', (e) => {
-            placeMarker(e.lngLat);
-            getAddress(e.lngLat);
-        });
+            // Handle search results
+            searchBox.on('tomtom.searchbox.resultselected', function(event) {
+                const coords = event.data.result.position;
+                // Convert position to [lng, lat] format
+                placeMarker([coords.lng, coords.lat]);
+                getAddress(coords);
+            });
+
+            // Add marker on map click
+            map.on('click', (e) => {
+                // TomTom click event provides coordinates in {lng, lat} format
+                const clickedPoint = e.lngLat;
+                placeMarker(clickedPoint);
+                getAddress(clickedPoint);
+            });
+        } catch (error) {
+            console.error('Map initialization error:', error);
+            showError(error);
+        }
     }
 
     // Handle geolocation
@@ -117,8 +141,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function placeMarker(lngLat) {
     if (marker) marker.remove();
+
+    // Handle both array and object formats of coordinates
+    let coordinates;
+    if (Array.isArray(lngLat)) {
+        coordinates = lngLat;
+    } else if (lngLat.lng && lngLat.lat) {
+        coordinates = [lngLat.lng, lngLat.lat];
+    } else {
+        coordinates = [lngLat[0], lngLat[1]];
+    }
+
     marker = new tt.Marker()
-        .setLngLat(lngLat)
+        .setLngLat(coordinates)
         .addTo(map);
 }
 
