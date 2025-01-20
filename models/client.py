@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Client model module"""
 from sqlalchemy import Column, String, Float
+from sqlalchemy import Column, String, Float
 from sqlalchemy.orm import relationship
 from models.base_model import BaseModel, Base
 from flask_login import UserMixin

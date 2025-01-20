@@ -5,6 +5,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField
 from flask_login import current_user, login_required
 from wtforms.validators import DataRequired, Length, Email, ValidationError, Regexp, Optional
+from wtforms.validators import DataRequired, Length, Email, ValidationError, Regexp, Optional
 from models import storage
 
 setting_routes = Blueprint('setting_routes', __name__)
@@ -52,7 +53,6 @@ class UserSettingForm(FlaskForm):
 def setting():
     """Handle user settings"""
     user_setting_form = UserSettingForm()
-
     if request.method == "GET":
         user_setting_form.username.data = current_user.username
         user_setting_form.email.data = current_user.email
@@ -99,7 +99,6 @@ def setting():
             flash(f"Error updating profile: {str(e)}", "danger")
 
         return redirect(url_for("setting_routes.setting"))
-
     # If form validation failed, show errors
     for field, errors in user_setting_form.errors.items():
         for error in errors:

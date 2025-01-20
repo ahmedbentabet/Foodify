@@ -155,61 +155,6 @@ function handleLocationError(error) {
     }
 }
 
-<<<<<<< HEAD
-function setMarker(location) {
-    if (marker) marker.setMap(null);
-    marker = new google.maps.Marker({
-        map: map,
-        position: location,
-        animation: google.maps.Animation.DROP
-    });
-}
-
-document.getElementById('delivery-form').addEventListener('submit', (e) => {
-    e.preventDefault();
-
-    const deliveryDetails = {
-        address: document.getElementById('address-input').value,
-        contactName: document.getElementById('contact-name').value,
-        phone: document.getElementById('phone').value,
-        instructions: document.getElementById('instructions').value,
-        deliveryTime: document.getElementById('delivery-slot').value,
-        location: marker ? {
-            lat: marker.getPosition().lat(),
-            lng: marker.getPosition().lng()
-        } : null
-    };
-
-    // Store delivery details
-    localStorage.setItem('deliveryDetails', JSON.stringify(deliveryDetails));
-
-    // Proceed to payment
-    window.location.href = 'payment.html';
-});
-
-document.getElementById('delivery-form').addEventListener('submit', (e) => {
-    e.preventDefault();
-
-    if (!validateDeliveryForm()) return;
-
-    // Save delivery info
-    const deliveryDetails = {
-        address: document.getElementById('address-input').value,
-        contactName: document.getElementById('contact-name').value,
-        phone: document.getElementById('phone').value,
-        instructions: document.getElementById('instructions').value,
-        location: marker ? {
-            lat: marker.getPosition().lat(),
-            lng: marker.getPosition().lng()
-        } : null
-    };
-
-    // Store and navigate
-    localStorage.setItem('deliveryDetails', JSON.stringify(deliveryDetails));
-    window.location.href = 'payment.html';
-}); 
-
-=======
 function showError(message) {
     const errorDiv = document.createElement('div');
     errorDiv.className = 'error-message';
@@ -217,4 +162,3 @@ function showError(message) {
     document.querySelector('.delivery-container').prepend(errorDiv);
     setTimeout(() => errorDiv.remove(), 5000);
 }
->>>>>>> origin/Tariq_Branch
