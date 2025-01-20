@@ -120,6 +120,7 @@ function handleProceedToDelivery() {
             deliveryFee: DELIVERY_FEE
         };
 
+<<<<<<< HEAD
         localStorage.setItem('orderSummary', JSON.stringify(orderSummary));
         window.location.href = 'delivery.html';
     } catch (error) {
@@ -132,4 +133,9 @@ function sanitizeInput(input) {
     div.textContent = input;
     return div.innerHTML;
 }
+=======
+    // Navigate to delivery page
+    window.location.href = '/delivery';  // Changed from /location
+});
+>>>>>>> origin/Tariq_Branch
 

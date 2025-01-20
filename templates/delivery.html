@@ -5,8 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Delivery Details - Foodify</title>
-    <link rel="stylesheet" href="../static/Styles/delivery.css">
-    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places"></script>
+    <!-- TomTom Maps SDK -->
+    <link rel='stylesheet' type='text/css' href='https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.23.0/maps/maps.css'>
+    <script src="https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.23.0/maps/maps-web.min.js"></script>
+    <script src="https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.23.0/services/services-web.min.js"></script>
+    <!-- Your CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/delivery.css') }}">
 </head>
 
 <body>
@@ -35,7 +39,21 @@
     </nav>
     <!-- Navigation remains same as other pages -->
     <div class="delivery-container">
-        <div class="map-section">
+        <!-- Location Prompt -->
+        <div id="locationPrompt" class="location-prompt">
+            <h2>Delivery Location</h2>
+            <p>Would you like to continue with your stored location?</p>
+            {% if stored_location %}
+                <p class="stored-address">{{ stored_location.address }}</p>
+            {% endif %}
+            <div class="button-group">
+                <button id="useStoredLocation" class="btn primary">Yes</button>
+                <button id="selectNewLocation" class="btn secondary">No</button>
+            </div>
+        </div>
+
+        <!-- Map Section -->
+        <div id="mapSection" class="map-section" style="display: none;">
             <div id="map"></div>
             <div class="location-search">
                 <input type="text" id="address-input" placeholder="Enter your delivery address">
@@ -137,4 +155,3 @@
 </body>
 
 </html>
-
