@@ -108,45 +108,84 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Form submission
-  document
-    .getElementById("locationForm")
-    .addEventListener("submit", async (e) => {
-      e.preventDefault();
-      if (!marker) {
+  document.getElementById("locationForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    if (!marker) {
         showError("Please select a location on the map");
         return;
-      }
+    }
 
-      const phone = document.getElementById("phone").value;
-      if (!phone.match(/^[0-9]{11}$/)) {
-        showError("Please enter a valid 11-digit phone number");
+    const countryCode = document.getElementById("country-code").value;
+    const phoneNumber = document.getElementById("phone").value;
+    const fullPhone = countryCode + phoneNumber;
+
+    // Validate phone number based on country code
+    const phoneRegex = {
+        // Middle East & North Africa
+        '+20': /^\+20[0-9]{10}$/, // Egypt
+        '+966': /^\+966[0-9]{9}$/, // Saudi Arabia
+        '+971': /^\+971[0-9]{9}$/, // UAE
+        '+974': /^\+974[0-9]{8}$/, // Qatar
+        '+965': /^\+965[0-9]{8}$/, // Kuwait
+        '+968': /^\+968[0-9]{8}$/, // Oman
+        '+973': /^\+973[0-9]{8}$/, // Bahrain
+        '+962': /^\+962[0-9]{9}$/, // Jordan
+        '+961': /^\+961[0-9]{8}$/, // Lebanon
+        '+963': /^\+963[0-9]{9}$/, // Syria
+        '+964': /^\+964[0-9]{10}$/, // Iraq
+        '+216': /^\+216[0-9]{8}$/, // Tunisia
+        '+213': /^\+213[0-9]{9}$/, // Algeria
+        '+212': /^\+212[0-9]{9}$/, // Morocco
+        '+218': /^\+218[0-9]{9}$/, // Libya
+        '+249': /^\+249[0-9]{9}$/, // Sudan
+
+        // Europe
+        '+44': /^\+44[0-9]{10}$/, // UK
+        '+33': /^\+33[0-9]{9}$/, // France
+        '+49': /^\+49[0-9]{11}$/, // Germany
+        '+39': /^\+39[0-9]{10}$/, // Italy
+        '+34': /^\+34[0-9]{9}$/, // Spain
+
+        // North America
+        '+1': /^\+1[0-9]{10}$/, // USA/Canada
+
+        // Asia
+        '+86': /^\+86[0-9]{11}$/, // China
+        '+91': /^\+91[0-9]{10}$/, // India
+        '+81': /^\+81[0-9]{10}$/, // Japan
+        '+82': /^\+82[0-9]{10}$/, // South Korea
+    };
+
+    if (!phoneRegex[countryCode].test(fullPhone)) {
+        showError("Please enter a valid phone number for " +
+                 countryCode + " (including country code)");
         return;
-      }
+    }
 
-      try {
+    try {
         const response = await fetch("/api/v1/location/save", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            lat: marker.getLngLat().lat,
-            lng: marker.getLngLat().lng,
-            address: document.getElementById("address").value,
-            phone: phone,
-            instructions: document.getElementById("instructions").value,
-          }),
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                lat: marker.getLngLat().lat,
+                lng: marker.getLngLat().lng,
+                address: document.getElementById("address").value,
+                phone: fullPhone,
+                instructions: document.getElementById("instructions").value
+            })
         });
 
         if (response.ok) {
-          window.location.href = "/payment";
+            window.location.href = "/payment";
         } else {
-          throw new Error("Failed to save location");
+            throw new Error("Failed to save location");
         }
-      } catch (error) {
+    } catch (error) {
         showError(error.message);
-      }
-    });
+    }
+  });
 });
 
 function placeMarker(lngLat) {
