@@ -121,3 +121,32 @@
         height: 300px;
     }
 }
+
+/* Add these styles for the TomTom search box */
+.tt-search-box {
+    width: 100%;
+    margin-right: 10px;
+}
+
+.tt-search-box-input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 25px;
+    font-size: 14px;
+}
+
+.tt-search-box-result-list {
+    background: white;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.tt-search-box-result {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.tt-search-box-result:hover {
+    background: #f5f5f5;
+}
