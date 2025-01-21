@@ -339,13 +339,10 @@ body {
     border: 1px solid rgba(231, 143, 56, 0.2);
     border-radius: 12px;
     margin-top: 8px;
-    padding: 12px;
+    padding: 8px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
     backdrop-filter: blur(10px);
     max-height: 300px;
-    overflow-y: auto;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
 }
 
 /* Individual Result Card Styling */
@@ -353,7 +350,7 @@ body {
     margin: 8px 0;
     padding: 12px;
     border-radius: 8px;
-    background: rgba(40, 40, 40, 0.95);
+    background: transparent;
     border: 1px solid rgba(231, 143, 56, 0.1);
     transition: all 0.3s ease;
     cursor: pointer;
@@ -377,16 +374,18 @@ body {
 
 /* Hover State */
 .tt-search-box-result:hover {
-    background: rgba(231, 143, 56, 0.15);
+    background: rgba(231, 143, 56, 0.1);
     border-color: rgba(231, 143, 56, 0.5);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(231, 143, 56, 0.1);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 /* Selected State */
 .tt-search-box-result.selected {
-    background: rgba(231, 143, 56, 0.2);
-    border-color: #e78f38;
+    background: rgba(231, 143, 56, 0.1);
+    border-color: rgba(231, 143, 56, 0.5);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 /* Matched Text */
