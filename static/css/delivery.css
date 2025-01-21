@@ -232,6 +232,37 @@ body {
 }
 
 .tt-search-box-result-list {
+    background: rgba(40, 40, 40, 0.95); /* Lighter background */
+    border: 1px solid rgba(231, 143, 56, 0.3);
+    border-radius: 8px;
+    margin-top: 5px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+}
+
+.tt-search-box-result {
+    color: rgba(255, 255, 255, 0.9); /* Light text color */
+    padding: 12px 16px;
+    transition: all 0.2s ease;
+}
+
+.tt-search-box-result-list-separator {
+    border-color: rgba(231, 143, 56, 0.2); /* Subtle separator */
+}
+
+.tt-search-box-result:hover,
+.tt-search-box-result.selected {
+    background: rgba(231, 143, 56, 0.3); /* Orange highlight */
+    color: #fff;
+}
+
+/* Additional highlight for matched text */
+.tt-search-box-result-match {
+    color: #e78f38; /* Orange highlight for matched text */
+    font-weight: 500;
+}
+
+.tt-search-box-result-list {
     background: rgba(0, 0, 0, 0.9);
     color: #e78f38;
     border: 1px solid rgba(231, 143, 56, 0.3);
