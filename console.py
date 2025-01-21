@@ -1,4 +1,7 @@
+<<<<<<< HEAD
+=======
 #!/usr/bin/env python3
+>>>>>>> 4fb386554b0b5da02ee592af690b96639016bf98
 """ Console Module """
 import cmd
 import sys
@@ -148,10 +151,15 @@ class FoodifyCommand(cmd.Cmd):
                 value.startswith("'") and value.endswith("'")
             ):
                 # It's a string, replace underscores with spaces and handle escaped quotes
+<<<<<<< HEAD
+                value = value[1:-1] #.replace('_', ' ') #.replace('"', '\\"')
+            elif '.' in value:
+=======
                 value = value[
                     1:-1
                 ]  # .replace('_', ' ') #.replace('"', '\\"')
             elif "." in value:
+>>>>>>> 4fb386554b0b5da02ee592af690b96639016bf98
                 try:
                     # Try converting to float
                     value = float(value)

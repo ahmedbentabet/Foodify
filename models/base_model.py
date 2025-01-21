@@ -12,7 +12,7 @@ from sqlalchemy.orm import sessionmaker
 Base = declarative_base()
 
 
-class BaseModel:
+class BaseModel(Base):
     """A base class for all Foodify models"""
 
     __abstract__ = True  # Make this an abstract base class
@@ -57,12 +57,12 @@ class BaseModel:
         dictionary = {}
         dictionary.update(self.__dict__)
         dictionary.update(
-            {"__class__": (str(type(self)).split(".")[-1]).split("'")[0]}
-        )
-        dictionary["created_at"] = self.created_at.isoformat()
-        dictionary["updated_at"] = self.updated_at.isoformat()
-        if "_sa_instance_state" in dictionary:
-            del dictionary["_sa_instance_state"]
+            {'__class__': (str(type(self)).split('.')[-1]).split('\'')[0]})
+        dictionary['created_at'] = self.created_at.isoformat()
+        dictionary['updated_at'] = self.updated_at.isoformat()
+        if '_sa_instance_state' in dictionary:
+            del dictionary['_sa_instance_state']
+        print(dictionary)
         return dictionary
 
     def delete(self):
