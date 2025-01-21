@@ -103,7 +103,7 @@ body {
 .form-group input,
 .form-group textarea {
     width: 100%;
-    padding: 12px;
+    padding: 8px;
     background: rgba(255, 255, 255, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 5px;
@@ -231,28 +231,58 @@ body {
     background: rgba(0, 0, 0, 0.8);  /* Darker background when focused */
 }
 
-.tt-search-box-result-list {
-    background: rgba(40, 40, 40, 0.95); /* Lighter background */
+/* Enhanced TomTom SearchBox results list styling with complete scrollbar hiding */
+.tt-search-box .tt-search-box-result-list,
+.tt-search-box-result-list,
+.tt-search-box-result-list-container {
+    background: rgba(40, 40, 40, 0.95);
     border: 1px solid rgba(231, 143, 56, 0.3);
     border-radius: 8px;
     margin-top: 5px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     backdrop-filter: blur(10px);
+    max-height: 300px;
+
+    /* Hide scrollbar while maintaining scroll functionality */
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: none !important;  /* Firefox */
+    -ms-overflow-style: none !important;  /* IE and Edge */
+    -webkit-overflow-scrolling: touch;  /* iOS smooth scrolling */
 }
 
+/* Hide WebKit scrollbars comprehensively */
+.tt-search-box .tt-search-box-result-list::-webkit-scrollbar,
+.tt-search-box .tt-search-box-result-list::-webkit-scrollbar-track,
+.tt-search-box .tt-search-box-result-list::-webkit-scrollbar-thumb,
+.tt-search-box-result-list::-webkit-scrollbar,
+.tt-search-box-result-list::-webkit-scrollbar-track,
+.tt-search-box-result-list::-webkit-scrollbar-thumb,
+.tt-search-box-result-list-container::-webkit-scrollbar,
+.tt-search-box-result-list-container::-webkit-scrollbar-track,
+.tt-search-box-result-list-container::-webkit-scrollbar-thumb,
+.tt-search-box div::-webkit-scrollbar,
+.tt-search-box div::-webkit-scrollbar-track,
+.tt-search-box div::-webkit-scrollbar-thumb {
+    width: 0 !important;
+    height: 0 !important;
+    background: transparent !important;
+    display: none !important;
+    -webkit-appearance: none !important;
+    appearance: none !important;
+}
+
+/* Individual result styling */
 .tt-search-box-result {
-    color: rgba(255, 255, 255, 0.9); /* Light text color */
+    color: rgba(255, 255, 255, 0.9);
     padding: 12px 16px;
     transition: all 0.2s ease;
-}
-
-.tt-search-box-result-list-separator {
-    border-color: rgba(231, 143, 56, 0.2); /* Subtle separator */
+    cursor: pointer;
 }
 
 .tt-search-box-result:hover,
 .tt-search-box-result.selected {
-    background: rgba(231, 143, 56, 0.3); /* Orange highlight */
+    background: rgba(231, 143, 56, 0.2);
     color: #fff;
 }
 
@@ -260,23 +290,6 @@ body {
 .tt-search-box-result-match {
     color: #e78f38; /* Orange highlight for matched text */
     font-weight: 500;
-}
-
-.tt-search-box-result-list {
-    background: rgba(0, 0, 0, 0.9);
-    color: #e78f38;
-    border: 1px solid rgba(231, 143, 56, 0.3);
-}
-
-.tt-search-box-result {
-    color: #e78f38;  /* Orange text for results */
-    padding: 12px 16px;
-}
-
-.tt-search-box-result:hover,
-.tt-search-box-result.selected {
-    background: rgba(231, 143, 56, 0.2);
-    color: #fff;
 }
 
 /* Phone input specific styling */
