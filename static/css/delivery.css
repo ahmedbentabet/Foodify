@@ -237,18 +237,15 @@ body {
 .tt-search-box-result-list-container {
     background: rgba(40, 40, 40, 0.95);
     border: 1px solid rgba(231, 143, 56, 0.3);
-    border-radius: 8px;
-    margin-top: 5px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    border-radius: 12px;
+    margin-top: 8px;
+    padding: 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
     backdrop-filter: blur(10px);
     max-height: 300px;
-
-    /* Hide scrollbar while maintaining scroll functionality */
-    overflow-y: auto;
-    overflow-x: hidden;
-    scrollbar-width: none !important;  /* Firefox */
-    -ms-overflow-style: none !important;  /* IE and Edge */
-    -webkit-overflow-scrolling: touch;  /* iOS smooth scrolling */
+    overflow: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 }
 
 /* Hide WebKit scrollbars comprehensively */
@@ -334,4 +331,73 @@ body {
     color: rgba(255, 255, 255, 0.7);
     font-size: 0.85em;
     margin-top: 5px;
+}
+
+/* TomTom SearchBox Results Styling */
+.tt-search-box-result-list {
+    background: rgba(20, 20, 20, 0.95);
+    border: 1px solid rgba(231, 143, 56, 0.2);
+    border-radius: 12px;
+    margin-top: 8px;
+    padding: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(10px);
+    max-height: 300px;
+    overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+/* Individual Result Card Styling */
+.tt-search-box-result {
+    margin: 8px 0;
+    padding: 12px;
+    border-radius: 8px;
+    background: rgba(40, 40, 40, 0.95);
+    border: 1px solid rgba(231, 143, 56, 0.1);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+/* Result Title */
+.tt-search-box-result span:first-child {
+    color: #e78f38;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* Result Address */
+.tt-search-box-result span:last-child {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 12px;
+}
+
+/* Hover State */
+.tt-search-box-result:hover {
+    background: rgba(231, 143, 56, 0.15);
+    border-color: rgba(231, 143, 56, 0.5);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(231, 143, 56, 0.1);
+}
+
+/* Selected State */
+.tt-search-box-result.selected {
+    background: rgba(231, 143, 56, 0.2);
+    border-color: #e78f38;
+}
+
+/* Matched Text */
+.tt-search-box-result-match {
+    color: #fff;
+    background: rgba(231, 143, 56, 0.3);
+    padding: 0 4px;
+    border-radius: 3px;
+}
+
+/* Separator Between Results */
+.tt-search-box-result:not(:last-child) {
+    border-bottom: 1px solid rgba(231, 143, 56, 0.1);
 }
