@@ -5,7 +5,6 @@ from models.client import Client
 
 delivery_routes = Blueprint('delivery_routes', __name__)
 
-
 @delivery_routes.route('/delivery')
 @login_required
 def delivery_page():
@@ -20,11 +19,10 @@ def delivery_page():
             } if client.address else None
 
             return render_template('delivery.html',
-                                   stored_location=stored_location)
+                                 stored_location=stored_location)
     except Exception as e:
         print(f"Error loading delivery page: {e}")
         return render_template('delivery.html', stored_location=None)
-
 
 @delivery_routes.route('/api/v1/location/save', methods=['POST'])
 @login_required
