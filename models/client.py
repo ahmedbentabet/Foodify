@@ -17,6 +17,10 @@ class Client(BaseModel, Base, UserMixin):
     address = Column(String(70), nullable=False)  # Combined address field
     email = Column(String(100), unique=True, nullable=False)
     password = Column(String(128), nullable=False)
+    latitude = Column(Float, nullable=True)
+    longitude = Column(Float, nullable=True)
+    phone = Column(String(20), nullable=True)
+    delivery_instructions = Column(String(500), nullable=True)
 
     reviews = relationship(
         "Review", back_populates="client", cascade="all, delete-orphan"

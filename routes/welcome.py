@@ -1,26 +1,16 @@
 """Signup route handler"""
-
-from flask import (
-    Blueprint,
-    render_template,
-    url_for,
-    flash,
-    redirect,
-    session,
-    request,
-    jsonify,
-)
+from flask import Blueprint, render_template, url_for, flash, redirect, session, request, jsonify
 import math
 from models import storage
 from flask_wtf import FlaskForm
 from sqlalchemy.orm import joinedload
+from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired, Length, Email, Regexp, EqualTo
 from models.menu_item import MenuItem  # Add imports at top
-
 # from app import foodify_app
 
-welcome_routes = Blueprint("welcome_routes", __name__)
+welcome_routes = Blueprint('welcome_routes', __name__)
 
 
 @welcome_routes.route("/")
