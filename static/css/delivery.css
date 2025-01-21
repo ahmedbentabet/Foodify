@@ -247,3 +247,47 @@ body {
     background: rgba(231, 143, 56, 0.2);
     color: #fff;
 }
+
+/* Phone input specific styling */
+.phone-input-container input[type="tel"],
+.country-code {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+    color: #e78f38; /* Changed from white to orange */
+    padding: 12px;
+}
+
+.phone-input-container input[type="tel"] {
+    flex: 1;
+}
+
+.country-code {
+    min-width: 120px;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23e78f38' d='M6 9L0 0h12'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    padding-right: 30px;
+}
+
+/* Improve visibility of placeholder text */
+.phone-input-container input[type="tel"]::placeholder {
+    color: rgba(231, 143, 56, 0.6); /* Semi-transparent orange */
+}
+
+/* Style for focused state */
+.phone-input-container input[type="tel"]:focus,
+.country-code:focus {
+    outline: none;
+    border-color: #e78f38;
+    box-shadow: 0 0 5px rgba(231, 143, 56, 0.3);
+}
+
+/* Style for form hint */
+.form-hint {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.85em;
+    margin-top: 5px;
+}
