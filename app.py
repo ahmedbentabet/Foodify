@@ -64,7 +64,6 @@ from routes.welcome import welcome_routes
 from routes.order import order_routes
 from routes.payment import payment_routes
 from routes.all_orders_and_review import review_routes
-from routes.delivery import delivery_routes  # Changed from location_routes
 
 # Register blueprints
 foodify_app.register_blueprint(login_routes)
@@ -75,7 +74,6 @@ foodify_app.register_blueprint(welcome_routes)
 foodify_app.register_blueprint(order_routes)
 foodify_app.register_blueprint(payment_routes)
 foodify_app.register_blueprint(review_routes)
-foodify_app.register_blueprint(delivery_routes)  # Changed from location_routes
 
 # Register cleanup function with Flask app
 foodify_app.teardown_appcontext(close_db)

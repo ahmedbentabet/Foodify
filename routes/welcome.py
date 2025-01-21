@@ -3,11 +3,19 @@
 from flask import (
     Blueprint,
     render_template,
+    url_for,
+    flash,
+    redirect,
+    session,
     request,
     jsonify,
 )
+import math
 from models import storage
+from flask_wtf import FlaskForm
 from sqlalchemy.orm import joinedload
+from wtforms import StringField, PasswordField, SubmitField
+from wtforms.validators import DataRequired, Length, Email, Regexp, EqualTo
 from models.menu_item import MenuItem  # Add imports at top
 
 # from app import foodify_app
@@ -40,7 +48,6 @@ def search_meals():
             if query_param:
                 query = query.filter(MenuItem.name.ilike(f"%{query_param}%"))
             if restaurant != "All":
-                from models.restaurant import Restaurant
                 query = query.join(MenuItem.restaurant).filter(
                     Restaurant.name == restaurant
                 )
@@ -60,7 +67,7 @@ def search_meals():
                             "price": float(meal.price),
                             "is_available": meal.is_available,
                             "restaurant_name": meal.restaurant.name,
-                            "image_name": meal.image_url,
+                            "image_name": meal.name,
                         }
                         for meal in paginated_meals
                     ],
