@@ -103,9 +103,9 @@ def apply_coupon():
 
         # Example coupon codes - in real app, these would be in a database
         valid_coupons = {
-            'WELCOME10': 10,
-            'SAVE20': 20,
-            'ALX': 50
+            'WELCOME20': 20,
+            'ALX': 50,
+            'AHMED': 100
         }
 
         if code in valid_coupons:
