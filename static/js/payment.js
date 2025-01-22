@@ -9,12 +9,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateCartCount() {
         const cartCount = document.getElementById('cart-count');
+        if (!cartCount) return;
+
         const totalQuantity = cartItems.reduce((total, item) => total + item.quantity, 0);
 
         if (totalQuantity > 0) {
             cartCount.textContent = totalQuantity;
             cartCount.classList.remove('cart-count-hidden');
+            cartCount.classList.add('cart-count-active');
         } else {
+            cartCount.classList.remove('cart-count-active');
             cartCount.classList.add('cart-count-hidden');
         }
     }
@@ -80,6 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (data.success) {
                 // Clear cart
                 localStorage.removeItem('cartItems');
+                updateCartCount(); // Update cart count after clearing
                 // Redirect to welcome page
                 window.location.href = data.redirect;
             } else {

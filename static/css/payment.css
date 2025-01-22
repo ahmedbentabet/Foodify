@@ -96,31 +96,7 @@ nav button:hover {
     background: #f79c42;
 }
 
-
-.cart-icon-container {
-    position: relative;
-    margin-right: 20px;  /* Add space after cart icon */
-}
-
-
-#cart-count {
-    background-color: red;
-    color: white;
-    padding: 0.1rem;
-    border-radius: 100%;
-    font-weight: bold;
-    position: absolute;
-    top: -10px;
-    right: -17px;
-    display: block;
-    width: 18px;
-    height: 18px;
-}
-
-
-.cart-count-hidden span {
-    display: none;
-}
+/* Remove cart styles - now in shared/cart.css */
 
 .payment-container {
     max-width: 800px;
