@@ -10,7 +10,7 @@ from routes.signup import signup_routes
 from routes.user_setting import setting_routes
 from routes.contact import contact_routes
 from routes.login import login_routes, logout_routes
-from flask import Flask
+from flask import Flask, render_template
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from models import storage
@@ -46,6 +46,24 @@ def load_user(user_id):
 def close_db(e=None):
     """Cleanup function to be called after each request"""
     storage.close()
+
+
+# Error handlers
+@foodify_app.errorhandler(403)
+def forbidden_error(error):
+    """Handle 403 Forbidden error"""
+    return render_template('403.html'), 403
+
+@foodify_app.errorhandler(404)
+def not_found_error(error):
+    """Handle 404 Not Found error"""
+    return render_template('404.html'), 404
+
+@foodify_app.errorhandler(500)
+def internal_error(error):
+    """Handle 500 Internal Server error"""
+    storage.rollback()  # Rollback the session in case of database errors
+    return render_template('500.html'), 500
 
 
 # Import routes after login_manager is initialized
