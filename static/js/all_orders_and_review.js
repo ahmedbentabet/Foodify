@@ -100,4 +100,23 @@ document.addEventListener('DOMContentLoaded', () => {
             alert('Error submitting review');
         }
     });
+
+    // Add cart count update functionality
+    function updateCartCount() {
+        const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+        const cartCount = document.getElementById('cart-count');
+        const totalQuantity = cartItems.reduce((total, item) => total + item.quantity, 0);
+
+        if (totalQuantity > 0) {
+            cartCount.textContent = totalQuantity;
+            cartCount.classList.remove('cart-count-hidden');
+            cartCount.classList.add('cart-count-active');
+        } else {
+            cartCount.classList.remove('cart-count-active');
+            cartCount.classList.add('cart-count-hidden');
+        }
+    }
+
+    // Initialize cart count
+    updateCartCount();
 });
