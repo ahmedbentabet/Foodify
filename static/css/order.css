@@ -255,30 +255,36 @@ body {
 .price-calculation {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 10px;
     background: rgba(255, 255, 255, 0.1);
-    padding: 15px;
+    padding: 12px;
     border-radius: 12px;
+    flex-wrap: nowrap;
+    min-width: 0;
+    max-width: 100%;
 }
 
-.unit-price {
-    font-size: 1.2rem;
+.unit-price, .total-price {
+    font-size: 1.1rem;
     color: #e78f38;
     font-weight: 600;
+    white-space: nowrap;
 }
 
 .multiply, .equals {
     color: #888;
-    font-size: 1.2rem;
+    font-size: 1rem;
+    padding: 0 5px;
 }
 
 .quantity {
     display: flex;
     align-items: center;
-    gap: 10px;
     background: rgba(255, 255, 255, 0.15);
-    padding: 8px 15px;
+    padding: 5px 12px;
     border-radius: 20px;
+    min-width: 40px;
+    justify-content: center;
 }
 
 .quantity img {
@@ -293,10 +299,10 @@ body {
 }
 
 .quantity-value {
-    font-size: 1.1rem;
+    font-size: 1rem;
     color: #fff;
-    min-width: 30px;
     text-align: center;
+    min-width: 20px;
 }
 
 .total-price {
