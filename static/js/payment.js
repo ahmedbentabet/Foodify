@@ -42,12 +42,63 @@ document.addEventListener('DOMContentLoaded', () => {
         totalElement.textContent = `$${(subtotal + deliveryFee).toFixed(2)}`;
     }
 
+    const applyCouponButton = document.getElementById('applyCoupon');
+    const couponInput = document.getElementById('couponCode');
+    const couponMessage = document.getElementById('couponMessage');
+    let appliedCoupon = null;
+
+    applyCouponButton.addEventListener('click', async () => {
+        const code = couponInput.value.trim().toUpperCase();
+        
+        if (!code) {
+            showCouponMessage('Please enter a coupon code', 'error');
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/v1/apply_coupon', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ code })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                appliedCoupon = data.discount;
+                showCouponMessage(`Coupon applied! ${data.discount}% off`, 'success');
+                updateTotals();
+                couponInput.disabled = true;
+                applyCouponButton.disabled = true;
+            } else {
+                showCouponMessage(data.error || 'Invalid coupon code', 'error');
+            }
+        } catch (error) {
+            showCouponMessage('Error applying coupon', 'error');
+        }
+    });
+
+    function showCouponMessage(message, type) {
+        couponMessage.textContent = message;
+        couponMessage.className = `coupon-message ${type}`;
+    }
+
     function updateTotals() {
         fetch('/api/v1/payment/totals')
             .then(response => response.json())
             .then(data => {
-                document.getElementById('subtotal').textContent = `$${data.subtotal}`;
-                document.getElementById('total').textContent = `$${data.total}`;
+                let subtotal = parseFloat(data.subtotal);
+                let total = parseFloat(data.total);
+
+                if (appliedCoupon) {
+                    const discount = total * (appliedCoupon / 100);
+                    total -= discount;
+                }
+
+                document.getElementById('subtotal').textContent = `$${subtotal.toFixed(2)}`;
+                document.getElementById('total').textContent = `$${total.toFixed(2)}`;
             })
             .catch(error => console.error('Error:', error));
     }
