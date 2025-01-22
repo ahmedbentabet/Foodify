@@ -1,6 +1,15 @@
 #!/usr/bin/env python3
 """The Foodify app
 """
+from routes.delivery import delivery_routes  # Changed from location_routes
+from routes.all_orders_and_review import review_routes
+from routes.payment import payment_routes
+from routes.order import order_routes
+from routes.welcome import welcome_routes
+from routes.signup import signup_routes
+from routes.user_setting import setting_routes
+from routes.contact import contact_routes
+from routes.login import login_routes, logout_routes
 from flask import Flask
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
@@ -40,14 +49,7 @@ def close_db(e=None):
 
 
 # Import routes after login_manager is initialized
-from routes.login import login_routes, logout_routes
-from routes.user_setting import setting_routes
-from routes.signup import signup_routes
-from routes.welcome import welcome_routes
-from routes.order import order_routes
-from routes.payment import payment_routes
-from routes.all_orders_and_review import review_routes
-from routes.delivery import delivery_routes  # Changed from location_routes
+
 
 # Register blueprints
 foodify_app.register_blueprint(login_routes)
@@ -59,6 +61,7 @@ foodify_app.register_blueprint(order_routes)
 foodify_app.register_blueprint(payment_routes)
 foodify_app.register_blueprint(review_routes)
 foodify_app.register_blueprint(delivery_routes)  # Changed from location_routes
+foodify_app.register_blueprint(contact_routes)
 
 # Register cleanup function with Flask app
 foodify_app.teardown_appcontext(close_db)

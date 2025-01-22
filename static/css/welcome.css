@@ -86,13 +86,20 @@ nav button {
     background: #e78f38;
     border: none;
     color: #fff;
-    padding: 10px 30px;
+    padding: 10px 20px;  /* Reduced horizontal padding */
     font-size: 15px;
     font-weight: 600;
     border-radius: 20px;
     transition: transform 0.3s ease, background 0.3s ease;
     cursor: pointer;
     margin-left: 10px;
+    min-width: 90px;    /* Added minimum width */
+    white-space: nowrap; /* Prevent text wrapping */
+}
+
+#signUpBtn {
+    width: auto;      /* Allow button to fit content */
+    padding: 10px 20px;
 }
 
 nav button:hover {
@@ -648,5 +655,31 @@ footer p, footer ul {
     .footer-content div {
         margin-bottom: 20px;
     }
+}
+
+.dropdown-toggle {
+    width: auto !important;
+    min-width: fit-content;
+    padding: 10px 20px !important;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.dropdown.show {
+    margin-left: 10px;
+}
+
+.dropdown-menu {
+    min-width: fit-content;
+    margin-top: 5px !important;
+    border-radius: 8px;
+}
+
+.dropdown-item {
+    padding: 8px 20px;
+    text-align: left;
+    white-space: nowrap;
 }
 
