@@ -8,6 +8,8 @@ body {
     max-width: 1200px;
     margin: 80px auto 0;
     padding: 20px;
+    min-height: calc(100vh - 160px); /* Account for nav and footer */
+    padding-bottom: 60px; /* Add space before footer */
 }
 
 .location-prompt {
@@ -455,5 +457,42 @@ body {
 #geolocateMe:active {
     transform: translateY(1px);
     box-shadow: 0 2px 10px rgba(231, 143, 56, 0.2);
+}
+
+/* Update footer styles */
+footer {
+    width: 100%;
+    margin-top: auto;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 20px 0;
+}
+
+.footer-bottom {
+    text-align: center;
+    color: #fff;
+    padding: 10px 0;
+}
+
+/* Add at the end of the file */
+
+/* Footer adjustments for delivery page */
+footer {
+    position: relative;
+    width: 100%;
+    margin-top: 40px; /* Reduced from auto */
+    padding: 10px 0; /* Reduced padding */
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.footer-bottom {
+    text-align: center;
+    color: #fff;
+    padding: 5px 0; /* Reduced padding */
+    margin: 0; /* Reset margin */
+}
+
+.footer-bottom p {
+    margin: 0; /* Remove paragraph margin */
+    font-size: 14px; /* Slightly smaller font */
 }
 
