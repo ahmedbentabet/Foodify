@@ -95,7 +95,7 @@
             <p class="success-message">Your delicious food is being prepared!</p>
             <div class="success-actions">
                 <a href="{{ url_for('welcome_routes.welcome') }}#restaurants" class="btn primary">Order Again</a>
-                <a href="{{ url_for('review_routes.all_orders_and_review') }}" class="btn secondary">Leave Review</a>
+                <a href="{{ url_for('contact_routes.contact') }}" class="btn secondary">Leave Review</a>
             </div>
         </div>
     </div>
@@ -109,7 +109,7 @@
                 setTimeout(() => {
                     successModal.remove();
                 }, 500);
-            }, 5000);
+            }, 10000);
         }
     });
     </script>
