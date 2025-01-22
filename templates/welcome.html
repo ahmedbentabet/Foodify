@@ -82,6 +82,39 @@
         {% endif%}
     </nav>
 
+    <!-- Add this right after the nav section -->
+    {% if session.pop('order_success', False) %}
+    <div class="order-success-modal" id="successModal">
+        <div class="success-content">
+            <img src="{{ url_for('static', filename='images/foodify_logo.png') }}" class="success-logo">
+            <div class="checkmark-circle">
+                <i class="fas fa-check"></i>
+            </div>
+            <h2>Order Confirmed! 🎉</h2>
+            <p>Thank you for your order of ${{ "%.2f"|format(session.pop('order_total', 0)) }}</p>
+            <p class="success-message">Your delicious food is being prepared!</p>
+            <div class="success-actions">
+                <a href="{{ url_for('welcome_routes.welcome') }}#restaurants" class="btn primary">Order Again</a>
+                <a href="{{ url_for('review_routes.all_orders_and_review') }}" class="btn secondary">Leave Review</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const successModal = document.getElementById('successModal');
+        if (successModal) {
+            setTimeout(() => {
+                successModal.classList.add('fade-out');
+                setTimeout(() => {
+                    successModal.remove();
+                }, 500);
+            }, 5000);
+        }
+    });
+    </script>
+    {% endif %}
+
     <!-- Home section -->
     <section class="home">
         <div class="content">
