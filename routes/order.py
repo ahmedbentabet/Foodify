@@ -188,3 +188,34 @@ def confirm_order():
     except Exception as e:
         storage.rollback()
         return jsonify({"error": str(e)}), 500
+
+
+@order_routes.route("/order")
+@login_required
+def order_page():
+    """Render order page with user's active order items"""
+    with storage.session_scope() as session:
+        # Get user's active order and its items
+        active_order = (
+            session.query(Order)
+            .filter_by(client_id=current_user.id, status="active")
+            .options(
+                joinedload(Order.order_items)
+                .joinedload(OrderItem.menu_item)
+            )
+            .first()
+        )
+
+        order_items = []
+        if active_order:
+            for order_item in active_order.order_items:
+                menu_item = order_item.menu_item
+                order_items.append({
+                    'id': menu_item.id,
+                    'name': menu_item.name,
+                    'price': float(menu_item.price),
+                    'image_url': menu_item.image_url,
+                    'quantity': order_item.quantity
+                })
+
+        return render_template('order.html', order_items=order_items)
