@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    document.getElementById('confirm-payment').addEventListener('click', () => {
+    document.getElementById('confirm-payment').addEventListener('click', async () => {
         const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
 
         if (paymentMethod === 'credit' && !validateCreditCard()) {
@@ -66,9 +66,29 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        alert(`Order confirmed! Payment method: ${paymentMethod}`);
-        localStorage.removeItem('cartItems');
-        window.location.href = 'index.html';
+        try {
+            const response = await fetch('/confirm_order', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ payment_method: paymentMethod })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                // Clear cart
+                localStorage.removeItem('cartItems');
+                // Redirect to welcome page
+                window.location.href = data.redirect;
+            } else {
+                alert(data.error || 'Error confirming order');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Failed to process order. Please try again.');
+        }
     });
 
     function validateCreditCard() {
