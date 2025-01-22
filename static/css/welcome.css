@@ -683,3 +683,128 @@ footer p, footer ul {
     white-space: nowrap;
 }
 
+.order-success-modal {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, #222, #111);
+    border: 2px solid #e78f38;
+    border-radius: 15px;
+    padding: 25px;
+    z-index: 10000;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(10px);
+    animation: slideDown 0.5s ease-out;
+    min-width: 320px;
+    max-width: 90%;
+    text-align: center;
+}
+
+.success-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.success-logo {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+}
+
+.checkmark-circle {
+    width: 50px;
+    height: 50px;
+    background: #e78f38;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 10px 0;
+}
+
+.checkmark-circle i {
+    color: white;
+    font-size: 24px;
+}
+
+.order-success-modal h2 {
+    color: #fff;
+    font-size: 24px;
+    margin: 0;
+}
+
+.order-success-modal p {
+    color: rgba(255, 255, 255, 0.9);
+    margin: 5px 0;
+}
+
+.success-message {
+    color: #e78f38 !important;
+    font-weight: 500;
+}
+
+.success-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.success-actions .btn {
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.success-actions .btn.primary {
+    background: #e78f38;
+    color: white;
+}
+
+.success-actions .btn.secondary {
+    background: transparent;
+    border: 2px solid #e78f38;
+    color: #e78f38;
+}
+
+.fade-out {
+    animation: fadeOut 0.5s ease-out forwards;
+}
+
+@keyframes slideDown {
+    from {
+        transform: translate(-50%, -100%);
+        opacity: 0;
+    }
+    to {
+        transform: translate(-50%, 0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    to {
+        opacity: 0;
+        transform: translate(-50%, -20px);
+    }
+}
+
+@media (max-width: 768px) {
+    .order-success-modal {
+        width: 90%;
+        padding: 20px;
+    }
+
+    .success-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .success-actions .btn {
+        width: 100%;
+    }
+}
+
