@@ -200,6 +200,7 @@ nav button:hover {
 .form-group input[readonly] {
     background-color: #e9ecef;  /* Bootstrap's default gray for readonly inputs */
     cursor: not-allowed;
+    color: #000000;  /* Making readonly input text black */
 }
 
 button {
