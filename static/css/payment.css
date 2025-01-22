@@ -99,6 +99,7 @@ nav button:hover {
 
 .cart-icon-container {
     position: relative;
+    margin-right: 20px;  /* Add space after cart icon */
 }
 
 
@@ -128,6 +129,7 @@ nav button:hover {
     background: rgba(255, 255, 255, 0.1);
     border-radius: 15px;
     backdrop-filter: blur(10px);
+    color: #fff;
 }
 
 .order-summary {
@@ -141,6 +143,7 @@ nav button:hover {
     margin-top: 20px;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     padding-top: 20px;
+    color: #fff;
 }
 
 .cart-items {
@@ -152,6 +155,10 @@ nav button:hover {
     justify-content: space-between;
     padding: 10px 0;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.cart-item span {
+    color: #fff;
 }
 
 .credit-card-form {
@@ -167,6 +174,11 @@ nav button:hover {
     border-radius: 5px;
     background: rgba(255, 255, 255, 0.1);
     color: white;
+    color: #fff;
+}
+
+.credit-card-form input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
 }
 
 .card-details {
@@ -203,6 +215,10 @@ nav button:hover {
     display: block;
     margin: 10px 0;
     cursor: pointer;
+}
+
+.payment-options span {
+    color: #fff;
 }
 
 #confirm-payment {
@@ -249,6 +265,7 @@ footer ul {
 .contact h3 {
     text-align: center;
     text-decoration: underline;
+    color: #fff;
 }
 
 .footer-bottom {
@@ -257,6 +274,10 @@ footer ul {
     border-top: 1px solid #444;
     padding-top: 10px;
     font-size: 14px;
+}
+
+.footer-bottom p {
+    color: #fff;
 }
 
 .contact .team {
@@ -298,6 +319,10 @@ footer ul {
     transition: color 0.3s ease;
 }
 
+.contact .team-member .name {
+    color: #fff !important;
+}
+
 .contact .team-member img:hover+.name {
     color: #e78f38;
     /* Change color when hovering over the image */
@@ -309,6 +334,43 @@ footer ul {
     text-decoration: none;
 }
 
+.about p {
+    color: #fff;
+}
+
+/* Dropdown menu text color */
+.dropdown-menu {
+    background: rgba(0, 0, 0, 0.9);
+}
+
+.dropdown-item {
+    color: #fff !important;
+}
+
+.dropdown-item:hover {
+    background: rgba(231, 143, 56, 0.2);
+}
+
+.dropdown-menu .nav-item .dropdown-item {
+    color: #000 !important;
+}
+
+.dropdown-menu .nav-item .dropdown-item:hover {
+    background: rgba(231, 143, 56, 0.2);
+    color: #000 !important;
+}
+
+.order-summary h2,
+.payment-section h2 {
+    color: #fff;
+}
+
+/* Add spacing for dropdown relative to cart */
+.dropdown.show {
+    margin-left: 30px;  /* Add space between cart and dropdown */
+    display: inline-block;
+    position: relative;
+}
 
 @media (max-width: 768px) {
     .footer-content {
