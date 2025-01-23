@@ -2,7 +2,6 @@
 """The Foodify app
 """
 from routes.delivery import delivery_routes  # Changed from location_routes
-from Templates.all_orders_and_review import review_routes
 from routes.payment import payment_routes
 from routes.order import order_routes
 from routes.welcome import welcome_routes
@@ -80,7 +79,6 @@ foodify_app.register_blueprint(signup_routes)
 foodify_app.register_blueprint(welcome_routes)
 foodify_app.register_blueprint(order_routes)
 foodify_app.register_blueprint(payment_routes)
-foodify_app.register_blueprint(review_routes)
 foodify_app.register_blueprint(delivery_routes)  # Changed from location_routes
 foodify_app.register_blueprint(contact_routes)
 foodify_app.register_blueprint(restaurant_routes)  # Add this line
