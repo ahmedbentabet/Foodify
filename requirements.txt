@@ -1,12 +1,13 @@
+python-version >= "3.10.13"
 Flask==2.0.1
 Flask-Bcrypt==1.0.1
 Flask-Login==0.5.0
 Flask-SQLAlchemy==2.5.1
-Flask-WTF==1.2.2
+Flask-WTF==1.1.1
 Jinja2==3.1.4
 SQLAlchemy==2.0.31
 Werkzeug==2.0.1
-WTForms==3.2.1
+WTForms==3.1.2
 bcrypt==4.2.1
 email_validator==2.2.0
 itsdangerous==2.2.0
