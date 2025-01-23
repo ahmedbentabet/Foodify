@@ -1,40 +1,33 @@
 """Signup route handler"""
 
-from flask import (
-    Blueprint,
-    render_template,
-    request,
-    jsonify,
-)
+from flask import Blueprint, render_template, request, jsonify
 from models import storage
 from sqlalchemy.orm import joinedload
-from models.menu_item import MenuItem  # Add imports at top
+from models.menu_item import MenuItem
 from models.restaurant import Restaurant
-
-# from app import foodify_app
+from typing import Dict, Any
 
 welcome_routes = Blueprint("welcome_routes", __name__)
 
 
 @welcome_routes.route("/")
 @welcome_routes.route("/welcome")
-def welcome():
+def welcome() -> str:
+    """Render welcome page"""
     return render_template("welcome.html", title="Welcome to Foodify")
 
 
 @welcome_routes.route("/api/v1/search", methods=["GET"])
-def search_meals():
-    """Search meals endpoint with proper error handling"""
+def search_meals() -> Dict[str, Any]:
+    """Search meals with pagination and filtering"""
     try:
-        with storage.session_scope() as db_session:  # Use context manager
+        with storage.session_scope() as db_session:
             query_param = request.args.get("query", "").strip().lower()
             restaurant = request.args.get("restaurant", "All").strip()
             page = int(request.args.get("page", 1))
             per_page = 8
 
-            # Build query with proper relationship reference
             query = db_session.query(MenuItem).options(
-                # Using actual relationship attribute
                 joinedload(MenuItem.restaurant)
             )
 
@@ -46,11 +39,8 @@ def search_meals():
                     Restaurant.name == restaurant
                 )
 
-            # Get total count and paginate
             total = query.count()
-            paginated_meals = (
-                query.limit(per_page).offset((page - 1) * per_page).all()
-            )
+            meals = query.limit(per_page).offset((page - 1) * per_page).all()
 
             return jsonify(
                 {
@@ -63,7 +53,7 @@ def search_meals():
                             "restaurant_name": meal.restaurant.name,
                             "image_name": meal.image_url,
                         }
-                        for meal in paginated_meals
+                        for meal in meals
                     ],
                     "total": total,
                 }

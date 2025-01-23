@@ -1,10 +1,5 @@
 #!/usr/bin/python3
-"""
-Database storage module for Foodify application.
-
-This module provides the DBStorage class that handles all database operations
-including CRUD operations, session management, and connection handling.
-"""
+"""Database storage module for Foodify application."""
 
 from os import getenv
 from sqlalchemy import create_engine
@@ -18,7 +13,7 @@ from models.order import Order
 from models.restaurant import Restaurant
 from models.review import Review
 
-from typing import Dict, Any, Optional, List, Type, Union
+from typing import Dict, Any, Optional, List, Type, Union, Generator
 from contextlib import contextmanager
 
 
@@ -28,27 +23,13 @@ CLASSES: List[ModelType] = [Client, Restaurant, MenuItem, Review, Order,
 
 
 class DBStorage:
-    """
-    Database Storage Class for managing database operations.
-
-    Attributes:
-        __engine: SQLAlchemy engine instance
-        __session: SQLAlchemy session instance
-    """
+    """Database Storage Class for managing database operations."""
 
     __engine: Optional[Engine] = None
     __session: Optional[scoped_session] = None
 
     def __init__(self) -> None:
-        """
-        Initialize database connection with optimized settings.
-
-        Environment variables:
-            FOOD_MYSQL_USER: Database username
-            FOOD_MYSQL_PWD: Database password
-            FOOD_MYSQL_HOST: Database host
-            FOOD_MYSQL_DB: Database name
-        """
+        """Initialize database connection with environment variables."""
         user = getenv("FOOD_MYSQL_USER", "root")
         pwd = getenv("FOOD_MYSQL_PWD", "root")
         host = getenv("FOOD_MYSQL_HOST", "127.0.0.1")
@@ -56,22 +37,17 @@ class DBStorage:
 
         self.__engine = create_engine(
             f"mysql+mysqldb://{user}:{pwd}@{host}/{db}",
-            pool_pre_ping=True,  # Check connection before using
-            pool_recycle=300,  # Recycle connections every 5 minutes
-            pool_size=5,  # Smaller pool size
-            max_overflow=10,  # Allow more temp connections if needed
-            pool_timeout=30,  # Connection timeout
+            pool_pre_ping=True,
+            pool_recycle=300,
+            pool_size=5,
+            max_overflow=10,
+            pool_timeout=30,
             connect_args={"connect_timeout": 60, "read_timeout": 30},
         )
         self.__session = None
 
     def reload(self) -> None:
-        """
-        Create database tables and initialize session.
-
-        Raises:
-            Exception: If database connection or table creation fails
-        """
+        """Create tables and initialize session."""
         try:
             Base.metadata.create_all(self.__engine)
             session_factory = sessionmaker(
@@ -88,22 +64,12 @@ class DBStorage:
             raise
 
     def new(self, obj: BaseModel) -> None:
-        """
-        Add new object to current database session.
-
-        Args:
-            obj: BaseModel instance to add
-        """
+        """Add new object to current database session."""
         if obj and self.__session:
             self.__session.add(obj)
 
     def save(self) -> None:
-        """
-        Commit current session changes to database.
-
-        Raises:
-            Exception: If commit fails
-        """
+        """Commit current session changes to database."""
         if not self.__session:
             return
 
@@ -114,23 +80,23 @@ class DBStorage:
             raise RuntimeError(f"Save operation failed: {str(e)}") from e
 
     def delete(self, obj: Optional[BaseModel] = None) -> None:
-        """Delete object from current database session"""
+        """Delete object from current database session."""
         if obj:
             try:
                 self.__session.delete(obj)
-                self.__session.flush()  # Added flush() call
+                self.__session.flush()
             except Exception as e:
                 self.__session.rollback()
-                print(f"Error deleting object: {e}")  # Added error logging
+                print(f"Error deleting object: {e}")
 
     def get(self, cls: Any, id: str) -> Optional[BaseModel]:
-        """Retrieve object by class and id"""
+        """Retrieve object by class and id."""
         if cls and id:
             return self.__session.query(cls).filter(cls.id == id).first()
         return None
 
     def all(self, cls=None) -> Dict[str, BaseModel]:
-        """Query objects"""
+        """Query objects."""
         try:
             if cls:
                 objects = self.__session.query(cls).all()
@@ -153,32 +119,16 @@ class DBStorage:
         filters: Dict[str, Any],
         nested_filters: Optional[Dict[str, Dict[str, Any]]] = None
     ) -> List[BaseModel]:
-        """
-        Enhanced search method supporting nested relationship filtering.
-
-        Args:
-            cls: Model class to search
-            filters: Primary filter conditions
-            nested_filters: Filters for related models
-
-        Returns:
-            List of matching model instances
-
-        Example:
-            filters = {"name": "Pizza Hut"}
-            nested_filters = {"menu_items": {"name": "juice"}}
-        """
+        """Enhanced search with nested relationship filtering."""
         if not self.__session:
             return []
 
         query = self.__session.query(cls)
 
-        # Apply main filters with type checking
         for key, value in filters.items():
             if hasattr(cls, key):
                 query = query.filter(getattr(cls, key).ilike(f"%{value}%"))
 
-        # Apply nested relationship filters
         if nested_filters:
             for relation, rel_filters in nested_filters.items():
                 if hasattr(cls, relation):
@@ -190,22 +140,22 @@ class DBStorage:
         return query.all()
 
     def close(self) -> None:
-        """Close session safely"""
+        """Close session safely."""
         if self.__session:
             try:
-                self.__session.remove()  # Safe to call on scoped_session
+                self.__session.remove()
             except Exception as e:
                 print(f"Error closing session: {e}")
                 pass
 
     def count(self, cls: Optional[Any] = None) -> int:
-        """Count number of objects in storage"""
+        """Count number of objects in storage."""
         if cls:
             return self.__session.query(cls).count()
         return 0
 
     def rollback(self) -> None:
-        """Rollback current database session"""
+        """Rollback current database session."""
         try:
             if self.__session:
                 self.__session.rollback()
@@ -213,16 +163,8 @@ class DBStorage:
             print(f"Error during rollback: {e}")
 
     @contextmanager
-    def session_scope(self) -> Session:
-        """
-        Provide a transactional scope around operations.
-
-        Yields:
-            Active database session
-
-        Raises:
-            Exception: If session operations fail
-        """
+    def session_scope(self) -> Generator[Session, None, None]:
+        """Provide a transactional scope around operations."""
         session = self.refresh_session()
         try:
             yield session
@@ -236,16 +178,13 @@ class DBStorage:
                 session.remove()
 
     def refresh_session(self):
-        """Create a fresh session"""
+        """Create a fresh session."""
         try:
             if self.__session:
                 self.__session.close()
-
-            # Create session factory
             session_factory = sessionmaker(
                 bind=self.__engine, expire_on_commit=False, autoflush=True
             )
-            # Create scoped session
             Session = scoped_session(session_factory)
             self.__session = Session
             return self.__session
