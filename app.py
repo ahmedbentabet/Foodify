@@ -10,6 +10,7 @@ from routes.signup import signup_routes
 from routes.user_setting import setting_routes
 from routes.contact import contact_routes
 from routes.login import login_routes, logout_routes
+from routes.restaurant import restaurant_routes
 from flask import Flask, render_template
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
@@ -54,10 +55,12 @@ def forbidden_error(error):
     """Handle 403 Forbidden error"""
     return render_template('403.html'), 403
 
+
 @foodify_app.errorhandler(404)
 def not_found_error(error):
     """Handle 404 Not Found error"""
     return render_template('404.html'), 404
+
 
 @foodify_app.errorhandler(500)
 def internal_error(error):
@@ -80,6 +83,7 @@ foodify_app.register_blueprint(payment_routes)
 foodify_app.register_blueprint(review_routes)
 foodify_app.register_blueprint(delivery_routes)  # Changed from location_routes
 foodify_app.register_blueprint(contact_routes)
+foodify_app.register_blueprint(restaurant_routes)  # Add this line
 
 # Register cleanup function with Flask app
 foodify_app.teardown_appcontext(close_db)
