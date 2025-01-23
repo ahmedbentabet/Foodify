@@ -1,8 +1,15 @@
 #!/usr/bin/python3
-"""This module defines a class to manage db storage for Foodify"""
+"""
+Database storage module for Foodify application.
+
+This module provides the DBStorage class that handles all database operations
+including CRUD operations, session management, and connection handling.
+"""
+
 from os import getenv
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, scoped_session
+from sqlalchemy.orm import sessionmaker, scoped_session, Session
+from sqlalchemy.engine import Engine
 from models.base_model import Base, BaseModel
 from models.client import Client
 from models.menu_item import MenuItem
@@ -11,21 +18,37 @@ from models.order import Order
 from models.restaurant import Restaurant
 from models.review import Review
 
-from typing import Dict, Any, Optional, List
+from typing import Dict, Any, Optional, List, Type, Union
 from contextlib import contextmanager
 
 
-classes = [Client, Restaurant, MenuItem, Review, Order, OrderItem]
+ModelType = Type[Union[Client, Restaurant, MenuItem, Review, Order, OrderItem]]
+CLASSES: List[ModelType] = [Client, Restaurant, MenuItem, Review, Order,
+                            OrderItem]
 
 
 class DBStorage:
-    """Database Storage Class"""
+    """
+    Database Storage Class for managing database operations.
 
-    __engine = None
-    __session = None
+    Attributes:
+        __engine: SQLAlchemy engine instance
+        __session: SQLAlchemy session instance
+    """
+
+    __engine: Optional[Engine] = None
+    __session: Optional[scoped_session] = None
 
     def __init__(self) -> None:
-        """Initialize database connection with better settings"""
+        """
+        Initialize database connection with optimized settings.
+
+        Environment variables:
+            FOOD_MYSQL_USER: Database username
+            FOOD_MYSQL_PWD: Database password
+            FOOD_MYSQL_HOST: Database host
+            FOOD_MYSQL_DB: Database name
+        """
         user = getenv("FOOD_MYSQL_USER", "root")
         pwd = getenv("FOOD_MYSQL_PWD", "root")
         host = getenv("FOOD_MYSQL_HOST", "127.0.0.1")
@@ -43,33 +66,52 @@ class DBStorage:
         self.__session = None
 
     def reload(self) -> None:
-        """Create tables and session with proper error handling"""
+        """
+        Create database tables and initialize session.
+
+        Raises:
+            Exception: If database connection or table creation fails
+        """
         try:
             Base.metadata.create_all(self.__engine)
             session_factory = sessionmaker(
-                bind=self.__engine, expire_on_commit=False, autoflush=True
+                bind=self.__engine,
+                expire_on_commit=False,
+                autoflush=True
             )
             Session = scoped_session(session_factory)
             self.__session = Session
         except Exception as e:
-            print(f"Error reloading database: {e}")
+            print(f"Database reload error: {str(e)}")
             if self.__session:
                 self.__session.remove()
             raise
 
     def new(self, obj: BaseModel) -> None:
-        """Add object to current database session"""
-        if obj:
+        """
+        Add new object to current database session.
+
+        Args:
+            obj: BaseModel instance to add
+        """
+        if obj and self.__session:
             self.__session.add(obj)
 
     def save(self) -> None:
-        """Commit changes to database"""
+        """
+        Commit current session changes to database.
+
+        Raises:
+            Exception: If commit fails
+        """
+        if not self.__session:
+            return
+
         try:
             self.__session.commit()
         except Exception as e:
             self.__session.rollback()
-            print(f"Error saving changes: {e}")  # Added error logging
-            raise e
+            raise RuntimeError(f"Save operation failed: {str(e)}") from e
 
     def delete(self, obj: Optional[BaseModel] = None) -> None:
         """Delete object from current database session"""
@@ -94,7 +136,7 @@ class DBStorage:
                 objects = self.__session.query(cls).all()
             else:
                 objects = []
-                for c in classes:
+                for c in CLASSES:
                     objects.extend(self.__session.query(c).all())
 
             return {
@@ -107,25 +149,36 @@ class DBStorage:
 
     def search(
         self,
-        cls: Any,
+        cls: ModelType,
         filters: Dict[str, Any],
-        nested_filters: Dict[str, Dict] = None,
+        nested_filters: Optional[Dict[str, Dict[str, Any]]] = None
     ) -> List[BaseModel]:
         """
-        Enhanced search method with nested relationship filtering
+        Enhanced search method supporting nested relationship filtering.
+
+        Args:
+            cls: Model class to search
+            filters: Primary filter conditions
+            nested_filters: Filters for related models
+
+        Returns:
+            List of matching model instances
 
         Example:
-        filters = {"name": "Pizza Hut"}
-        nested_filters = {"menu_items": {"name": "juice"}}
+            filters = {"name": "Pizza Hut"}
+            nested_filters = {"menu_items": {"name": "juice"}}
         """
+        if not self.__session:
+            return []
+
         query = self.__session.query(cls)
 
-        # Apply main filters
+        # Apply main filters with type checking
         for key, value in filters.items():
             if hasattr(cls, key):
                 query = query.filter(getattr(cls, key).ilike(f"%{value}%"))
 
-        # Apply nested filters
+        # Apply nested relationship filters
         if nested_filters:
             for relation, rel_filters in nested_filters.items():
                 if hasattr(cls, relation):
@@ -160,8 +213,16 @@ class DBStorage:
             print(f"Error during rollback: {e}")
 
     @contextmanager
-    def session_scope(self):
-        """Provide a transactional scope around a series of operations"""
+    def session_scope(self) -> Session:
+        """
+        Provide a transactional scope around operations.
+
+        Yields:
+            Active database session
+
+        Raises:
+            Exception: If session operations fail
+        """
         session = self.refresh_session()
         try:
             yield session
@@ -169,17 +230,16 @@ class DBStorage:
         except Exception as e:
             if session:
                 session.rollback()
-            print(f"Session error: {e}")
-            raise
+            raise RuntimeError(f"Session operation failed: {str(e)}") from e
         finally:
             if session:
-                session.remove()  # Now safe to call remove() on scoped_session
+                session.remove()
 
     def refresh_session(self):
         """Create a fresh session"""
         try:
             if self.__session:
-                self.__session.close()  # Use close() instead of remove() for regular sessions
+                self.__session.close()
 
             # Create session factory
             session_factory = sessionmaker(

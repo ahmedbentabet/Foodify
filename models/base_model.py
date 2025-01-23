@@ -1,28 +1,40 @@
 #!/usr/bin/env python3
-"""This module defines a base class for all models in our foodify"""
+"""Base model module providing common functionality for all models."""
+from typing import Any, Dict
 import uuid
 from datetime import datetime
 from sqlalchemy import Column, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-
-# import models
 
 Base = declarative_base()
 
 
 class BaseModel:
-    """A base class for all Foodify models"""
+    """
+    Base class for all Foodify models providing common functionality.
 
-    __abstract__ = True  # Make this an abstract base class
+    Attributes:
+        id: Unique identifier for each instance
+        created_at: Timestamp of instance creation
+        updated_at: Timestamp of last update
+    """
 
-    id = Column(String(60), primary_key=True, nullable=False)
-    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
-    updated_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    __abstract__ = True
 
-    def __init__(self, *args, **kwargs):
-        """Instantiates a new model"""
+    id: str = Column(String(60), primary_key=True, nullable=False)
+    created_at: datetime = Column(
+        DateTime, default=datetime.utcnow, nullable=False)
+    updated_at: datetime = Column(
+        DateTime, default=datetime.utcnow, nullable=False)
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
+        """
+        Initialize a new BaseModel instance.
+
+        Args:
+            *args: Variable length argument list
+            **kwargs: Arbitrary keyword arguments
+        """
         super().__init__()  # Call parent class constructor
         if not kwargs:
             self.id = str(uuid.uuid4())
@@ -39,21 +51,31 @@ class BaseModel:
             if "updated_at" not in kwargs:
                 self.updated_at = datetime.now()
 
-    def __str__(self):
-        """Returns a string representation of the instance"""
+    def __str__(self) -> str:
+        """
+        Return string representation of the instance.
+
+        Returns:
+            String representation of the model instance
+        """
         cls = (str(type(self)).split(".")[-1]).split("'")[0]
         return "[{}] ({}) {}".format(cls, self.id, self.__dict__)
 
-    def save(self):
-        """Updates updated_at with current time when instance is changed"""
+    def save(self) -> None:
+        """Update the updated_at timestamp and save instance to storage."""
         self.updated_at = datetime.now()
         import models
 
         models.storage.new(self)
         models.storage.save()
 
-    def to_dict(self):
-        """Convert instance into dict format"""
+    def to_dict(self) -> Dict[str, Any]:
+        """
+        Convert instance to dictionary format.
+
+        Returns:
+            Dictionary representation of the model instance
+        """
         dictionary = {}
         dictionary.update(self.__dict__)
         dictionary.update(
@@ -65,8 +87,8 @@ class BaseModel:
             del dictionary["_sa_instance_state"]
         return dictionary
 
-    def delete(self):
-        """Docs"""
+    def delete(self) -> None:
+        """Delete the current instance from storage."""
         import models
 
         models.storage.delete(self)
