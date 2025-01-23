@@ -1,146 +1,157 @@
-// Cart state management
+/**
+ * @file Main script for cart management and UI interactions
+ */
+
+/** @type {Array<{id: string, name: string, price: number, quantity: number}>} */
 let cartItems = [];
 
-async function updateCart(mealId, mealName, mealPrice, action) {
-    try {
-        const response = await fetch('/api/v1/cart/update', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                menu_item_id: mealId,
-                action: action
-            })
-        });
+/**
+ * Updates cart with new item or quantity
+ * @param {string} mealId - Meal identifier
+ * @param {string} mealName - Meal name
+ * @param {number} mealPrice - Meal price
+ * @param {'increase'|'decrease'} action - Action to perform
+ * @returns {Promise<void>}
+ */
+const updateCart = async (mealId, mealName, mealPrice, action) => {
+  try {
+    const response = await fetch("/api/v1/cart/update", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ menu_item_id: mealId, action }),
+    });
 
-        if (!response.ok) {
-            throw new Error('Failed to update cart');
-        }
+    if (!response.ok) throw new Error("Failed to update cart");
 
-        const data = await response.json();
-
-        // Update local cart state
-        updateLocalCart(data);
-        // Update the cart display
-        updateCartDisplay();
-
-        // Show success toast
-        showToast('Cart updated successfully', 'success');
-
-    } catch (error) {
-        console.error('Error updating cart:', error);
-        showToast('Failed to update cart', 'error');
-    }
-}
+    const data = await response.json();
+    updateLocalCart(data);
+    updateCartDisplay();
+    showToast("Cart updated successfully", "success");
+  } catch (error) {
+    console.error("Error updating cart:", error);
+    showToast("Failed to update cart", "error");
+  }
+};
 
 // Meal elements event handling
 const mealElements = document.querySelectorAll(".meal");
 
 mealElements.forEach((mealElement) => {
-    const mealId = mealElement.getAttribute("data-meal-id");
-    const mealName = mealElement.querySelector("h3").textContent;
-    const mealPrice = parseFloat(
-        mealElement.querySelector(".price").getAttribute("data-price")
-    );
-    const quantityElement = mealElement.querySelector(".quantity-value");
+  const { mealId, mealName, mealPrice } = {
+    mealId: mealElement.dataset.mealId,
+    mealName: mealElement.querySelector("h3")?.textContent ?? "",
+    mealPrice: parseFloat(
+      mealElement.querySelector(".price")?.dataset.price ?? "0"
+    ),
+  };
 
-    const decreaseButton = mealElement.querySelector(".decrease");
-    const increaseButton = mealElement.querySelector(".increase");
+  const quantityElement = mealElement.querySelector(".quantity-value");
 
-    async function updateQuantity(action) {
-        // Check if user is logged in
-        const isLoggedIn = document.body.classList.contains("user-logged-in");
-        if (!isLoggedIn) {
-            localStorage.setItem("pendingCartAction", JSON.stringify({ mealId, action }));
-            window.location.href = "/login";
-            return;
-        }
-        await updateCart(mealId, mealName, mealPrice, action);
+  const decreaseButton = mealElement.querySelector(".decrease");
+  const increaseButton = mealElement.querySelector(".increase");
+
+  async function updateQuantity(action) {
+    // Check if user is logged in
+    const isLoggedIn = document.body.classList.contains("user-logged-in");
+    if (!isLoggedIn) {
+      localStorage.setItem(
+        "pendingCartAction",
+        JSON.stringify({ mealId, action })
+      );
+      window.location.href = "/login";
+      return;
     }
+    await updateCart(mealId, mealName, mealPrice, action);
+  }
 
-    increaseButton.addEventListener("click", () => updateQuantity("increase"));
-    decreaseButton.addEventListener("click", () => updateQuantity("decrease"));
+  increaseButton.addEventListener("click", () => updateQuantity("increase"));
+  decreaseButton.addEventListener("click", () => updateQuantity("decrease"));
 });
 
-// Cart display functions
-function updateCartDisplay() {
-    const cartCount = document.getElementById('cart-count');
-    const totalQuantity = cartItems.reduce((total, item) => total + item.quantity, 0);
+/**
+ * Updates the cart display with current items
+ * @returns {void}
+ */
+const updateCartDisplay = () => {
+  const cartCount = document.getElementById("cart-count");
+  if (!cartCount) return;
 
-    if (totalQuantity > 0) {
-        cartCount.textContent = totalQuantity;
-        cartCount.classList.add('cart-count-active');
-    } else {
-        cartCount.classList.remove('cart-count-active');
-    }
-}
+  const totalQuantity = cartItems.reduce(
+    (total, item) => total + item.quantity,
+    0
+  );
+  cartCount.textContent = totalQuantity.toString();
+  cartCount.classList.toggle("cart-count-active", totalQuantity > 0);
+};
 
 function updateLocalCart(data) {
-    if (data.order) {
-        const itemIndex = cartItems.findIndex(item => item.id === data.item.id);
-        if (itemIndex !== -1) {
-            if (data.item.quantity > 0) {
-                cartItems[itemIndex].quantity = data.item.quantity;
-            } else {
-                cartItems.splice(itemIndex, 1);
-            }
-        } else if (data.item.quantity > 0) {
-            cartItems.push(data.item);
-        }
-    } else {
-        cartItems = [];
+  if (data.order) {
+    const itemIndex = cartItems.findIndex((item) => item.id === data.item.id);
+    if (itemIndex !== -1) {
+      if (data.item.quantity > 0) {
+        cartItems[itemIndex].quantity = data.item.quantity;
+      } else {
+        cartItems.splice(itemIndex, 1);
+      }
+    } else if (data.item.quantity > 0) {
+      cartItems.push(data.item);
     }
+  } else {
+    cartItems = [];
+  }
 }
 
 // Toast notification function
 function showToast(message, type) {
-    const toast = document.createElement('div');
-    toast.className = `toast ${type}`;
-    toast.textContent = message;
-    document.body.appendChild(toast);
+  const toast = document.createElement("div");
+  toast.className = `toast ${type}`;
+  toast.textContent = message;
+  document.body.appendChild(toast);
 
+  setTimeout(() => {
+    toast.classList.add("show");
     setTimeout(() => {
-        toast.classList.add('show');
-        setTimeout(() => {
-            toast.classList.remove('show');
-            setTimeout(() => toast.remove(), 300);
-        }, 3000);
-    }, 100);
+      toast.classList.remove("show");
+      setTimeout(() => toast.remove(), 300);
+    }, 3000);
+  }, 100);
 }
 
 // Modal functionality
-const knowMoreButton = document.querySelector('.know_more'); // Button to open the modal
-const modal = document.querySelector('.modal'); // Modal container
-const closeModal = document.querySelector('.close'); // Close button inside the modal
+const modal = {
+  element: /** @type {HTMLElement|null} */ (document.querySelector(".modal")),
+  knowMoreBtn: /** @type {HTMLElement|null} */ (
+    document.querySelector(".know_more")
+  ),
+  closeBtn: /** @type {HTMLElement|null} */ (document.querySelector(".close")),
+};
 
-// Add null check before adding event listener
-if (knowMoreButton) {
-    knowMoreButton.addEventListener('click', () => {
-        modal.classList.add('show'); // Add class to show the modal with animation
-        modal.classList.remove('fade-out'); // Remove fade-out class if modal is being shown
-    });
+if (modal.knowMoreBtn && modal.element) {
+  modal.knowMoreBtn.addEventListener("click", () => {
+    modal.element?.classList.add("show");
+    modal.element?.classList.remove("fade-out");
+  });
 }
 
 // Add event listener to close the modal when the close button is clicked
-closeModal.addEventListener('click', () => {
-    modal.classList.add('fade-out'); // Add fade-out class to trigger fade-out animation
-    setTimeout(() => {
-        modal.classList.remove('show', 'fade-out'); // Remove 'show' and 'fade-out' classes after animation
-    }, 400); // Match the animation duration (e.g., 400ms)
+modal.closeBtn?.addEventListener("click", () => {
+  modal.element?.classList.add("fade-out");
+  setTimeout(() => {
+    modal.element?.classList.remove("show", "fade-out");
+  }, 400);
 });
 
 // Add event listener to close the modal if the user clicks outside of it
-window.addEventListener('click', (e) => {
-    if (e.target === modal) {
-        modal.classList.add('fade-out'); // Add fade-out class to trigger fade-out animation
-        setTimeout(() => {
-            modal.classList.remove('show', 'fade-out'); // Remove 'show' and 'fade-out' classes after animation
-        }, 400); // Match the animation duration (e.g., 400ms)
-    }
+window.addEventListener("click", (e) => {
+  if (e.target === modal.element) {
+    modal.element?.classList.add("fade-out");
+    setTimeout(() => {
+      modal.element?.classList.remove("show", "fade-out");
+    }, 400);
+  }
 });
 
-const element = document.getElementById('elementId');
+const element = document.getElementById("elementId");
 if (element) {
-    element.addEventListener('click', handler);
+  element.addEventListener("click", handler);
 }
