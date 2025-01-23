@@ -31,7 +31,6 @@ class Restaurant(BaseModel, Base):
     menu_items = relationship(
         "MenuItem", back_populates="restaurant", cascade="all, delete-orphan"
     )
-    # orders = relationship("Order", back_populates="restaurant", cascade="all, delete-orphan")
 
     def __init__(self, *args, **kwargs):
         """Initialize restaurant"""
