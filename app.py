@@ -2,7 +2,7 @@
 """The Foodify app
 """
 from routes.delivery import delivery_routes  # Changed from location_routes
-from routes.all_orders_and_review import review_routes
+from Templates.all_orders_and_review import review_routes
 from routes.payment import payment_routes
 from routes.order import order_routes
 from routes.welcome import welcome_routes
