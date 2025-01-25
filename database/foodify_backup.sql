@@ -45,7 +45,7 @@ CREATE TABLE `clients` (
 
 LOCK TABLES `clients` WRITE;
 /*!40000 ALTER TABLE `clients` DISABLE KEYS */;
-INSERT INTO `clients` VALUES ('tariq','Tariq@gmail.com','$2b$12$wFRE4VGyf4P6Uyto.0N8ce.K67/ZN.6QMyZtadYHm37JWWiKoKXSa','dddsd','78bb0876-5825-4784-ab35-fd4a06d07dfb','2025-01-07 13:54:45','2025-01-07 13:54:45',30.033,31.2176,'+249128007101','',NULL),('Ahmed','ahmed@gmail.com','$2b$12$2wYKH2GKPuYl2Fl5hMM9GeV4pMhpWoLDIAgofwQIeNy.kLxXpilsu','Morocco','82127fb2-223f-4ed5-8a90-3934caf3101a','2025-01-12 17:36:23','2025-01-12 17:36:23',-15.4155,28.2773,NULL,'',NULL);
+INSERT INTO `clients` VALUES ('tariq','Tariq@gmail.com','$2b$12$wFRE4VGyf4P6Uyto.0N8ce.K67/ZN.6QMyZtadYHm37JWWiKoKXSa','dddsd','78bb0876-5825-4784-ab35-fd4a06d07dfb','2025-01-07 13:54:45','2025-01-07 13:54:45',30.033,31.2176,'+249128007101','',NULL),('Ahmed','ahmed@gmail.com','$2b$12$2wYKH2GKPuYl2Fl5hMM9GeV4pMhpWoLDIAgofwQIeNy.kLxXpilsu','Morocco','82127fb2-223f-4ed5-8a90-3934caf3101a','2025-01-12 17:36:23','2025-01-12 17:36:23',-15.4155,28.2773,NULL,'',NULL),('sarah','sarah@example.com','$2b$12$2wYKH2GKPuYl2Fl5hMM9GeV4pMhpWoLDIAgofwQIeNy.kLxXpilsu','Cairo','91127fb2-223f-4ed5-8a90-3934caf3101b','2025-01-13 10:36:23','2025-01-13 10:36:23',30.0444,31.2357,'+201234567890','',NULL),('mike','mike@example.com','$2b$12$2wYKH2GKPuYl2Fl5hMM9GeV4pMhpWoLDIAgofwQIeNy.kLxXpilsu','Alexandria','72127fb2-223f-4ed5-8a90-3934caf3101c','2025-01-14 14:36:23','2025-01-14 14:36:23',31.2001,29.9187,'+201122334455','',NULL),('lisa','lisa@example.com','$2b$12$2wYKH2GKPuYl2Fl5hMM9GeV4pMhpWoLDIAgofwQIeNy.kLxXpilsu','Giza','62127fb2-223f-4ed5-8a90-3934caf3101d','2025-01-15 16:36:23','2025-01-15 16:36:23',29.9773,31.1325,'+201099887766','',NULL);
 /*!40000 ALTER TABLE `clients` ENABLE KEYS */;
 UNLOCK TABLES;
 
