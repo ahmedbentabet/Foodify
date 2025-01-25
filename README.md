@@ -15,10 +15,11 @@ Foodify is a Flask-based food delivery platform designed to help you discover an
 5. Setup Instructions
 6. Usage
 7. Technologies Used
-8. Security Considerations
-9. API Notes
-10. Contributors
-11. License
+8. Frontend Architecture
+9. Security Considerations
+10. API Notes
+11. Contributors
+12. License
 
 ---
 
@@ -206,6 +207,108 @@ Refer to [docs/DATABASE_DOCUMENTATION.md](docs/DATABASE_DOCUMENTATION.md) for sc
 - Register or log in to explore restaurants and place orders.
 - Customize location data via the TomTom API (configure your `TOMTOM_API_KEY`).
 - Modify code in `routes` for additional endpoints or logic.
+
+---
+
+## 🎨 Frontend Architecture
+
+### Core Technologies
+
+- **HTML5**: Semantic markup with accessibility features
+- **CSS3**: Custom styling and responsive design
+- **JavaScript**: Vanilla JS for core functionality
+- **Bootstrap 5.1.3**: UI components and grid system
+- **Font Awesome 6.0.0**: Icon system
+- **TomTom Maps SDK 6.23.0**: Location services
+
+### Key Features & Components
+
+1. **Navigation System**
+   - Responsive navbar with dynamic cart updates
+   - User authentication state management
+   - Dropdown menus for user settings
+
+2. **Cart Management** (`static/js/script.js`)
+   - Real-time cart updates
+   - Local storage persistence
+   - Animated notifications
+
+3. **Location Services** (`static/js/delivery.js`)
+   - TomTom Maps integration
+   - Address autocomplete
+   - Geolocation support
+
+4. **Search System** (`static/js/search.js`)
+   - Dynamic menu item filtering
+   - Restaurant-based filtering
+   - Pagination implementation
+
+### CSS Architecture
+
+```plaintext
+static/css/
+├── shared/
+│   └── cart.css          # Shared cart styling
+├── welcome.css           # Home page styles
+├── login_signup.css      # Authentication styles
+├── payment.css           # Payment page styles
+├── delivery.css          # Delivery page styles
+└── contact.css          # Contact page styles
+```
+
+### JavaScript Modules
+
+```plaintext
+static/js/
+├── script.js            # Core functionality
+├── search.js            # Search & filtering
+├── delivery.js          # Location handling
+├── payment.js           # Payment processing
+├── contact.js           # Contact form handling
+└── login_signup.js      # Authentication
+```
+
+### Responsive Design
+
+- Mobile-first approach
+- Breakpoints:
+
+```css
+/* Mobile */
+@media (max-width: 480px) { ... }
+
+/* Tablet */
+@media (max-width: 768px) { ... }
+
+/* Desktop */
+@media (min-width: 769px) { ... }
+```
+
+### Performance Optimizations
+
+- Dynamic script loading
+- Image optimization
+- Local storage for cart data
+- Debounced search input
+
+### Asset Management
+
+- Images stored in `images/`
+- Restaurant logos in `menu_items/`
+- Team photos in `Team/`
+
+### Browser Support
+
+- Modern browsers (Chrome, Firefox, Safari, Edge)
+- Fallback styles for older browsers
+- Polyfills where necessary
+
+### Security Features
+
+- CSRF protection on forms
+- Input sanitization
+- Secure session handling
+- Protected API endpoints
 
 ---
 
