@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """This module defines a class to manage db storage for Foodify"""
 from contextlib import contextmanager
-from typing import Dict, Any, Optional, List
+from typing import Dict, Any, Optional, List, Type, Union, Generator
 from models.review import Review
 from models.restaurant import Restaurant
 from models.order import Order
@@ -9,7 +9,8 @@ from models.order_item import OrderItem
 from models.menu_item import MenuItem
 from models.client import Client
 from models.base_model import Base, BaseModel
-from sqlalchemy.orm import sessionmaker, scoped_session
+from sqlalchemy.orm import sessionmaker, scoped_session, Session
+from sqlalchemy.engine import Engine
 from sqlalchemy import create_engine
 from os import getenv
 from dotenv import load_dotenv
