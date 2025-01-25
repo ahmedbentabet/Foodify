@@ -1,12 +1,8 @@
 # Foodify Database Documentation
 
-  
-
 ## Database Overview
 
 Foodify uses MySQL 8.0 to store and manage data for the food delivery platform. The database (`foodify_db`) consists of multiple tables that handle users, restaurants, menu items, orders, and reviews.
-
-  
 
 ## Entity Relationship Diagram
 
@@ -14,13 +10,9 @@ Foodify uses MySQL 8.0 to store and manage data for the food delivery platform. 
 
 ## Table Descriptions
 
-  
-
 ### Clients
 
 Stores user information for customers.
-
-  
 
 | Column | Type | Description |
 
@@ -46,13 +38,9 @@ Stores user information for customers.
 
 | updated_at | datetime | Record update timestamp |
 
-  
-
 ### Restaurants
 
 Stores restaurant information.
-
-  
 
 | Column | Type | Description |
 
@@ -70,13 +58,9 @@ Stores restaurant information.
 
 | updated_at | datetime | Record update timestamp |
 
-  
-
 ### MenuItems
 
 Stores food items available at restaurants.
-
-  
 
 | Column | Type | Description |
 
@@ -98,13 +82,9 @@ Stores food items available at restaurants.
 
 | updated_at | datetime | Record update timestamp |
 
-  
-
 ### Orders
 
 Tracks customer orders.
-
-  
 
 | Column | Type | Description |
 
@@ -124,13 +104,9 @@ Tracks customer orders.
 
 | updated_at | datetime | Record update timestamp |
 
-  
-
 ### OrderItems
 
 Links orders to menu items with quantities.
-
-  
 
 | Column | Type | Description |
 
@@ -148,13 +124,9 @@ Links orders to menu items with quantities.
 
 | updated_at | datetime | Record update timestamp |
 
-  
-
 ### Reviews
 
 Stores customer reviews for restaurants.
-
-  
 
 | Column | Type | Description |
 
@@ -174,63 +146,45 @@ Stores customer reviews for restaurants.
 
 | updated_at | datetime | Record update timestamp |
 
-  
-
 ## Relationships
 
-  
-
-1. **Client -> Orders**: One-to-Many
+1.**Client -> Orders**: One-to-Many
 
    - A client can have multiple orders
 
    - Each order belongs to one client
 
-  
-
-2. **Restaurant -> MenuItems**: One-to-Many
+2.**Restaurant -> MenuItems**: One-to-Many
 
    - A restaurant can have multiple menu items
 
    - Each menu item belongs to one restaurant
 
-  
-
-3. **Order -> OrderItems**: One-to-Many
+3.**Order -> OrderItems**: One-to-Many
 
    - An order can have multiple order items
 
    - Each order item belongs to one order
 
-  
-
-4. **MenuItem -> OrderItems**: One-to-Many
+4.**MenuItem -> OrderItems**: One-to-Many
 
    - A menu item can be in multiple order items
 
    - Each order item references one menu item
 
-  
-
-5. **Client -> Reviews**: One-to-Many
+5.**Client -> Reviews**: One-to-Many
 
    - A client can write multiple reviews
 
    - Each review belongs to one client
 
-  
-
-6. **Restaurant -> Reviews**: One-to-Many
+6.**Restaurant -> Reviews**: One-to-Many
 
    - A restaurant can have multiple reviews
 
    - Each review belongs to one restaurant
 
-  
-
 ## Database Backup and Restore
-
-  
 
 ### Creating a backup
 
@@ -240,8 +194,6 @@ mysqldump -u username -p foodify_db > foodify_backup.sql
 
 ```
 
-  
-
 ### Restoring from backup
 
 ```bash
@@ -250,11 +202,7 @@ mysql -u username -p foodify_db < foodify_backup.sql
 
 ```
 
-  
-
 ## Common Queries
-
-  
 
 ### Get all menu items for a restaurant
 
@@ -265,8 +213,6 @@ SELECT * FROM menu_items
 WHERE restaurant_id = 'restaurant_uuid';
 
 ```
-
-  
 
 ### Get client's order history
 
@@ -283,8 +229,6 @@ JOIN menu_items mi ON oi.menu_item_id = mi.id
 WHERE o.client_id = 'client_uuid';
 
 ```
-
-  
 
 ### Get restaurant's average rating
 
