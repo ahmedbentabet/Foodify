@@ -75,7 +75,7 @@ Foodify is a Flask-based food delivery platform designed to help you discover an
 ├── .env.example                # Environment variable template
 ├── .gitignore
 ├── app.py                      # Main Flask application entry point
-└── LICENSE                     # License file (add or update as needed)
+└── LICENSE
 ```
 
 ---
@@ -105,10 +105,18 @@ Foodify is a Flask-based food delivery platform designed to help you discover an
 
 ## 🎮 Console Commands
 
-Use `console.py` for administrative or interactive tasks. It allows testing model queries, debugging, and direct database operations:
+Use `console.py` for database management:
 
 ```bash
+# Create new client
 python console.py
+(foodify) create Client username="imad" email="imad@mail.com" password_hash="123_456" address="hay_alnajah_N15_Rabat"
+
+# Create restaurant
+(foodify) create Restaurant name="Pizza_Hot" city="Rabat"
+
+# Create review
+(foodify) create Review client_id="[uuid]" restaurant_id="[uuid]" rating=4 comment="Good_meals"
 ```
 
 ---
@@ -235,10 +243,10 @@ Common issues and solutions:
 
 ## 👥 Contributors
 
-- **Tariq Omer** - Backend Developer
-- **Ahmed** - Backend Developer
-- **Abubakar** - Frontend Developer
-- **John** - Database Administrator
+- [Abubakr Elgandy](https://github.com/abobakrelgandy) - Backend Developer | Frontend Developer
+- [John Samy](https://github.com/JohnSamy2004) - Backend Developer | Frontend Developer
+- [Ahmed Bentabet](https://github.com/ahmedbentabet) - Backend Developer | Database Manager
+- [Tariq Omer](https://github.com/Tariq5mo) - Backend Developer | project manager
 
 ---
 
@@ -257,3 +265,53 @@ We welcome contributions! Please:
 3. Submit a pull request
 
 For detailed API documentation, see [docs/API_DOCUMENTATION.md](docs/API_DOCUMENTATION.md).
+
+---
+
+## 🧪 Testing
+
+Run the test suite using pytest:
+
+```bash
+python -m pytest tests/ -v
+```
+
+Key test files:
+
+- `test_create.py`: Tests model creation
+- `test_update.py`: Tests model updates
+- `test_delete.py`: Tests model deletion
+
+---
+
+## 📊 Database Schema
+
+Our MySQL database follows this structure:
+
+[![ER Diagram](https://i.postimg.cc/qMRVLVmy/Entity-Relationship-Diagram.png)](docs/DATABASE_DOCUMENTATION.md)
+
+Key indexes for performance:
+
+```sql
+CREATE INDEX idx_orders_client ON orders(client_id);
+CREATE INDEX idx_orders_status ON orders(status);
+CREATE INDEX idx_order_items_order ON order_items(order_id);
+CREATE INDEX idx_order_items_menu_item ON order_items(menu_item_id);
+```
+
+See `database/foodify_backup.sql` for complete schema.
+
+---
+
+## 🔍 Documentation References
+
+- API Documentation: See [docs/API_DOCUMENTATION.md](docs/API_DOCUMENTATION.md)
+- Database Schema: See [docs/DATABASE_DOCUMENTATION.md](docs/DATABASE_DOCUMENTATION.md)
+- Sample Data: See [database/foodify_backup.sql](database/foodify_backup.sql)
+
+> [!WARNING]
+> API Deprecation Notice:
+>
+> - Hybrid endpoints (HTML+JSON) will be removed in v2.0 (Q4 2024)
+> - Use pure REST endpoints from API_DOCUMENTATION.md
+> - Rate limiting (50 req/min) will be enforced on all API endpoints
