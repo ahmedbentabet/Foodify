@@ -34,7 +34,6 @@ CREATE TABLE `clients` (
   `longitude` float DEFAULT NULL,
   `phone` varchar(20) DEFAULT NULL,
   `delivery_instructions` varchar(500) DEFAULT NULL,
-  `contact_name` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -46,7 +45,7 @@ CREATE TABLE `clients` (
 
 LOCK TABLES `clients` WRITE;
 /*!40000 ALTER TABLE `clients` DISABLE KEYS */;
-INSERT INTO `clients` VALUES ('tariq','Tariq@gmail.com','$2b$12$wFRE4VGyf4P6Uyto.0N8ce.K67/ZN.6QMyZtadYHm37JWWiKoKXSa','dddsd','78bb0876-5825-4784-ab35-fd4a06d07dfb','2025-01-07 13:54:45','2025-01-07 13:54:45',30.033,31.2176,'+249128007101','',NULL),('Talal4024 ','tala@gmail.com','$2b$12$2wYKH2GKPuYl2Fl5hMM9GeV4pMhpWoLDIAgofwQIeNy.kLxXpilsu','ppp','82127fb2-223f-4ed5-8a90-3934caf3101a','2025-01-12 17:36:23','2025-01-12 17:36:23',-15.4155,28.2773,NULL,'',NULL);
+INSERT INTO `clients` VALUES ('tariq','Tariq@gmail.com','$2b$12$wFRE4VGyf4P6Uyto.0N8ce.K67/ZN.6QMyZtadYHm37JWWiKoKXSa','dddsd','78bb0876-5825-4784-ab35-fd4a06d07dfb','2025-01-07 13:54:45','2025-01-07 13:54:45',30.033,31.2176,'+249128007101','',NULL),('Ahmed','ahmed@gmail.com','$2b$12$2wYKH2GKPuYl2Fl5hMM9GeV4pMhpWoLDIAgofwQIeNy.kLxXpilsu','Morocco','82127fb2-223f-4ed5-8a90-3934caf3101a','2025-01-12 17:36:23','2025-01-12 17:36:23',-15.4155,28.2773,NULL,'',NULL);
 /*!40000 ALTER TABLE `clients` ENABLE KEYS */;
 UNLOCK TABLES;
 
