@@ -1,20 +1,19 @@
 #!/usr/bin/python3
-"""Database storage module for Foodify application."""
-
-from os import getenv
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, scoped_session, Session
-from sqlalchemy.engine import Engine
-from models.base_model import Base, BaseModel
-from models.client import Client
-from models.menu_item import MenuItem
-from models.order_item import OrderItem
-from models.order import Order
-from models.restaurant import Restaurant
-from models.review import Review
-
-from typing import Dict, Any, Optional, List, Type, Union, Generator
+"""This module defines a class to manage db storage for Foodify"""
 from contextlib import contextmanager
+from typing import Dict, Any, Optional, List
+from models.review import Review
+from models.restaurant import Restaurant
+from models.order import Order
+from models.order_item import OrderItem
+from models.menu_item import MenuItem
+from models.client import Client
+from models.base_model import Base, BaseModel
+from sqlalchemy.orm import sessionmaker, scoped_session
+from sqlalchemy import create_engine
+from os import getenv
+from dotenv import load_dotenv
+load_dotenv()
 
 
 ModelType = Type[Union[Client, Restaurant, MenuItem, Review, Order, OrderItem]]
@@ -29,11 +28,14 @@ class DBStorage:
     __session: Optional[scoped_session] = None
 
     def __init__(self) -> None:
-        """Initialize database connection with environment variables."""
-        user = getenv("FOOD_MYSQL_USER", "root")
-        pwd = getenv("FOOD_MYSQL_PWD", "root")
-        host = getenv("FOOD_MYSQL_HOST", "127.0.0.1")
-        db = getenv("FOOD_MYSQL_DB", "foodify_db")
+        """Initialize database connection with better settings"""
+        user = getenv("FOOD_MYSQL_USER")
+        pwd = getenv("FOOD_MYSQL_PWD")
+        host = getenv("FOOD_MYSQL_HOST")
+        db = getenv("FOOD_MYSQL_DB")
+
+        if not all([user, pwd, host, db]):
+            raise ValueError("Missing required database credentials")
 
         self.__engine = create_engine(
             f"mysql+mysqldb://{user}:{pwd}@{host}/{db}",
