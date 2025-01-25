@@ -283,6 +283,7 @@ This project is licensed under the MIT License. See the LICENSE file for more de
 
 
 
+
 # Foodify 🍔
 
 Foodify is a Flask-based app designed to help you discover and explore amazing food options near you using the TomTom API. Follow this guide to set up the project locally.
@@ -327,7 +328,18 @@ The app requires environment variables for proper configuration. To get started:
     TOMTOM_API_KEY=your_tomtom_api_key
     ```
     
-3. **Obtain API Keys**
+3. **How to Generate a Flask Secret Key**
+    
+    The secret key is essential for securing sessions and preventing tampering. To generate one, use Python’s built-in secrets module:
+    
+    - Run the following command in your terminal:
+        
+        ```bash
+        python -c "import secrets; print(secrets.token_hex(24))"
+        ```
+        
+    - Copy the output and paste it as the value for `FLASK_SECRET_KEY` in your `.env` file.
+4. **Obtain API Keys**
     
     - Sign up for the [TomTom API](https://developer.tomtom.com/) and generate an API key.
     - Replace `your_tomtom_api_key` in the `.env` file with your actual key.
@@ -368,6 +380,7 @@ The app requires environment variables for proper configuration. To get started:
 ## 🗄️ Setting Up the Database
 
 1. Ensure your MySQL server is running.
+    
 2. Create the `foodify_db` database:
     
     ```sql
@@ -375,6 +388,7 @@ The app requires environment variables for proper configuration. To get started:
     ```
     
 3. Update the `.env` file with your database credentials.
+    
 
 ---
 
