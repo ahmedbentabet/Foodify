@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """The Foodify app
 """
-from routes.delivery import delivery_routes  # Changed from location_routes
+from routes.delivery import delivery_routes
 from routes.payment import payment_routes
 from routes.order import order_routes
 from routes.welcome import welcome_routes
@@ -10,7 +10,7 @@ from routes.user_setting import setting_routes
 from routes.contact import contact_routes
 from routes.login import login_routes, logout_routes
 from routes.restaurant import restaurant_routes
-from routes.config import config_routes  # Add this import
+from routes.config import config_routes
 from flask import Flask, render_template
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
