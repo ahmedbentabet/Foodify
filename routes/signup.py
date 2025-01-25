@@ -16,6 +16,7 @@ from wtforms.validators import (
     Email,
     Regexp,
     ValidationError,
+    EqualTo,
 )
 from models import storage
 from flask_login import login_user, current_user
@@ -40,6 +41,13 @@ class SignUpForm(FlaskForm):
                 "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&_])[A-Za-z\\d@$!%*?&_]{8,32}$"
             ),
         ],
+    )
+    confirm_password = PasswordField(
+        'Confirm Password',
+        validators=[
+            DataRequired(),
+            EqualTo('password', message='Passwords must match')
+        ]
     )
     submit = SubmitField("Sign Up")
 
