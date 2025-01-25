@@ -277,3 +277,141 @@ Access the application at `http://127.0.0.1:5000`.
 ## License
 
 This project is licensed under the MIT License. See the LICENSE file for more details.
+
+
+---
+
+
+
+# Foodify 🍔
+
+Foodify is a Flask-based app designed to help you discover and explore amazing food options near you using the TomTom API. Follow this guide to set up the project locally.
+
+---
+
+## 🛠️ Prerequisites
+
+Make sure you have the following installed on your system:
+
+- **Python 3.8+**
+- **pip** (Python package manager)
+- **MySQL** (or any other database compatible with the app)
+
+---
+
+## ⚙️ Setting Up the Environment Variables
+
+The app requires environment variables for proper configuration. To get started:
+
+1. **Create a `.env` file**  
+    In the root directory of the project, create a `.env` file and copy the structure from the `.env.example` file:
+    
+    ```bash
+    cp .env.example .env
+    ```
+    
+2. **Populate the `.env` File**  
+    Open the `.env` file and add the necessary values. Here’s an example:
+    
+    ```env
+    # Flask
+    FLASK_SECRET_KEY=your_flask_secret_key
+    
+    # Database
+    FOOD_MYSQL_USER=your_database_user
+    FOOD_MYSQL_PWD=your_database_password
+    FOOD_MYSQL_HOST=127.0.0.1
+    FOOD_MYSQL_DB=foodify_db
+    
+    # TomTom API
+    TOMTOM_API_KEY=your_tomtom_api_key
+    ```
+    
+3. **Obtain API Keys**
+    
+    - Sign up for the [TomTom API](https://developer.tomtom.com/) and generate an API key.
+    - Replace `your_tomtom_api_key` in the `.env` file with your actual key.
+
+---
+
+## 📦 Installing Dependencies
+
+1. Create a virtual environment:
+    
+    ```bash
+    python -m venv venv
+    ```
+    
+2. Activate the virtual environment:
+    
+    - On **Windows**:
+        
+        ```bash
+        venv\Scripts\activate
+        ```
+        
+    - On **Linux/Mac**:
+        
+        ```bash
+        source venv/bin/activate
+        ```
+        
+3. Install required Python packages:
+    
+    ```bash
+    pip install -r requirements.txt
+    ```
+    
+
+---
+
+## 🗄️ Setting Up the Database
+
+1. Ensure your MySQL server is running.
+2. Create the `foodify_db` database:
+    
+    ```sql
+    CREATE DATABASE foodify_db;
+    ```
+    
+3. Update the `.env` file with your database credentials.
+
+---
+
+## 🚀 Running the App
+
+1. Run the Flask application:
+    
+    ```bash
+    python app.py
+    ```
+    
+2. Open your browser and navigate to:
+    
+    ```
+    http://127.0.0.1:5000
+    ```
+    
+
+---
+
+## 🧪 Testing
+
+To test the application, ensure the app is running and use the appropriate routes for the API.
+
+---
+
+## 🐛 Troubleshooting
+
+- **Issue**: `ModuleNotFoundError: No module named 'flask'`  
+    **Solution**: Ensure you’ve activated the virtual environment and installed dependencies.
+    
+- **Issue**: Database connection errors  
+    **Solution**: Double-check the credentials in your `.env` file and ensure your database is running.
+    
+
+---
+
+## 🙌 Contribution
+
+We welcome contributions! Please fork the repository, make changes, and create a pull request.
