@@ -137,16 +137,17 @@ nav button:hover {
     background: #e78f38;
     border: 2px solid #e78f38;
     color: #fff;
-    padding: 10px 30px;
-    font-size: 14px;
+    padding: 15px 40px;  /* Increased padding */
+    font-size: 18px;     /* Increased font size */
     font-weight: 600;
-    border-radius: 20px;
+    border-radius: 25px; /* Slightly larger border radius */
     transition: 0.3s ease;
     cursor: pointer;
 }
 
 .home button:hover {
-    transform: scale(0.95);
+    transform: scale(1.05); /* Slightly larger scale on hover */
+    background: #f79c42;    /* Lighter orange on hover */
 }
 
 .home button.know_more {
@@ -154,11 +155,8 @@ nav button:hover {
     border: 2px solid #e78f38;
     color: #eee;
     margin-left: 20px;
-}
-
-.home button.know_more:hover {
-    background: #fff;
-    color: #e78f38;
+    padding: 15px 40px;  /* Match the main button size */
+    font-size: 18px;     /* Match the main button size */
 }
 
 .home img {
