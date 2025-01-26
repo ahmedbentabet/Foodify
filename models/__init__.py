@@ -1,5 +1,9 @@
 #!/usr/bin/python3
-"""This module instantiates an object of the DBStorage class"""
+"""
+Database storage initialization module.
+Instantiates the storage engine and makes it available throughout
+the application.
+"""
 from models.engine.db_storage import DBStorage
 
 

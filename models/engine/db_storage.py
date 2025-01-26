@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """This module defines a class to manage db storage for Foodify"""
 from contextlib import contextmanager
-from typing import Dict, Any, Optional, List
+from typing import Dict, Any, Optional, List, Type, Union, Generator
 from models.review import Review
 from models.restaurant import Restaurant
 from models.order import Order
@@ -9,21 +9,24 @@ from models.order_item import OrderItem
 from models.menu_item import MenuItem
 from models.client import Client
 from models.base_model import Base, BaseModel
-from sqlalchemy.orm import sessionmaker, scoped_session
+from sqlalchemy.orm import sessionmaker, scoped_session, Session
+from sqlalchemy.engine import Engine
 from sqlalchemy import create_engine
 from os import getenv
 from dotenv import load_dotenv
 load_dotenv()
 
 
-classes = [Client, Restaurant, MenuItem, Review, Order, OrderItem]
+ModelType = Type[Union[Client, Restaurant, MenuItem, Review, Order, OrderItem]]
+CLASSES: List[ModelType] = [Client, Restaurant, MenuItem, Review, Order,
+                            OrderItem]
 
 
 class DBStorage:
-    """Database Storage Class"""
+    """Database Storage Class for managing database operations."""
 
-    __engine = None
-    __session = None
+    __engine: Optional[Engine] = None
+    __session: Optional[scoped_session] = None
 
     def __init__(self) -> None:
         """Initialize database connection with better settings"""
@@ -37,68 +40,72 @@ class DBStorage:
 
         self.__engine = create_engine(
             f"mysql+mysqldb://{user}:{pwd}@{host}/{db}",
-            pool_pre_ping=True,  # Check connection before using
-            pool_recycle=300,  # Recycle connections every 5 minutes
-            pool_size=5,  # Smaller pool size
-            max_overflow=10,  # Allow more temp connections if needed
-            pool_timeout=30,  # Connection timeout
+            pool_pre_ping=True,
+            pool_recycle=300,
+            pool_size=5,
+            max_overflow=10,
+            pool_timeout=30,
             connect_args={"connect_timeout": 60, "read_timeout": 30},
         )
         self.__session = None
 
     def reload(self) -> None:
-        """Create tables and session with proper error handling"""
+        """Create tables and initialize session."""
         try:
             Base.metadata.create_all(self.__engine)
             session_factory = sessionmaker(
-                bind=self.__engine, expire_on_commit=False, autoflush=True
+                bind=self.__engine,
+                expire_on_commit=False,
+                autoflush=True
             )
             Session = scoped_session(session_factory)
             self.__session = Session
         except Exception as e:
-            print(f"Error reloading database: {e}")
+            print(f"Database reload error: {str(e)}")
             if self.__session:
                 self.__session.remove()
             raise
 
     def new(self, obj: BaseModel) -> None:
-        """Add object to current database session"""
-        if obj:
+        """Add new object to current database session."""
+        if obj and self.__session:
             self.__session.add(obj)
 
     def save(self) -> None:
-        """Commit changes to database"""
+        """Commit current session changes to database."""
+        if not self.__session:
+            return
+
         try:
             self.__session.commit()
         except Exception as e:
             self.__session.rollback()
-            print(f"Error saving changes: {e}")  # Added error logging
-            raise e
+            raise RuntimeError(f"Save operation failed: {str(e)}") from e
 
     def delete(self, obj: Optional[BaseModel] = None) -> None:
-        """Delete object from current database session"""
+        """Delete object from current database session."""
         if obj:
             try:
                 self.__session.delete(obj)
-                self.__session.flush()  # Added flush() call
+                self.__session.flush()
             except Exception as e:
                 self.__session.rollback()
-                print(f"Error deleting object: {e}")  # Added error logging
+                print(f"Error deleting object: {e}")
 
     def get(self, cls: Any, id: str) -> Optional[BaseModel]:
-        """Retrieve object by class and id"""
+        """Retrieve object by class and id."""
         if cls and id:
             return self.__session.query(cls).filter(cls.id == id).first()
         return None
 
     def all(self, cls=None) -> Dict[str, BaseModel]:
-        """Query objects"""
+        """Query objects."""
         try:
             if cls:
                 objects = self.__session.query(cls).all()
             else:
                 objects = []
-                for c in classes:
+                for c in CLASSES:
                     objects.extend(self.__session.query(c).all())
 
             return {
@@ -111,25 +118,20 @@ class DBStorage:
 
     def search(
         self,
-        cls: Any,
+        cls: ModelType,
         filters: Dict[str, Any],
-        nested_filters: Dict[str, Dict] = None,
+        nested_filters: Optional[Dict[str, Dict[str, Any]]] = None
     ) -> List[BaseModel]:
-        """
-        Enhanced search method with nested relationship filtering
+        """Enhanced search with nested relationship filtering."""
+        if not self.__session:
+            return []
 
-        Example:
-        filters = {"name": "Pizza Hut"}
-        nested_filters = {"menu_items": {"name": "juice"}}
-        """
         query = self.__session.query(cls)
 
-        # Apply main filters
         for key, value in filters.items():
             if hasattr(cls, key):
                 query = query.filter(getattr(cls, key).ilike(f"%{value}%"))
 
-        # Apply nested filters
         if nested_filters:
             for relation, rel_filters in nested_filters.items():
                 if hasattr(cls, relation):
@@ -141,22 +143,22 @@ class DBStorage:
         return query.all()
 
     def close(self) -> None:
-        """Close session safely"""
+        """Close session safely."""
         if self.__session:
             try:
-                self.__session.remove()  # Safe to call on scoped_session
+                self.__session.remove()
             except Exception as e:
                 print(f"Error closing session: {e}")
                 pass
 
     def count(self, cls: Optional[Any] = None) -> int:
-        """Count number of objects in storage"""
+        """Count number of objects in storage."""
         if cls:
             return self.__session.query(cls).count()
         return 0
 
     def rollback(self) -> None:
-        """Rollback current database session"""
+        """Rollback current database session."""
         try:
             if self.__session:
                 self.__session.rollback()
@@ -164,8 +166,8 @@ class DBStorage:
             print(f"Error during rollback: {e}")
 
     @contextmanager
-    def session_scope(self):
-        """Provide a transactional scope around a series of operations"""
+    def session_scope(self) -> Generator[Session, None, None]:
+        """Provide a transactional scope around operations."""
         session = self.refresh_session()
         try:
             yield session
@@ -173,23 +175,19 @@ class DBStorage:
         except Exception as e:
             if session:
                 session.rollback()
-            print(f"Session error: {e}")
-            raise
+            raise RuntimeError(f"Session operation failed: {str(e)}") from e
         finally:
             if session:
-                session.remove()  # Now safe to call remove() on scoped_session
+                session.remove()
 
     def refresh_session(self):
-        """Create a fresh session"""
+        """Create a fresh session."""
         try:
             if self.__session:
-                self.__session.close()  # Use close() instead of remove() for regular sessions
-
-            # Create session factory
+                self.__session.close()
             session_factory = sessionmaker(
                 bind=self.__engine, expire_on_commit=False, autoflush=True
             )
-            # Create scoped session
             Session = scoped_session(session_factory)
             self.__session = Session
             return self.__session

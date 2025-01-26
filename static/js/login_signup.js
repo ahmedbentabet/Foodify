@@ -1,53 +1,50 @@
-document.addEventListener("DOMContentLoaded", function () {
-    const loginBtn = document.getElementById("loginBtn");
-    const signUpBtn = document.getElementById("signUpBtn");
-    const flipCardInner = document.querySelector(".flip-card__inner");
-    const toggleSwitch = document.getElementById("toggleSwitch");
+/**
+ * @file Authentication and signup management
+ */
 
-    // Read URL parameters to determine the default mode
+document.addEventListener('DOMContentLoaded', () => {
+    const elements = {
+        loginBtn: /** @type {HTMLElement|null} */ (document.getElementById('loginBtn')),
+        signUpBtn: /** @type {HTMLElement|null} */ (document.getElementById('signUpBtn')),
+        flipCard: /** @type {HTMLElement|null} */ (document.querySelector('.flip-card__inner')),
+        toggle: /** @type {HTMLInputElement|null} */ (document.getElementById('toggleSwitch'))
+    };
+
     const urlParams = new URLSearchParams(window.location.search);
-    const mode = urlParams.get("mode"); // Read the "mode" value
+    const isSignupMode = urlParams.get('mode') === 'signup';
 
-    // Set the default state based on the "mode" value
-    if (mode === "signup") {
-        flipCardInner.style.transform = "rotateY(180deg)"; // Show the Sign-Up page
-        toggleSwitch.checked = true; // Activate the toggle switch
-    } else {
-        flipCardInner.style.transform = "rotateY(0deg)"; // Show the Login page
-        toggleSwitch.checked = false; // Deactivate the toggle switch
+    // Initialize UI state
+    if (elements.flipCard && elements.toggle) {
+        elements.flipCard.style.transform = isSignupMode ? 'rotateY(180deg)' : 'rotateY(0deg)';
+        elements.toggle.checked = isSignupMode;
     }
 
-    // When clicking the "Sign Up" button
-    signUpBtn.addEventListener("click", function () {
-        flipCardInner.style.transform = "rotateY(180deg)"; // Flip the card to show the Sign-Up page
-        toggleSwitch.checked = true; // Activate the toggle switch when clicking "Sign Up"
+    // Event handlers
+    const handleModeSwitch = (showSignup) => {
+        if (elements.flipCard && elements.toggle) {
+            elements.flipCard.style.transform = showSignup ? 'rotateY(180deg)' : 'rotateY(0deg)';
+            elements.toggle.checked = showSignup;
+        }
+    };
+
+    elements.signUpBtn?.addEventListener('click', () => handleModeSwitch(true));
+    elements.loginBtn?.addEventListener('click', () => handleModeSwitch(false));
+    elements.toggle?.addEventListener('change', (e) => {
+        handleModeSwitch(/** @type {HTMLInputElement} */ (e.target).checked);
     });
 
-    // When clicking the "Login" button
-    loginBtn.addEventListener("click", function () {
-        flipCardInner.style.transform = "rotateY(0deg)"; // Flip the card back to the Login page
-        toggleSwitch.checked = false; // Deactivate the toggle switch when clicking "Login"
-    });
+    // Form validation
+    const signUpForm = /** @type {HTMLFormElement|null} */ (document.getElementById('signUpForm'));
+    signUpForm?.addEventListener('submit', (e) => {
+        const password = /** @type {HTMLInputElement} */ (document.getElementById('password')).value;
+        const passwordAgain = /** @type {HTMLInputElement} */ (document.getElementById('passwordAgain')).value;
+        const errorMessage = /** @type {HTMLElement|null} */ (document.getElementById('error-message'));
 
-    // When clicking the toggle switch itself
-    toggleSwitch.addEventListener("change", function () {
-        if (toggleSwitch.checked) {
-            flipCardInner.style.transform = "rotateY(180deg)"; // Flip the card to the Sign-Up page
-        } else {
-            flipCardInner.style.transform = "rotateY(0deg)"; // Flip the card back to the Login page
+        if (password !== passwordAgain) {
+            e.preventDefault();
+            if (errorMessage) errorMessage.style.display = 'block';
+        } else if (errorMessage) {
+            errorMessage.style.display = 'none';
         }
     });
-});
-
-document.getElementById("signUpForm").addEventListener("submit", function (event) {
-    var password = document.getElementById("password").value;
-    var passwordAgain = document.getElementById("passwordAgain").value;
-    var errorMessage = document.getElementById("error-message");
-
-    if (password !== passwordAgain) {
-        event.preventDefault(); // Prevent form submission if passwords do not match
-        errorMessage.style.display = "block"; // Display error message
-    } else {
-        errorMessage.style.display = "none"; // Hide error message if passwords match
-    }
 });

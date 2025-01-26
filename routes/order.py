@@ -1,20 +1,27 @@
-from flask import Blueprint, jsonify, request, render_template, redirect, url_for, flash, session
+from flask import (
+    Blueprint,
+    jsonify,
+    request,
+    render_template,
+    url_for,
+    session,
+)
 from flask_login import current_user, login_required
 from models import storage
 from models.order import Order
 from models.order_item import OrderItem
 from models.menu_item import MenuItem
 from sqlalchemy.orm import joinedload
-import uuid
 from datetime import datetime
-from decimal import Decimal
+from typing import Dict, Any
 
 order_routes = Blueprint("order_routes", __name__)
 
 
 @order_routes.route("/api/v1/cart/update", methods=["POST"])
 @login_required
-def update_cart():
+def update_cart() -> Dict[str, Any]:
+    """Update cart items with proper error handling"""
     try:
         with storage.session_scope() as session:
             data = request.get_json()
@@ -31,8 +38,9 @@ def update_cart():
                 session.query(Order)
                 .filter_by(client_id=current_user.id, status="active")
                 .options(
-                    joinedload(Order.order_items)
-                    .joinedload(OrderItem.menu_item)
+                    joinedload(Order.order_items).joinedload(
+                        OrderItem.menu_item
+                    )
                 )
                 .first()
             )
@@ -41,9 +49,7 @@ def update_cart():
                 if action == "decrease":
                     return jsonify({"error": "No active order found"}), 400
                 active_order = Order(
-                    client_id=current_user.id,
-                    status="active",
-                    total_price=0
+                    client_id=current_user.id, status="active", total_price=0
                 )
                 session.add(active_order)
                 session.commit()
@@ -59,8 +65,9 @@ def update_cart():
                 if not order_item:
                     return jsonify({"error": "Item not in cart"}), 400
 
-                new_total = float(active_order.total_price) - \
-                    float(menu_item.price)
+                new_total = float(active_order.total_price) - float(
+                    menu_item.price
+                )
 
                 if order_item.quantity <= 1:
                     session.delete(order_item)
@@ -70,11 +77,13 @@ def update_cart():
                         active_order.status = "cancelled"
                         session.delete(active_order)
                         session.commit()
-                        return jsonify({
-                            "success": True,
-                            "order": None,
-                            "item": {"id": menu_item_id, "quantity": 0}
-                        })
+                        return jsonify(
+                            {
+                                "success": True,
+                                "order": None,
+                                "item": {"id": menu_item_id, "quantity": 0},
+                            }
+                        )
                 else:
                     order_item.quantity -= 1
                     active_order.total_price = new_total
@@ -86,26 +95,29 @@ def update_cart():
                     order_item = OrderItem(
                         order_id=active_order.id,
                         menu_item_id=menu_item_id,
-                        quantity=1
+                        quantity=1,
                     )
                     session.add(order_item)
                 active_order.total_price = float(
-                    active_order.total_price or 0) + float(menu_item.price)
+                    active_order.total_price or 0
+                ) + float(menu_item.price)
 
             session.commit()
 
-            return jsonify({
-                "success": True,
-                "order": {
-                    "id": active_order.id,
-                    "total_price": float(active_order.total_price),
-                    "status": active_order.status
-                },
-                "item": {
-                    "id": menu_item_id,
-                    "quantity": order_item.quantity if order_item else 0
+            return jsonify(
+                {
+                    "success": True,
+                    "order": {
+                        "id": active_order.id,
+                        "total_price": float(active_order.total_price),
+                        "status": active_order.status,
+                    },
+                    "item": {
+                        "id": menu_item_id,
+                        "quantity": order_item.quantity if order_item else 0,
+                    },
                 }
-            })
+            )
 
     except Exception as e:
         print(f"Cart update error: {e}")
@@ -160,9 +172,6 @@ def get_cart_state():
 def confirm_order():
     """Handle order confirmation and cleanup"""
     try:
-        data = request.get_json()
-        payment_method = data.get("payment_method")
-
         # Use a session scope for transaction management
         with storage.session_scope() as db_session:
             # Get active order with all related items
@@ -185,7 +194,7 @@ def confirm_order():
                     client_id=current_user.id,
                     status="completed",
                     total_price=order_total,
-                    order_date=datetime.utcnow()
+                    order_date=datetime.utcnow(),
                 )
                 db_session.add(completed_order)
 
@@ -200,14 +209,16 @@ def confirm_order():
                 db_session.commit()
 
                 # Use Flask's session for storing success message
-                session['order_success'] = True
-                session['order_total'] = order_total
+                session["order_success"] = True
+                session["order_total"] = order_total
 
-                return jsonify({
-                    "success": True,
-                    "message": "Order confirmed successfully",
-                    "redirect": url_for('welcome_routes.welcome')
-                })
+                return jsonify(
+                    {
+                        "success": True,
+                        "message": "Order confirmed successfully",
+                        "redirect": url_for("welcome_routes.welcome"),
+                    }
+                )
 
             except Exception as e:
                 db_session.rollback()
@@ -229,8 +240,7 @@ def order_page():
             session.query(Order)
             .filter_by(client_id=current_user.id, status="active")
             .options(
-                joinedload(Order.order_items)
-                .joinedload(OrderItem.menu_item)
+                joinedload(Order.order_items).joinedload(OrderItem.menu_item)
             )
             .first()
         )
@@ -239,12 +249,14 @@ def order_page():
         if active_order:
             for order_item in active_order.order_items:
                 menu_item = order_item.menu_item
-                order_items.append({
-                    'id': menu_item.id,
-                    'name': menu_item.name,
-                    'price': float(menu_item.price),
-                    'image_url': menu_item.image_url,
-                    'quantity': order_item.quantity
-                })
+                order_items.append(
+                    {
+                        "id": menu_item.id,
+                        "name": menu_item.name,
+                        "price": float(menu_item.price),
+                        "image_url": menu_item.image_url,
+                        "quantity": order_item.quantity,
+                    }
+                )
 
-        return render_template('order.html', order_items=order_items)
+        return render_template("order.html", order_items=order_items)

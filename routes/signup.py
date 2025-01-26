@@ -1,12 +1,15 @@
 #!/usr/bin/env python3
-"""Signup route handler"""
+"""
+Signup route handler.
+"""
+
 from flask import (
     Blueprint,
     render_template,
     url_for,
     flash,
     redirect,
-    session,
+    Response,
 )
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
@@ -19,13 +22,15 @@ from wtforms.validators import (
     EqualTo,
 )
 from models import storage
-from flask_login import login_user, current_user
-
+from flask_login import current_user
+from typing import Union
 
 signup_routes = Blueprint("signup_routes", __name__)
 
 
 class SignUpForm(FlaskForm):
+    """Form for user signup."""
+
     username = StringField(
         "Username", validators=[DataRequired(), Length(min=3, max=70)]
     )
@@ -51,33 +56,33 @@ class SignUpForm(FlaskForm):
     )
     submit = SubmitField("Sign Up")
 
-    def validate_username(self, username):
+    def validate_username(self, username: StringField) -> None:
+        """Check if username is unique."""
         from models.client import Client
 
-        # Get all clients and check if username exists
         all_clients = storage.all(Client).values()
-        for client in all_clients:
-            if client.username == username.data:
-                raise ValidationError(
-                    "Username already exists! Please choose a different one"
-                )
+        if any(client.username == username.data for client in all_clients):
+            raise ValidationError(
+                "Username already exists! Please choose a different one"
+            )
 
-    def validate_email(self, email):
+    def validate_email(self, email: StringField) -> None:
+        """Check if email is unique."""
         from models.client import Client
 
-        # Get all clients and check if email exists
         all_clients = storage.all(Client).values()
-        for client in all_clients:
-            if client.email == email.data:
-                raise ValidationError(
-                    "Email already exists! Please choose a different one"
-                )
+        if any(client.email == email.data for client in all_clients):
+            raise ValidationError(
+                "Email already exists! Please choose a different one"
+            )
 
 
 @signup_routes.route("/signup", methods=["GET", "POST"])
-def signup():
+def signup() -> Union[str, "Response"]:
+    """Handle user signup."""
     if current_user.is_authenticated:
         return redirect(url_for("welcome_routes.welcome"))
+
     form = SignUpForm()
     if form.validate_on_submit():
         from models.client import Client
@@ -99,4 +104,5 @@ def signup():
             "success",
         )
         return redirect(url_for("login_routes.login"))
+
     return render_template("signup.html", title="Sign Up", form=form)

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,6 +12,7 @@
     <link rel="icon" type="image/png" href="../static/images/foodify_logo.png" sizes="48x48">
     <link rel="stylesheet" href="../static/css/shared/cart.css">
 </head>
+
 <body>
     <nav>
         <a href="{{ url_for('welcome_routes.welcome') }}" class="logo">
@@ -43,12 +45,12 @@
             <h2>Create Account</h2>
             <form class="form" action="{{ url_for('signup_routes.signup') }}" method="POST">
                 {{ form.hidden_tag() }}
-                
+
                 <div class="form-group">
                     <label for="username">Username</label>
                     {{ form.username(class="form-input", id="username") }}
                     {% if form.username.errors %}
-                        <div class="error">{{ form.username.errors[0] }}</div>
+                    <div class="error">{{ form.username.errors[0] }}</div>
                     {% endif %}
                 </div>
 
@@ -56,7 +58,7 @@
                     <label for="address">Address</label>
                     {{ form.address(class="form-input", id="address") }}
                     {% if form.address.errors %}
-                        <div class="error">{{ form.address.errors[0] }}</div>
+                    <div class="error">{{ form.address.errors[0] }}</div>
                     {% endif %}
                 </div>
 
@@ -64,7 +66,7 @@
                     <label for="email">Email</label>
                     {{ form.email(class="form-input", id="email") }}
                     {% if form.email.errors %}
-                        <div class="error">{{ form.email.errors[0] }}</div>
+                    <div class="error">{{ form.email.errors[0] }}</div>
                     {% endif %}
                 </div>
 
@@ -72,7 +74,7 @@
                     <label for="password">Password</label>
                     {{ form.password(class="form-input", id="password") }}
                     {% if form.password.errors %}
-                        <div class="error">{{ form.password.errors[0] }}</div>
+                    <div class="error">{{ form.password.errors[0] }}</div>
                     {% endif %}
                 </div>
 
@@ -107,4 +109,5 @@
     <script src="../static/js/search.js"></script>
     <script src="../static/js/payment.js"></script>
 </body>
+
 </html>

@@ -70,23 +70,27 @@ def get_totals():
                 session.query(Order)
                 .filter_by(client_id=current_user.id, status="active")
                 .options(
-                    joinedload(Order.order_items)
-                    .joinedload(OrderItem.menu_item)
+                    joinedload(Order.order_items).joinedload(
+                        OrderItem.menu_item
+                    )
                 )
                 .first()
             )
 
-            subtotal = float(
-                active_order.total_price) if active_order else 0.00
+            subtotal = (
+                float(active_order.total_price) if active_order else 0.00
+            )
             delivery_fee = 5.00
             total = subtotal + delivery_fee
 
-            return jsonify({
-                "success": True,
-                "subtotal": "{:.2f}".format(subtotal),
-                "delivery_fee": "{:.2f}".format(delivery_fee),
-                "total": "{:.2f}".format(total),
-            })
+            return jsonify(
+                {
+                    "success": True,
+                    "subtotal": "{:.2f}".format(subtotal),
+                    "delivery_fee": "{:.2f}".format(delivery_fee),
+                    "total": "{:.2f}".format(total),
+                }
+            )
 
     except Exception as e:
         print(f"Payment totals error: {e}")
@@ -99,27 +103,24 @@ def apply_coupon():
     """Apply a coupon code to the order"""
     try:
         data = request.get_json()
-        code = data.get('code', '').upper()
+        code = data.get("code", "").upper()
 
         # Example coupon codes - in real app, these would be in a database
-        valid_coupons = {
-            'WELCOME20': 20,
-            'ALX': 50,
-            'AHMED': 100
-        }
+        valid_coupons = {"WELCOME20": 20, "ALX": 50, "AHMED": 100}
 
         if code in valid_coupons:
-            return jsonify({
-                'success': True,
-                'discount': valid_coupons[code],
-                'message': f'Coupon applied! {valid_coupons[code]}% off'
-            })
+            return jsonify(
+                {
+                    "success": True,
+                    "discount": valid_coupons[code],
+                    "message": f"Coupon applied! {valid_coupons[code]}% off",
+                }
+            )
         else:
-            return jsonify({
-                'success': False,
-                'error': 'Invalid coupon code'
-            })
+            return jsonify(
+                {"success": False, "error": "Invalid coupon code"}
+            )
 
     except Exception as e:
         print(f"Coupon error: {e}")
-        return jsonify({'error': str(e)}), 500
+        return jsonify({"error": str(e)}), 500
