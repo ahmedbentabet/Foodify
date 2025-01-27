@@ -38,45 +38,105 @@ Foodify is a Flask-based food delivery platform designed to help you discover an
 ## 📁 Project Structure
 
 ```plaintext
-│— AUTHORS
-├── README.md                   # Project description and instructions
-├── console.py                  # Console-based interface for testing/admin tasks
-
-├── models/                     # Database models
-│   ├── __init__.py             # Initialize models module
-│   ├── base_model.py           # Base model with common fields
-│   ├── client.py               # Client model (corresponds to 'clients' table)
-│   ├── restaurant.py           # Restaurant model (restaurant details)
-│   ├── menu_item.py            # Menu item model (food details)
-│   ├── order.py                # Order model (order details, status, payments)
-│   ├── review.py               # Review model (user feedback)
-│   └── engine/                 # MySQL storage engine
-│       ├── __init__.py
-│       └── db_storage.py       # MySQL connection logic
-
-├── routes/                     # Route handlers
-│   ├── __init__.py
-│   ├── ...
-│   └── config.py
-
-├── docs/
-│   ├── API_DOCUMENTATION.md
-│   └── DATABASE_DOCUMENTATION.md
-
-├── database/
-│   └── foodify_backup.sql      # MySQL data dump
-
-├── tests/                      # Unit tests for modules and routes
-│   ├── __init__.py
-│   ├── test_models/
-│   │   ├── __init__.py
-│   │   ├── test_client.py
-│   │   └── ...
+Foodify/
+├── AUTHORS                     # Project contributors list
+├── README.md                   # Project documentation
+├── app.py                      # Flask application entry point
+├── console.py                  # CLI for database management
 ├── requirements.txt            # Python dependencies
-├── .env.example                # Environment variable template
-├── .gitignore
-├── app.py                      # Main Flask application entry point
-└── LICENSE
+├── .env.example               # Environment variables template
+├── .gitignore                 # Git ignore rules
+|
+│
+├── database/                  # Database files
+│   └── foodify_backup.sql    # MySQL database dump
+│
+├── docs/                      # Documentation
+│   ├── API_DOCUMENTATION.md  # REST API specifications
+│   └── DATABASE_DOCUMENTATION.md  # Database schema and queries
+│
+├── models/                    # Database models
+│   ├── __init__.py          # Models initialization
+│   ├── base_model.py        # Base model class
+│   ├── client.py            # Client model
+│   ├── menu_item.py         # MenuItem model
+│   ├── order.py            # Order model
+│   ├── order_item.py       # OrderItem model
+│   ├── restaurant.py       # Restaurant model
+│   ├── review.py          # Review model
+│   └── engine/            # Database engine
+│       ├── __init__.py    # Engine initialization
+│       └── db_storage.py  # MySQL storage implementation
+│
+├── routes/                   # Route handlers
+│   ├── __init__.py         # Routes initialization
+│   ├── contact.py         # Contact page routes
+│   ├── delivery.py        # Delivery management
+│   ├── login.py          # Authentication routes
+│   ├── order.py          # Order processing
+│   ├── payment.py        # Payment handling
+│   ├── restaurant.py     # Restaurant pages
+│   ├── signup.py         # User registration
+│   ├── user_setting.py   # User settings
+|   ├── welcome.py        # Home page routes
+│   └── config.py         # Route configuration
+|
+|
+│
+├── static/                   # Static assets
+│   ├── css/               # Stylesheets
+│   │   ├── shared/       # Shared styles
+│   │   │   └── cart.css  # Shopping cart styles
+│   │   ├── login.css
+│   │   ├── payment.css
+│   │   ├── welcome.css
+│   │   └── ...
+│   ├── js/              # JavaScript files
+│   │   ├── script.js    # Core functionality
+│   │   ├── payment.js   # Payment handling
+│   │   ├── search.js    # Search functionality
+│   │   └── ...
+│   └── images/         # Image assets
+│       ├── menu_items/  # Restaurant menu images
+│       └── Team/        # Team member photos
+│
+├── templates/              # HTML templates
+│   ├── 403.html          # Error pages
+│   ├── 404.html
+│   ├── 500.html
+│   ├── contact.html      # Contact page
+│   ├── delivery.html     # Delivery page
+│   ├── login.html        # Login page
+│   ├── order.html        # Order management
+│   ├── payment.html      # Payment page
+│   ├── welcome.html      # Home page
+│   └── ...
+│
+└── tests/
+    └── unit/
+    ├── test_console/
+    │   └── test_console_commands.py       # Tests for console command interface
+    │
+    ├── test_models/
+    │   ├── test_base_model.py            # Tests for base model functionality
+    │   ├── test_client.py                # Tests for Client model
+    │   ├── test_menu_item.py             # Tests for MenuItem model
+    │   ├── test_order.py                 # Tests for Order model
+    │   ├── test_restaurant.py            # Tests for Restaurant model
+    │   ├── test_review.py                # Tests for Review model
+    │   └── test_engine/
+    │       └── test_db_storage.py        # Tests for database storage
+    │
+    └── test_web_flask/                   # Tests for Flask web routes
+        ├── test_contact.py               # Tests for contact endpoints
+        ├── test_delivery.py              # Tests for delivery endpoints
+        ├── test_login.py                 # Tests for login/auth endpoints
+        ├── test_order.py                 # Tests for order endpoints
+        ├── test_payment.py               # Tests for payment endpoints
+        ├── test_restaurant.py            # Tests for restaurant endpoints
+        ├── test_signup.py                # Tests for signup endpoints
+        ├── test_user_setting.py          # Tests for user settings endpoints
+        └── test_welcome_page.py          # Tests for welcome page endpoints
 ```
 
 ---
