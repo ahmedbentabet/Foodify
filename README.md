@@ -407,7 +407,8 @@ Common issues and solutions:
 ## 👥 Contributors
 
 - [Abubakr Elgandy](https://github.com/abobakrelgandy) - Backend Developer | Frontend Developer
-- [John Samy](https://github.com/JohnSamy2004) - Backend Developer | Frontend Developer
+- [John Samy
+](https://github.com/JohnSamy2004) - Backend Developer | Frontend Developer
 - [Ahmed Bentabet](https://github.com/ahmedbentabet) - Backend Developer | Database Manager
 - [Tariq Omer](https://github.com/Tariq5mo) - Backend Developer | project manager
 
