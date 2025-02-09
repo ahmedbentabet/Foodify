@@ -455,10 +455,10 @@ Common issues and solutions:
 
 ## 👥 Contributors
 
-- [Abubakr Elgandy](https://github.com/abobakrelgandy) - Backend Developer | project manager
-- [John Samy](https://github.com/JohnSamy2004) - Backend Developer | Frontend Developer
 - [Ahmed Bentabet](https://github.com/ahmedbentabet) - Backend Developer | Database Manager
-- [Tariq Omer](https://github.com/Tariq5mo) - Backend Developer | Frontend Developer
+- [Tariq Omer](https://github.com/Tariq5mo) - Backend Developer | Project Manager
+- [Abubakr Elgandy](https://github.com/abobakrelgandy) - Frontend Developer
+- [John Samy](https://github.com/JohnSamy2004) - Frontend Developer
 
 ---
 
